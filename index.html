@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Learning Hub | Visual Labs & Educational Explorations</title>
+  <meta name="description" content="Explore interactive mathematical visualizers, lab simulations, and mastery challenges for Honors and STEM students. Aligned with NC Standards and Common Core." />
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="assets/css/portal.css" />
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="bg-mesh-glow" aria-hidden="true">
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+    <div class="glow-orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar glass-nav">
+    <div class="container nav-content">
+      <a href="index.html" class="logo-group" id="navLogo">
+        <div class="logo-icon">✨</div>
+        <div>
+          <span class="logo-text">LearningHub</span>
+          <span class="badge badge-grade" style="margin-left: 8px; font-size: 0.65rem;">v1.0</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#featured-section" class="nav-link" id="navFeaturedLink">Featured Labs</a>
+        <a href="#standards-section" class="nav-link" id="navStandardsLink">Standards</a>
+        <a href="#roadmap-section" class="nav-link" id="navRoadmapLink">Roadmap</a>
+        <a href="https://github.com/jimmymj/learning" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="githubRepoBtn">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero-section">
+      <div class="hero-pill">
+        <span>🚀</span>
+        <span>Interactive Web Learning Suite</span>
+      </div>
+      <h1 class="hero-title">
+        Master Complex Concepts Through <span class="gradient-text">Visual Intuition</span>
+      </h1>
+      <p class="hero-subtitle">
+        A curated collection of zero-dependency, browser-native simulations and interactive laboratory experiments designed for Honors Mathematics and STEM learners.
+      </p>
+
+      <div class="card-actions" style="justify-content: center; margin-bottom: 24px;">
+        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="btn btn-primary btn-lg" id="heroLaunchFeaturedBtn">
+          <span>⚡ Launch Math Lab</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+        <button type="button" class="btn btn-secondary btn-lg open-modal-btn" data-url="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" data-title="CMS 8th Honors Math: Dilations, Similarity & Slope Lab" id="heroPreviewBtn">
+          <span>👁️ Live Preview</span>
+        </button>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-num mono">100%</span>
+          <span class="stat-label">Client-Side</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">8th Honors</span>
+          <span class="stat-label">Target Grade</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">NC.8.G / EE</span>
+          <span class="stat-label">Curriculum Aligned</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">20 Q</span>
+          <span class="stat-label">Graded Quiz</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter and Search -->
+    <section class="filter-container" id="filter-section">
+      <div class="search-box-wrapper">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input type="text" id="appSearchInput" class="search-input" placeholder="Search lab modules, concepts, or standards..." aria-label="Search apps" />
+      </div>
+
+      <div class="filter-pills" role="tablist">
+        <button class="filter-pill active" data-category="all" id="pillAll">All Subjects (1)</button>
+        <button class="filter-pill" data-category="math" id="pillMath">📐 Mathematics (1)</button>
+        <button class="filter-pill" data-category="physics" id="pillPhysics">⚡ Physics (Coming Soon)</button>
+        <button class="filter-pill" data-category="cs" id="pillCS">💻 Computer Science (Coming Soon)</button>
+      </div>
+    </section>
+
+    <!-- Featured App Showcase Card -->
+    <section id="featured-section">
+      <article class="featured-card glass-panel app-item-card" data-category="math" id="cardMathVisualizer">
+        <div class="card-top-glow"></div>
+        <div class="featured-grid">
+          
+          <!-- Content Left -->
+          <div>
+            <div class="featured-badge-group">
+              <span class="badge badge-featured">Featured Release</span>
+              <span class="badge badge-grade">CMS 8th Honors Math</span>
+              <span class="badge badge-standard">NC.8.G.3 • NC.8.G.4 • NC.8.EE.6</span>
+            </div>
+
+            <h2 class="card-heading searchable-title">Dilations, Similarity & Slope Lab</h2>
+            <p class="card-desc searchable-desc">
+              An exhaustive interactive visualizer combining non-rigid geometric transformations with coordinate geometry and constant rate-of-change proofs. Students manipulate scale factors, arbitrarily positioned dilation centers, and sequenced similarity mappings.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Coordinate Dilations:</strong> Real-time scaling from origin or custom center <code>(cx, cy)</code> with reduction/enlargement badges.</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Similarity Sequence:</strong> Multi-step composition of rigid motions and dilations proving triangle similarity.</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Slope Triangles:</strong> Visual proof of constant slope via similar right triangles along a linear equation.</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Honors Cheat Sheet & 20-Q Quiz:</strong> Comprehensive formula reference paired with a 20-question randomized mastery quiz.</span>
+              </li>
+            </ul>
+
+            <div class="card-actions">
+              <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="btn btn-primary" id="launchLabBtn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <span>Launch Fullscreen Lab</span>
+              </a>
+              <button type="button" class="btn btn-secondary open-modal-btn" data-url="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" data-title="Dilations, Similarity & Slope Lab" id="previewLabBtn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <span>Quick View in Modal</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Mini-Visualizer Canvas Right -->
+          <div class="visual-preview-box">
+            <div class="preview-header">
+              <div class="window-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="mono" style="font-size: 0.72rem; color: #94a3b8;">Dilation Canvas Engine</span>
+            </div>
+            <div class="preview-canvas-container">
+              <canvas id="previewCanvas"></canvas>
+              <span class="canvas-overlay-tag mono">Interactive Simulation</span>
+            </div>
+          </div>
+
+        </div>
+      </article>
+    </section>
+
+    <!-- Standards & Curriculum Alignment Section -->
+    <section id="standards-section" style="margin-top: 40px;">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Standards & Learning Objectives</h2>
+          <p class="section-subtitle">Rigorous alignment with North Carolina Standard Course of Study & Common Core</p>
+        </div>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="glass-panel" style="padding: 24px; border-radius: var(--radius-lg);">
+          <span class="badge badge-standard" style="margin-bottom: 12px;">Standard NC.8.G.3</span>
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Coordinate Transformations</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            Describe the effect of dilations, translations, rotations, and reflections on two-dimensional figures using coordinates: $(x, y) \rightarrow (kx, ky)$ with center at $(0, 0)$ and arbitrary centers $(cx, cy)$.
+          </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 24px; border-radius: var(--radius-lg);">
+          <span class="badge badge-standard" style="margin-bottom: 12px;">Standard NC.8.G.4</span>
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Similarity Sequence</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            Understand that a two-dimensional figure is similar to another if the second can be obtained from the first by a sequence of rotations, reflections, translations, and dilations.
+          </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 24px; border-radius: var(--radius-lg);">
+          <span class="badge badge-standard" style="margin-bottom: 12px;">Standard NC.8.EE.6</span>
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Slope & Similar Triangles</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            Use similar triangles to explain why the slope $m$ is the same between any two distinct points on a non-vertical line in the coordinate plane; derive $y = mx + b$.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upcoming Roadmap Section -->
+    <section id="roadmap-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Planned Learning Modules</h2>
+          <p class="section-subtitle">Future expansions in progress for the LearningHub suite</p>
+        </div>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <span class="roadmap-status">Coming Soon</span>
+            <h3 class="roadmap-title">Pythagorean Theorem & 3D Distance Lab</h3>
+            <p class="roadmap-desc">Interactive visual proofs of $a^2 + b^2 = c^2$, distance formula in coordinate space, and 3D diagonal calculations.</p>
+          </div>
+          <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">NC.8.G.6 • NC.8.G.7 • NC.8.G.8</span>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <span class="roadmap-status">Coming Soon</span>
+            <h3 class="roadmap-title">Systems of Equations Sandbox</h3>
+            <p class="roadmap-desc">Visualizing intersection of linear equations, comparing substitution, elimination, and graphic intersections with dynamic sliders.</p>
+          </div>
+          <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">NC.8.EE.8</span>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="roadmap-top">
+            <span class="roadmap-status">Coming Soon</span>
+            <h3 class="roadmap-title">Scientific Notation & Exponent Matrix</h3>
+            <p class="roadmap-desc">Visual scale of the universe from subatomic quarks to galaxy superclusters using powers of 10 and scientific notation.</p>
+          </div>
+          <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">NC.8.EE.1 • NC.8.EE.3 • NC.8.EE.4</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Embedded Modal Runner -->
+  <div class="modal-overlay" id="labModal" role="dialog" aria-modal="true" aria-labelledby="modalLabTitle">
+    <div class="modal-window">
+      <div class="modal-bar">
+        <div class="modal-actions">
+          <span class="badge badge-featured">Embedded Runner</span>
+          <span id="modalLabTitle" style="font-weight: 700; color: #fff; font-size: 0.95rem;">Lab Title</span>
+        </div>
+        <div class="modal-actions">
+          <button id="reloadModalBtn" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" title="Reload Lab">↻ Reload</button>
+          <a id="newTabModalBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">↗ Open in Tab</a>
+          <button id="closeModalBtn" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" title="Close Modal">✕ Close</button>
+        </div>
+      </div>
+      <iframe id="labIframe" class="modal-iframe" title="Interactive Lab Preview" src="about:blank"></iframe>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <p style="color: #cbd5e1; font-weight: 600; margin-bottom: 4px;">LearningHub Open Source Educational Suite</p>
+        <p>Built with Vanilla HTML, Modern CSS, and High-Performance JavaScript.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/jimmymj/learning" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
+        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="footer-link">Math Lab Direct</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/portal.js"></script>
+</body>
+</html>

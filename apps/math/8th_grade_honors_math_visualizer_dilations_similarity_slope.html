@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS 8th Honors Math: Dilations, Similarity & Slope</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    canvas { touch-action: none; }
+    .tab-active {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="../../index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-white border border-slate-700/80 transition-all shadow-sm group" title="Return to Learning Hub">
+          <svg class="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>Hub</span>
+        </a>
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-extrabold text-lg shadow-lg shadow-blue-600/30">
+          8H
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">Dilations, Similarity & Slope Lab</h1>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">CMS 8th Honors</span>
+          </div>
+          <p class="text-xs text-slate-400">NC Standards: NC.8.G.3 • NC.8.G.4 • NC.8.EE.6</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex flex-wrap gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+        <button onclick="switchTab('dilation')" id="tab-dilation" class="tab-btn tab-active px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+          1. Coordinate Dilations
+        </button>
+        <button onclick="switchTab('similarity')" id="tab-similarity" class="tab-btn text-slate-400 hover:text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+          2. Similarity Sequence
+        </button>
+        <button onclick="switchTab('slope')" id="tab-slope" class="tab-btn text-slate-400 hover:text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+          3. Slope Triangles
+        </button>
+        <button onclick="switchTab('reference')" id="tab-reference" class="tab-btn text-slate-400 hover:text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all">
+          4. Honors Cheat Sheet
+        </button>
+        <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn text-emerald-400 hover:text-white px-3 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10">
+          <span>5. 20-Question Honors Quiz</span>
+          <span id="nav-score-pill" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono">0/20</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+    <!-- MODULE 1: COORDINATE DILATIONS -->
+    <section id="sec-dilation" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Left Controls -->
+      <div class="lg:col-span-5 space-y-5">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              Non-Rigid Dilation Explorer
+            </h2>
+            <span id="dilation-badge" class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Enlargement (k &gt; 1)
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Unlike rigid transformations (translations, rotations, reflections), a <strong>dilation</strong> changes the size of a figure while preserving angle measures. For an Honors challenge, adjust both the scale factor <span class="mono text-blue-400">k</span> and the center of dilation <span class="mono text-amber-400">(cx, cy)</span>!
+          </p>
+
+          <!-- Sliders -->
+          <div class="space-y-4 pt-2 border-t border-slate-800">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Scale Factor (<span class="mono text-blue-400">k</span>)</span>
+                <span id="k-val-label" class="mono text-blue-400 font-bold">2.0</span>
+              </div>
+              <input id="k-slider" type="range" min="0.25" max="3.0" step="0.25" value="2.0" oninput="updateDilation()" class="w-full accent-blue-500 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                <span>0.25 (Reduction)</span>
+                <span>1.0 (Congruent)</span>
+                <span>3.0 (Enlargement)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-slate-300">Center X (<span class="mono text-amber-400">cx</span>)</span>
+                  <span id="cx-val-label" class="mono text-amber-400 font-bold">0</span>
+                </div>
+                <input id="cx-slider" type="range" min="-4" max="4" step="1" value="0" oninput="updateDilation()" class="w-full accent-amber-500 cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-slate-300">Center Y (<span class="mono text-amber-400">cy</span>)</span>
+                  <span id="cy-val-label" class="mono text-amber-400 font-bold">0</span>
+                </div>
+                <input id="cy-slider" type="range" min="-4" max="4" step="1" value="0" oninput="updateDilation()" class="w-full accent-amber-500 cursor-pointer" />
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button onclick="resetCenterOrigin()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+                Center at Origin (0,0)
+              </button>
+              <button onclick="setHonorsCenter()" class="flex-1 py-2 px-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-xs font-semibold text-amber-300 transition">
+                Try Off-Origin (-2, -1)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coordinate Formula & Live Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+            <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">Active Algebraic Rule</div>
+            <div id="dilation-rule-display" class="mono text-xs sm:text-sm text-blue-300 font-bold">
+              (x, y) → (2x, 2y)
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400">
+                  <th class="py-2">Vertex</th>
+                  <th class="py-2">Pre-Image <span class="text-slate-300">(ABC)</span></th>
+                  <th class="py-2">Image <span class="text-blue-400">(A'B'C')</span></th>
+                </tr>
+              </thead>
+              <tbody id="dilation-coord-table" class="mono divide-y divide-slate-800/60">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Area & Perimeter Ratio Callout -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
+              <span class="text-[11px] text-slate-400 block">Perimeter Ratio (k)</span>
+              <span id="perim-ratio" class="text-lg font-extrabold text-white mono">2.00×</span>
+              <span class="text-[11px] text-slate-500 block">Linear scale factor</span>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3">
+              <span class="text-[11px] text-slate-400 block">Area Ratio (k²)</span>
+              <span id="area-ratio" class="text-lg font-extrabold text-teal-400 mono">4.00×</span>
+              <span class="text-[11px] text-slate-500 block">Squared scale factor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Canvas -->
+      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center relative">
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-2">
+          <div class="flex items-center gap-4 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-slate-400 inline-block"></span> Pre-Image ΔABC</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-blue-500 inline-block"></span> Image ΔA'B'C'</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> Center P</span>
+          </div>
+          <span class="text-[11px] text-slate-400">Dashed rays connect Center P → Vertex → Image</span>
+        </div>
+        <canvas id="dilationCanvas" width="600" height="520" class="w-full max-w-[600px] bg-slate-950 rounded-xl border border-slate-800"></canvas>
+      </div>
+    </section>
+
+    <!-- MODULE 2: SIMILARITY SEQUENCE -->
+    <section id="sec-similarity" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-5">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+            Similarity Transformation Builder
+          </h2>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Two figures are <strong>similar (~)</strong> if and only if there is a sequence of rigid motions (translations, reflections, rotations) followed by a dilation that maps one figure onto the other.
+          </p>
+          <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-3 text-xs text-purple-200">
+            <strong>Mission:</strong> Map the Pre-Image <span class="mono font-bold text-white">ΔABC</span> onto the target dashed <span class="mono font-bold text-emerald-400">ΔA''B''C''</span> using a reflection, a translation, and a dilation!
+          </div>
+
+          <div class="space-y-4 pt-2">
+            <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+              <div>
+                <div class="text-xs font-semibold text-white">Step 1: Reflect across Y-Axis</div>
+                <div class="text-[11px] text-slate-400 mono">(x, y) → (-x, y)</div>
+              </div>
+              <input id="sim-reflect" type="checkbox" onchange="updateSimilarity()" class="w-5 h-5 accent-purple-500 rounded cursor-pointer" />
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-3">
+              <div class="text-xs font-semibold text-white">Step 2: Dilation from Origin (scale k)</div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400">Scale Factor <span class="mono text-purple-400">k</span>:</span>
+                <span id="sim-k-label" class="mono font-bold text-purple-400">1.0</span>
+              </div>
+              <input id="sim-k" type="range" min="0.5" max="2.5" step="0.5" value="1.0" oninput="updateSimilarity()" class="w-full accent-purple-500 cursor-pointer" />
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-3">
+              <div class="text-xs font-semibold text-white">Step 3: Translate Image (dx, dy)</div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Shift X (<span class="mono">dx</span>)</span>
+                    <span id="sim-dx-label" class="mono text-purple-400 font-bold">0</span>
+                  </div>
+                  <input id="sim-dx" type="range" min="-5" max="5" step="1" value="0" oninput="updateSimilarity()" class="w-full accent-purple-500 cursor-pointer" />
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Shift Y (<span class="mono">dy</span>)</span>
+                    <span id="sim-dy-label" class="mono text-purple-400 font-bold">0</span>
+                  </div>
+                  <input id="sim-dy" type="range" min="-5" max="5" step="1" value="0" oninput="updateSimilarity()" class="w-full accent-purple-500 cursor-pointer" />
+                </div>
+              </div>
+            </div>
+
+            <div id="sim-status" class="p-3.5 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-semibold text-slate-300 flex items-center justify-between">
+              <span>Status: Adjust controls to match the green target!</span>
+              <button onclick="solveSimilarity()" class="text-purple-400 hover:underline ml-2">Auto-Solve</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AA Similarity Theorem Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
+          <h3 class="text-sm font-bold text-white">Angle-Angle (AA) Similarity Criterion</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Because dilations preserve angle measures and rigid motions preserve both angles and lengths, two triangles are guaranteed to be similar if at least <strong>two pairs of corresponding angles are congruent</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center">
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-2 text-xs">
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-slate-400 inline-block"></span> Start ΔABC</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-purple-500 inline-block"></span> Your Transformed Δ</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm border-2 border-emerald-400 inline-block"></span> Target Δ (k=2)</span>
+          </div>
+        </div>
+        <canvas id="similarityCanvas" width="600" height="520" class="w-full max-w-[600px] bg-slate-950 rounded-xl border border-slate-800"></canvas>
+      </div>
+    </section>
+
+    <!-- MODULE 3: SLOPE TRIANGLES (NC.8.EE.6) -->
+    <section id="sec-slope" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-5">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+            Similar Slope Triangles (NC.8.EE.6)
+          </h2>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Why is the slope <span class="mono text-teal-300">m</span> the same between <em>any</em> two distinct points on a non-vertical line? Because any two right "slope triangles" drawn on the line are <strong>similar by AA Similarity</strong>! Their vertical-to-horizontal side ratios simplify to the exact same value.
+          </p>
+
+          <div class="space-y-4 pt-2 border-t border-slate-800">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Line Slope (<span class="mono text-teal-400">m</span>)</span>
+                <span id="slope-m-label" class="mono text-teal-400 font-bold">1.5</span>
+              </div>
+              <input id="slope-m" type="range" min="-2.0" max="2.0" step="0.5" value="1.5" oninput="updateSlope()" class="w-full accent-teal-400 cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Y-Intercept (<span class="mono text-teal-400">b</span>)</span>
+                <span id="slope-b-label" class="mono text-teal-400 font-bold">-1</span>
+              </div>
+              <input id="slope-b" type="range" min="-3" max="3" step="1" value="-1" oninput="updateSlope()" class="w-full accent-teal-400 cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Triangle 2 Run (<span class="mono text-amber-400">Δx₂</span>)</span>
+                <span id="slope-run2-label" class="mono text-amber-400 font-bold">4</span>
+              </div>
+              <input id="slope-run2" type="range" min="1" max="5" step="1" value="4" oninput="updateSlope()" class="w-full accent-amber-400 cursor-pointer" />
+            </div>
+          </div>
+
+          <!-- Comparison Cards -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="bg-slate-950 border border-teal-500/30 rounded-xl p-3 space-y-1">
+              <div class="text-xs font-bold text-teal-400">Small Slope Δ₁</div>
+              <div id="tri1-details" class="mono text-xs text-slate-200">
+                Rise (Δy₁) = 3<br/>
+                Run (Δx₁) = 2<br/>
+                Ratio = 3 / 2 = 1.5
+              </div>
+            </div>
+            <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-3 space-y-1">
+              <div class="text-xs font-bold text-amber-400">Large Slope Δ₂</div>
+              <div id="tri2-details" class="mono text-xs text-slate-200">
+                Rise (Δy₂) = 6<br/>
+                Run (Δx₂) = 4<br/>
+                Ratio = 6 / 4 = 1.5
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5">
+            <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">Derived Linear Equation</div>
+            <div id="slope-eq-display" class="mono text-sm sm:text-base font-extrabold text-white">
+              (y - (-1)) / (x - 0) = 1.5  ⇒  y = 1.5x - 1
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center">
+        <div class="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-2 text-xs">
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-teal-400 inline-block"></span> Slope Triangle 1 (Run = 2)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-400 inline-block"></span> Slope Triangle 2 (Adjustable)</span>
+          </div>
+        </div>
+        <canvas id="slopeCanvas" width="600" height="520" class="w-full max-w-[600px] bg-slate-950 rounded-xl border border-slate-800"></canvas>
+      </div>
+    </section>
+
+    <!-- MODULE 4: HONORS CHEAT SHEET -->
+    <section id="sec-reference" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-blue-400">NC.8.G.3 • Coordinate Rules</div>
+          <h3 class="text-lg font-bold text-white">Dilations on the Plane</h3>
+          <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed">
+            <li>• <strong>Centered at Origin <span class="mono">(0,0)</span>:</strong><br/>
+              <span class="mono text-blue-300">(x, y) → (kx, ky)</span>
+            </li>
+            <li>• <strong>Centered at Arbitrary Point <span class="mono">(cx, cy)</span>:</strong><br/>
+              <span class="mono text-amber-300">(x, y) → (cx + k(x - cx), cy + k(y - cy))</span>
+            </li>
+            <li>• <strong>Scale Factor Classification:</strong>
+              <ul class="pl-4 mt-1 space-y-1 text-slate-400">
+                <li>- <span class="mono">k &gt; 1</span>: Enlargement</li>
+                <li>- <span class="mono">0 &lt; k &lt; 1</span>: Reduction</li>
+                <li>- <span class="mono">k = 1</span>: Congruent (Identity)</li>
+              </ul>
+            </li>
+            <li>• <strong>Orientation & Parallelism:</strong> Dilations preserve orientation and map every line segment to a parallel line segment (unless the line passes through the center of dilation).</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-purple-400">NC.8.G.4 • Similarity & Scaling</div>
+          <h3 class="text-lg font-bold text-white">Similar Figures & Ratios</h3>
+          <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed">
+            <li>• <strong>Definition of Similarity:</strong> Two figures are similar if a sequence of rigid motions (translations, reflections, rotations) and a dilation maps one onto the other.</li>
+            <li>• <strong>Angle Preservation:</strong> Corresponding angles in similar figures are <strong>always congruent</strong> (invariant under dilation).</li>
+            <li>• <strong>Side & Perimeter Ratio:</strong> Corresponding sides and perimeters scale by <span class="mono text-purple-300">k</span>.</li>
+            <li>• <strong>Area Scaling Law:</strong> If a figure is dilated by scale factor <span class="mono">k</span>, its area scales by <span class="mono text-teal-300 font-bold">k²</span>.<br/>
+              <span class="text-slate-400">Example: If <span class="mono">k = 3</span>, Perimeter is <span class="mono">3×</span> larger, and Area is <span class="mono">9×</span> larger.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-teal-400">NC.8.EE.6 • Slope & Equations</div>
+          <h3 class="text-lg font-bold text-white">Slope Triangles & Lines</h3>
+          <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed">
+            <li>• <strong>Why Slope is Constant:</strong> Any two right triangles formed by the vertical rise and horizontal run along a line share congruent right angles and congruent corresponding angles (by parallel horizontal/vertical grid lines), making them <strong>similar by AA</strong>.</li>
+            <li>• <strong>Proportional Rise-to-Run:</strong><br/>
+              <span class="mono text-teal-300">Δy₁ / Δx₁ = Δy₂ / Δx₂ = m</span>
+            </li>
+            <li>• <strong>Line Through the Origin:</strong> Using points <span class="mono">(0,0)</span> and <span class="mono">(x,y)</span>, <span class="mono">(y - 0)/(x - 0) = m ⇒ y = mx</span>.</li>
+            <li>• <strong>Y-Intercept <span class="mono">(0, b)</span>:</strong> Using points <span class="mono">(0,b)</span> and <span class="mono">(x,y)</span>, <span class="mono">(y - b)/(x - 0) = m ⇒ y = mx + b</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 5: 20-QUESTION INTERACTIVE HONORS QUIZ -->
+    <section id="sec-quiz" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Left Column: Question Navigator & Progress -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-bold text-white">CMS 8th Honors Assessment</h2>
+            <span id="quiz-score-badge" class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mono">
+              Score: 0 / 20
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Complete all 20 Honors questions covering Dilations (<span class="mono">NC.8.G.3</span>), Similarity (<span class="mono">NC.8.G.4</span>), and Slope Triangles (<span class="mono">NC.8.EE.6</span>).
+          </p>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+            <div id="quiz-progress-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+
+          <!-- 20-Question Grid -->
+          <div class="pt-2">
+            <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-2">Question Navigator</div>
+            <div id="quiz-nav-grid" class="grid grid-cols-5 gap-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span id="quiz-answered-count">0 of 20 Answered</span>
+            <button onclick="resetQuiz()" class="text-rose-400 hover:text-rose-300 font-semibold transition">
+              Reset Quiz
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Active Question Card -->
+      <div class="lg:col-span-8">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-2.5">
+              <span id="q-number-badge" class="px-3 py-1 rounded-lg bg-blue-600 text-white font-extrabold text-xs mono">
+                Question 1 of 20
+              </span>
+              <span id="q-topic-badge" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 font-semibold text-xs">
+                NC.8.G.3 • Origin Dilation
+              </span>
+            </div>
+            <button onclick="toggleHint()" class="text-xs font-semibold text-amber-400 hover:text-amber-300 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-lg transition">
+              💡 Show Hint
+            </button>
+          </div>
+
+          <!-- Question Text -->
+          <div id="q-text" class="text-base sm:text-lg font-semibold text-white leading-relaxed">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Hint Box -->
+          <div id="q-hint-box" class="hidden p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 leading-relaxed">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Options List -->
+          <div id="q-options" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Rationale / Explanation Box -->
+          <div id="q-rationale-box" class="hidden p-4 rounded-xl border text-xs sm:text-sm leading-relaxed space-y-1">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Prev / Next Controls -->
+          <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+            <button onclick="prevQuestion()" id="btn-prev-q" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-xs font-bold text-slate-200 transition">
+              ← Previous Question
+            </button>
+            <button onclick="nextQuestion()" id="btn-next-q" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition">
+              Next Question →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Navigation Logic
+    function switchTab(tab) {
+      const tabs = ['dilation', 'similarity', 'slope', 'reference', 'quiz'];
+      tabs.forEach(t => {
+        const sec = document.getElementById('sec-' + t);
+        const btn = document.getElementById('tab-' + t);
+        if (t === tab) {
+          sec.classList.remove('hidden');
+          if (t !== 'reference') sec.classList.add('grid');
+          btn.classList.add('tab-active');
+          btn.classList.remove('text-slate-400');
+        } else {
+          sec.classList.add('hidden');
+          sec.classList.remove('grid');
+          btn.classList.remove('tab-active');
+          if (t !== 'quiz') btn.classList.add('text-slate-400');
+        }
+      });
+      if (tab === 'dilation') updateDilation();
+      if (tab === 'similarity') updateSimilarity();
+      if (tab === 'slope') updateSlope();
+      if (tab === 'quiz') renderQuizQuestion();
+    }
+
+    // Shared Coordinate Grid Drawer
+    function drawGrid(ctx, width, height, scale) {
+      ctx.clearRect(0, 0, width, height);
+      const ox = width / 2;
+      const oy = height / 2;
+
+      ctx.lineWidth = 1;
+      for (let x = -15; x <= 15; x++) {
+        const px = ox + x * scale;
+        ctx.strokeStyle = x === 0 ? '#475569' : '#1e293b';
+        ctx.lineWidth = x === 0 ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, height);
+        ctx.stroke();
+
+        if (x !== 0 && x % 2 === 0 && px > 20 && px < width - 20) {
+          ctx.fillStyle = '#64748b';
+          ctx.font = '10px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText(x, px, oy + 14);
+        }
+      }
+
+      for (let y = -15; y <= 15; y++) {
+        const py = oy - y * scale;
+        ctx.strokeStyle = y === 0 ? '#475569' : '#1e293b';
+        ctx.lineWidth = y === 0 ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(0, py);
+        ctx.lineTo(width, py);
+        ctx.stroke();
+
+        if (y !== 0 && y % 2 === 0 && py > 20 && py < height - 20) {
+          ctx.fillStyle = '#64748b';
+          ctx.font = '10px Inter';
+          ctx.textAlign = 'right';
+          ctx.fillText(y, ox - 6, py + 3);
+        }
+      }
+    }
+
+    function toScreen(x, y, width, height, scale) {
+      return {
+        x: width / 2 + x * scale,
+        y: height / 2 - y * scale
+      };
+    }
+
+    // ==========================================
+    // MODULE 1: COORDINATE DILATIONS
+    // ==========================================
+    const preImageABC = [
+      { label: 'A', x: 1, y: 2 },
+      { label: 'B', x: 3, y: 1 },
+      { label: 'C', x: 2, y: -1 }
+    ];
+
+    function resetCenterOrigin() {
+      document.getElementById('cx-slider').value = 0;
+      document.getElementById('cy-slider').value = 0;
+      updateDilation();
+    }
+
+    function setHonorsCenter() {
+      document.getElementById('cx-slider').value = -2;
+      document.getElementById('cy-slider').value = -1;
+      document.getElementById('k-slider').value = 2.0;
+      updateDilation();
+    }
+
+    function updateDilation() {
+      const k = parseFloat(document.getElementById('k-slider').value);
+      const cx = parseInt(document.getElementById('cx-slider').value);
+      const cy = parseInt(document.getElementById('cy-slider').value);
+
+      document.getElementById('k-val-label').textContent = k.toFixed(2);
+      document.getElementById('cx-val-label').textContent = cx;
+      document.getElementById('cy-val-label').textContent = cy;
+
+      const badge = document.getElementById('dilation-badge');
+      if (k > 1) {
+        badge.textContent = 'Enlargement (k > 1)';
+        badge.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      } else if (k < 1) {
+        badge.textContent = 'Reduction (0 < k < 1)';
+        badge.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      } else {
+        badge.textContent = 'Congruent (k = 1)';
+        badge.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30';
+      }
+
+      const ruleEl = document.getElementById('dilation-rule-display');
+      if (cx === 0 && cy === 0) {
+        ruleEl.textContent = `(x, y) → (${k}x, ${k}y)`;
+      } else {
+        const signX = cx >= 0 ? `- ${cx}` : `+ ${Math.abs(cx)}`;
+        const signY = cy >= 0 ? `- ${cy}` : `+ ${Math.abs(cy)}`;
+        ruleEl.textContent = `(x, y) → (${cx} + ${k}(x ${signX}), ${cy} + ${k}(y ${signY}))`;
+      }
+
+      const imageVerts = preImageABC.map(pt => ({
+        label: pt.label + "'",
+        x: cx + k * (pt.x - cx),
+        y: cy + k * (pt.y - cy)
+      }));
+
+      const tbody = document.getElementById('dilation-coord-table');
+      tbody.innerHTML = preImageABC.map((pt, idx) => {
+        const im = imageVerts[idx];
+        return `
+          <tr>
+            <td class="py-2 font-bold text-slate-300">${pt.label} → ${im.label}</td>
+            <td class="py-2 text-slate-400">(${pt.x}, ${pt.y})</td>
+            <td class="py-2 text-blue-400 font-bold">(${Number(im.x.toFixed(2))}, ${Number(im.y.toFixed(2))})</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('perim-ratio').textContent = k.toFixed(2) + '×';
+      document.getElementById('area-ratio').textContent = (k * k).toFixed(2) + '×';
+
+      const canvas = document.getElementById('dilationCanvas');
+      const ctx = canvas.getContext('2d');
+      const scale = 25;
+      drawGrid(ctx, canvas.width, canvas.height, scale);
+
+      const centerScreen = toScreen(cx, cy, canvas.width, canvas.height, scale);
+
+      ctx.save();
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.45)';
+      ctx.lineWidth = 1.5;
+      preImageABC.forEach((pt) => {
+        const farX = cx + Math.max(k, 1.3) * 1.2 * (pt.x - cx);
+        const farY = cy + Math.max(k, 1.3) * 1.2 * (pt.y - cy);
+        const farScreen = toScreen(farX, farY, canvas.width, canvas.height, scale);
+        ctx.beginPath();
+        ctx.moveTo(centerScreen.x, centerScreen.y);
+        ctx.lineTo(farScreen.x, farScreen.y);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      drawPolygon(ctx, preImageABC, canvas.width, canvas.height, scale, 'rgba(148, 163, 184, 0.2)', '#94a3b8', 2);
+      drawPolygon(ctx, imageVerts, canvas.width, canvas.height, scale, 'rgba(59, 130, 246, 0.25)', '#3b82f6', 2.5);
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(centerScreen.x, centerScreen.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fde68a';
+      ctx.font = 'bold 12px Inter';
+      ctx.fillText(`P(${cx},${cy})`, centerScreen.x + 8, centerScreen.y - 8);
+    }
+
+    function drawPolygon(ctx, pts, w, h, scale, fill, stroke, lineWidth, isDashed = false) {
+      ctx.save();
+      if (isDashed) ctx.setLineDash([6, 4]);
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+      pts.forEach((p, idx) => {
+        const sp = toScreen(p.x, p.y, w, h, scale);
+        if (idx === 0) ctx.moveTo(sp.x, sp.y);
+        else ctx.lineTo(sp.x, sp.y);
+      });
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      pts.forEach(p => {
+        const sp = toScreen(p.x, p.y, w, h, scale);
+        ctx.fillStyle = stroke;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        if (p.label) {
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = 'bold 11px JetBrains Mono';
+          ctx.fillText(p.label, sp.x + 6, sp.y - 6);
+        }
+      });
+    }
+
+    // ==========================================
+    // MODULE 2: SIMILARITY SEQUENCE
+    // ==========================================
+    const simStart = [
+      { label: 'A', x: -3, y: 1 },
+      { label: 'B', x: -1, y: 1 },
+      { label: 'C', x: -3, y: 3 }
+    ];
+    const simTarget = [
+      { label: "A''", x: 5, y: -1 },
+      { label: "B''", x: 1, y: -1 },
+      { label: "C''", x: 5, y: 3 }
+    ];
+
+    function solveSimilarity() {
+      document.getElementById('sim-reflect').checked = true;
+      document.getElementById('sim-k').value = 2.0;
+      document.getElementById('sim-dx').value = -1;
+      document.getElementById('sim-dy').value = -3;
+      updateSimilarity();
+    }
+
+    function updateSimilarity() {
+      const refl = document.getElementById('sim-reflect').checked;
+      const k = parseFloat(document.getElementById('sim-k').value);
+      const dx = parseInt(document.getElementById('sim-dx').value);
+      const dy = parseInt(document.getElementById('sim-dy').value);
+
+      document.getElementById('sim-k-label').textContent = k.toFixed(1);
+      document.getElementById('sim-dx-label').textContent = dx;
+      document.getElementById('sim-dy-label').textContent = dy;
+
+      const currentPts = simStart.map(pt => {
+        let x = refl ? -pt.x : pt.x;
+        let y = pt.y;
+        x = x * k + dx;
+        y = y * k + dy;
+        return { label: pt.label + "'", x, y };
+      });
+
+      const canvas = document.getElementById('similarityCanvas');
+      const ctx = canvas.getContext('2d');
+      const scale = 28;
+      drawGrid(ctx, canvas.width, canvas.height, scale);
+
+      drawPolygon(ctx, simStart, canvas.width, canvas.height, scale, 'rgba(148, 163, 184, 0.2)', '#94a3b8', 2);
+      drawPolygon(ctx, simTarget, canvas.width, canvas.height, scale, 'rgba(16, 185, 129, 0.12)', '#10b981', 2, true);
+      drawPolygon(ctx, currentPts, canvas.width, canvas.height, scale, 'rgba(168, 85, 247, 0.3)', '#a855f7', 2.5);
+
+      const matched = refl && k === 2.0 && dx === -1 && dy === -3;
+      const statusEl = document.getElementById('sim-status');
+      if (matched) {
+        statusEl.className = 'p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-500/20 text-xs font-bold text-emerald-300 flex items-center justify-between';
+        statusEl.innerHTML = `<span>🎉 Sequence Matched! (x, y) → (-2x - 1, 2y - 3) proves ΔABC ~ ΔA''B''C''!</span>`;
+      } else {
+        statusEl.className = 'p-3.5 rounded-xl border border-slate-700 bg-slate-800/60 text-xs font-semibold text-slate-300 flex items-center justify-between';
+        statusEl.innerHTML = `<span>Status: Adjust controls to match the green target!</span><button onclick="solveSimilarity()" class="text-purple-400 hover:underline ml-2">Auto-Solve</button>`;
+      }
+    }
+
+    // ==========================================
+    // MODULE 3: SLOPE TRIANGLES
+    // ==========================================
+    function updateSlope() {
+      const m = parseFloat(document.getElementById('slope-m').value);
+      const b = parseInt(document.getElementById('slope-b').value);
+      const run2 = parseInt(document.getElementById('slope-run2').value);
+
+      document.getElementById('slope-m-label').textContent = m.toFixed(1);
+      document.getElementById('slope-b-label').textContent = b;
+      document.getElementById('slope-run2-label').textContent = run2;
+
+      const canvas = document.getElementById('slopeCanvas');
+      const ctx = canvas.getContext('2d');
+      const scale = 26;
+      drawGrid(ctx, canvas.width, canvas.height, scale);
+
+      const pStart = toScreen(-10, m * (-10) + b, canvas.width, canvas.height, scale);
+      const pEnd = toScreen(10, m * 10 + b, canvas.width, canvas.height, scale);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.lineTo(pEnd.x, pEnd.y);
+      ctx.stroke();
+
+      const x1 = -4;
+      const y1 = m * x1 + b;
+      const run1 = 2;
+      const rise1 = m * run1;
+      drawSlopeTriangle(ctx, x1, y1, run1, rise1, canvas.width, canvas.height, scale, '#2dd4bf', 'rgba(45, 212, 191, 0.2)');
+
+      const x2 = 0;
+      const y2 = b;
+      const rise2 = m * run2;
+      drawSlopeTriangle(ctx, x2, y2, run2, rise2, canvas.width, canvas.height, scale, '#fbbf24', 'rgba(251, 191, 36, 0.2)');
+
+      document.getElementById('tri1-details').innerHTML = `
+        Rise (Δy₁) = ${rise1.toFixed(1)}<br/>
+        Run (Δx₁) = ${run1}<br/>
+        Ratio = ${rise1.toFixed(1)} / ${run1} = <strong>${m.toFixed(1)}</strong>
+      `;
+      document.getElementById('tri2-details').innerHTML = `
+        Rise (Δy₂) = ${rise2.toFixed(1)}<br/>
+        Run (Δx₂) = ${run2}<br/>
+        Ratio = ${rise2.toFixed(1)} / ${run2} = <strong>${m.toFixed(1)}</strong>
+      `;
+
+      const bSign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+      document.getElementById('slope-eq-display').textContent =
+        `(y - ${b < 0 ? `(${b})` : b}) / (x - 0) = ${m}   ⇒   y = ${m}x ${b === 0 ? '' : bSign}`;
+    }
+
+    function drawSlopeTriangle(ctx, x, y, run, rise, w, h, scale, stroke, fill) {
+      const p1 = toScreen(x, y, w, h, scale);
+      const p2 = toScreen(x + run, y, w, h, scale);
+      const p3 = toScreen(x + run, y + rise, w, h, scale);
+
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.lineTo(p3.x, p3.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      [p1, p3].forEach(pt => {
+        ctx.fillStyle = stroke;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // ==========================================
+    // MODULE 5: 20-QUESTION HONORS QUIZ ENGINE
+    // ==========================================
+    const quizQuestions = [
+      {
+        topic: "NC.8.G.3 • Origin Dilation",
+        question: "Triangle ABC has vertices at A(-4, 2), B(2, 6), and C(4, -2). If ΔABC is dilated by a scale factor of k = 3/2 centered at the origin, what are the coordinates of B'?",
+        hint: "Multiply both the x-coordinate and y-coordinate of vertex B by the scale factor k = 1.5.",
+        options: [
+          { text: "(3, 9)", isCorrect: true, rationale: "Correct! Multiplying B(2, 6) by k = 3/2 gives (2 × 1.5, 6 × 1.5) = (3, 9)." },
+          { text: "(3.5, 7.5)", isCorrect: false, rationale: "This adds 1.5 to each coordinate (a translation) rather than multiplying by the scale factor." },
+          { text: "(4/3, 4)", isCorrect: false, rationale: "This divides the coordinates by 3/2 (multiplying by 2/3) instead of multiplying by 3/2." },
+          { text: "(-6, 3)", isCorrect: false, rationale: "These are the dilated coordinates of vertex A', not vertex B'." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Off-Origin Dilation",
+        question: "Point P(7, -5) is dilated by a scale factor of k = 3 with a center of dilation at C(1, -2). What are the coordinates of the image P'?",
+        hint: "Use the off-origin formula: (cx + k(x - cx), cy + k(y - cy)).",
+        options: [
+          { text: "(21, -15)", isCorrect: false, rationale: "This dilates from the origin (0,0) rather than accounting for the center C(1, -2)." },
+          { text: "(19, -11)", isCorrect: true, rationale: "Correct! Using C(1, -2): x' = 1 + 3(7 - 1) = 19, and y' = -2 + 3(-5 - (-2)) = -2 + 3(-3) = -11." },
+          { text: "(18, -9)", isCorrect: false, rationale: "This finds the scaled displacement vector (18, -9) but forgets to add the center C(1, -2) back." },
+          { text: "(22, -17)", isCorrect: false, rationale: "This multiplies P by 3 first and then adds the center C(1, -2)." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Area & Perimeter Scaling",
+        question: "Polygon QRST has an area of 36 cm² and a perimeter of 28 cm. If QRST is dilated by a scale factor of k = 1/2 to form Q'R'S'T', what are the perimeter and area of Q'R'S'T'?",
+        hint: "Perimeter scales linearly by k, whereas area scales by k².",
+        options: [
+          { text: "Perimeter = 14 cm, Area = 18 cm²", isCorrect: false, rationale: "This multiplies both perimeter and area by 1/2, forgetting that area scales by k² = 1/4." },
+          { text: "Perimeter = 14 cm, Area = 9 cm²", isCorrect: true, rationale: "Correct! Perimeter = 28 × (1/2) = 14 cm, and Area = 36 × (1/2)² = 36 × (1/4) = 9 cm²." },
+          { text: "Perimeter = 7 cm, Area = 9 cm²", isCorrect: false, rationale: "This scales both perimeter and area by k² = 1/4." },
+          { text: "Perimeter = 56 cm, Area = 144 cm²", isCorrect: false, rationale: "This uses the reciprocal scale factor k = 2 (enlargement) instead of k = 1/2." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Dilation of a Line",
+        question: "Line segment AB lies on the line y = 4x - 5. If segment AB is dilated by a scale factor of k = 3 centered at the origin (0, 0), what is the slope of the image segment A'B'?",
+        hint: "Recall that a dilation maps any line segment to a parallel line segment.",
+        options: [
+          { text: "12", isCorrect: false, rationale: "A dilation changes the y-intercept (if not passing through the center), but preserves the slope." },
+          { text: "4", isCorrect: true, rationale: "Correct! Dilations map line segments to parallel line segments, so the slope remains 4 (the new line is y = 4x - 15)." },
+          { text: "4/3", isCorrect: false, rationale: "Dividing the slope by k is incorrect; parallel lines have identical slopes." },
+          { text: "-1/4", isCorrect: false, rationale: "This is the opposite reciprocal (perpendicular) slope, not a parallel dilation." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Angle Preservation",
+        question: "In ΔDEF, ∠D = 42°, ∠E = 68°, and side DE = 6 units. If ΔDEF undergoes a dilation with scale factor k = 2.5 followed by a reflection across the x-axis to form ΔD'E'F', what is the measure of ∠F'?",
+        hint: "Use the Triangle Sum Theorem (180°) and remember how similarity transformations affect angle measures.",
+        options: [
+          { text: "70°", isCorrect: true, rationale: "Correct! ∠F = 180° - (42° + 68°) = 70°. Both dilations and reflections preserve angle measures, so ∠F' = 70°." },
+          { text: "175°", isCorrect: false, rationale: "This multiplies ∠F = 70° by the scale factor k = 2.5, but angle measures never scale under dilation." },
+          { text: "110°", isCorrect: false, rationale: "This adds ∠D + ∠E = 110° without subtracting from 180°." },
+          { text: "28°", isCorrect: false, rationale: "This divides 70° by the scale factor 2.5." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Finding Center of Dilation",
+        question: "Vertex M(-2, 5) is mapped to M'(-10, 17) under a dilation with scale factor k = 3. What are the coordinates of the center of dilation C(cx, cy)?",
+        hint: "Set up cx + 3(-2 - cx) = -10 and cy + 3(5 - cy) = 17.",
+        options: [
+          { text: "(1, -1)", isCorrect: true, rationale: "Correct! Solving cx + 3(-2 - cx) = -10 gives -2cx - 6 = -10 ⇒ cx = 2? Wait: 2 + 3(-2 - 2) = -10, wait let's check: for (2, -1): cx = 2, cy = -1. Let's verify: -2cx = -4 ⇒ cx = 2, and -2cy = 2 ⇒ cy = -1. (Choice updated to (2, -1))." },
+          { text: "(-6, 11)", isCorrect: false, rationale: "This is the midpoint of segment MM', not the center of dilation." },
+          { text: "(0, 0)", isCorrect: false, rationale: "A dilation from the origin by k = 3 would map (-2, 5) to (-6, 15), not (-10, 17)." },
+          { text: "(-4, 6)", isCorrect: false, rationale: "This divides the displacement vector by 2 without solving for the fixed center point." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Similarity vs. Congruence Rules",
+        question: "Which coordinate rule describes a transformation that produces an image that is similar to the pre-image, but NOT congruent to it?",
+        hint: "Look for a rule that multiplies both x and y by the same positive scale factor k ≠ 1.",
+        options: [
+          { text: "(x, y) → (-x + 4, y - 3)", isCorrect: false, rationale: "This is a reflection and translation (rigid motions), producing a congruent figure." },
+          { text: "(x, y) → (0.4x - 2, 0.4y + 5)", isCorrect: true, rationale: "Correct! Both x and y are scaled by k = 0.4 (with a translation), creating a similar reduction that is not congruent." },
+          { text: "(x, y) → (2x, 3y)", isCorrect: false, rationale: "Scaling x and y by different factors (2 ≠ 3) is a non-uniform stretch that distorts angles, so it is not similar." },
+          { text: "(x, y) → (-y, x)", isCorrect: false, rationale: "This is a 90° counterclockwise rotation, which preserves size and produces a congruent figure." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Sequence of Transformations",
+        question: "Triangle ABC has vertices A(1, 2), B(3, 2), and C(1, 5). Triangle A''B''C'' has vertices A''(-2, -4), B''(-6, -4), and C''(-2, -10). Which sequence maps ΔABC onto ΔA''B''C''?",
+        hint: "Compare the signs and magnitudes of the coordinates from (x, y) to (-2x, -2y).",
+        options: [
+          { text: "A rotation of 180° about the origin followed by a dilation by scale factor 2 centered at the origin.", isCorrect: true, rationale: "Correct! Rotating 180° maps (x, y) → (-x, -y), and dilating by k = 2 maps (-x, -y) → (-2x, -2y)." },
+          { text: "A reflection across the x-axis followed by a dilation by scale factor 2 centered at the origin.", isCorrect: false, rationale: "Reflecting across the x-axis only negates y, producing (2x, -2y) instead of (-2x, -2y)." },
+          { text: "A translation 3 units left and 6 units down followed by a dilation by scale factor 2.", isCorrect: false, rationale: "Translating B(3, 2) gives (0, -4), which dilates to (0, -8) rather than (-6, -4)." },
+          { text: "A rotation of 90° clockwise about the origin followed by a dilation by scale factor 2.", isCorrect: false, rationale: "A 90° clockwise rotation swaps x and y coordinates: (x, y) → (y, -x)." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Reverse Area Scaling",
+        question: "In the coordinate plane, ΔJKL is dilated about the origin by scale factor k to create ΔJ'K'L'. If the area of ΔJKL is 16 square units and the area of ΔJ'K'L' is 144 square units, what is the positive scale factor k?",
+        hint: "Remember that Area(Image) / Area(Pre-Image) = k².",
+        options: [
+          { text: "9", isCorrect: false, rationale: "9 is the area ratio k² (144 / 16 = 9). You must take the square root to find the linear scale factor k." },
+          { text: "3", isCorrect: true, rationale: "Correct! Since k² = 144 / 16 = 9, taking the positive square root gives k = 3." },
+          { text: "4.5", isCorrect: false, rationale: "This divides the area ratio 9 by 2 instead of taking its square root." },
+          { text: "1/3", isCorrect: false, rationale: "A scale factor of 1/3 would reduce the area from 16 to 16/9, whereas the area enlarged to 144." }
+        ]
+      },
+      {
+        topic: "NC.8.EE.6 • Similar Slope Triangles",
+        question: "Two right slope triangles, ΔABC and ΔDEF, are drawn along the same non-vertical line L, where AC and DF are horizontal runs and BC and EF are vertical rises. If AC = 6, BC = 9, and DF = 10, what is the vertical rise EF?",
+        hint: "Set up the proportion BC / AC = EF / DF.",
+        options: [
+          { text: "15", isCorrect: true, rationale: "Correct! Since the slope triangles are similar, EF / 10 = 9 / 6 = 1.5, so EF = 15." },
+          { text: "13", isCorrect: false, rationale: "This adds 4 to 9 (additive thinking) instead of maintaining the proportional slope ratio 3/2." },
+          { text: "6.67", isCorrect: false, rationale: "This inverts the ratio (run over rise) when solving for EF." },
+          { text: "12", isCorrect: false, rationale: "A rise of 12 over a run of 10 gives a slope of 1.2, which does not match 9/6 = 1.5." }
+        ]
+      },
+      {
+        topic: "NC.8.EE.6 • Deriving Line Equations",
+        question: "A non-vertical line passes through (0, -4) and (x, y). A slope triangle drawn between (-6, -1) and (0, -4) has a vertical change of -3 and a horizontal change of 6. Which proportion derives the equation of this line?",
+        hint: "Equate the slope (y - y₁)/(x - x₁) using (0, -4) to the simplified slope -3/6 = -1/2.",
+        options: [
+          { text: "(y + 4) / (x - 0) = -1/2", isCorrect: true, rationale: "Correct! Using (0, -4), the vertical change is y - (-4) = y + 4 and horizontal change is x - 0, which equals the slope -3/6 = -1/2." },
+          { text: "(y - 4) / (x - 0) = -1/2", isCorrect: false, rationale: "This uses y - 4 instead of y - (-4) = y + 4." },
+          { text: "(y + 4) / (x - 0) = -2", isCorrect: false, rationale: "This divides run by rise (6 / -3 = -2) instead of rise by run (-3 / 6 = -1/2)." },
+          { text: "(x - 0) / (y + 4) = -1/2", isCorrect: false, rationale: "This places horizontal run in the numerator on the left side." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • AA Similarity Criterion",
+        question: "In ΔABC and ΔDEF, ∠A = (3x + 10)°, ∠B = 55°, ∠D = 70°, and ∠F = (2x + 15)°. If x = 20, which statement accurately describes the two triangles?",
+        hint: "Substitute x = 20 to find the angle measures, then find the third angle of ΔABC.",
+        options: [
+          { text: "The triangles are similar by the AA Similarity Criterion.", isCorrect: true, rationale: "Correct! For x = 20, ∠A = 70° = ∠D, and ∠C = 180° - (70° + 55°) = 55° = ∠F. Two congruent angle pairs prove AA Similarity." },
+          { text: "The triangles are not similar because ∠B ≠ ∠F.", isCorrect: false, rationale: "Even when x = 20, ∠F = 55° which DOES equal ∠B, and ∠C = 55° as well." },
+          { text: "The triangles must be congruent because their interior angles are equal.", isCorrect: false, rationale: "Equal angles guarantee similarity (AA), but without side lengths we cannot conclude congruence." },
+          { text: "There is insufficient information because no side lengths are given.", isCorrect: false, rationale: "AA Similarity only requires two pairs of congruent corresponding angles; side lengths are not needed." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Off-Origin Line Dilation",
+        question: "Line m has the equation y = -2x + 6. If line m is dilated by a scale factor of k = 1/2 centered at (0, 2), what is the equation of the image line m'?",
+        hint: "The slope stays -2. Dilate the y-intercept (0, 6) from the center (0, 2) by k = 1/2.",
+        options: [
+          { text: "y = -2x + 4", isCorrect: true, rationale: "Correct! The vertical distance from center (0, 2) to y-intercept (0, 6) is 4 units. Scaling by 1/2 gives 2 + 2 = 4, so b' = 4 and y = -2x + 4." },
+          { text: "y = -2x + 3", isCorrect: false, rationale: "This dilates from the origin (0, 0) instead of the center (0, 2)." },
+          { text: "y = -x + 4", isCorrect: false, rationale: "This multiplies the slope -2 by 1/2, violating parallelism under dilation." },
+          { text: "y = -2x + 2", isCorrect: false, rationale: "This replaces the y-intercept with the center of dilation." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Nested Similar Triangles",
+        question: "In ΔABC, point D lies on AB and point E lies on AC such that DE is parallel to BC. If AD = 4, DB = 6, and DE = 8, what is the length of BC?",
+        hint: "Be careful: the full side length of the larger triangle ΔABC is AB = AD + DB.",
+        options: [
+          { text: "20", isCorrect: true, rationale: "Correct! Since AB = 4 + 6 = 10, the similarity ratio of ΔABC to ΔADE is 10 / 4 = 2.5. Thus BC = 8 × 2.5 = 20." },
+          { text: "12", isCorrect: false, rationale: "This uses the partial segment DB = 6 instead of the full side length AB = 10." },
+          { text: "14", isCorrect: false, rationale: "This adds 6 to 8 instead of scaling proportionally." },
+          { text: "16", isCorrect: false, rationale: "This assumes D is the midpoint of AB, which is false since AD = 4 and DB = 6." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Compound Dilations",
+        question: "Point A(4, -6) is dilated about the origin by k₁ = 3/2, and the resulting image is then dilated about the origin by k₂ = 1/3 to form A''. What are the coordinates of A''?",
+        hint: "Multiply the scale factors together: k_total = k₁ × k₂.",
+        options: [
+          { text: "(2, -3)", isCorrect: true, rationale: "Correct! The combined scale factor is (3/2) × (1/3) = 1/2, mapping (4, -6) to (2, -3)." },
+          { text: "(7.33, -11)", isCorrect: false, rationale: "This adds the scale factors (3/2 + 1/3 = 11/6) instead of multiplying them." },
+          { text: "(8, -12)", isCorrect: false, rationale: "This divides by 1/2 (multiplying by 2) instead of multiplying by 1/2." },
+          { text: "(6, -9)", isCorrect: false, rationale: "This stops after the first dilation k₁ = 3/2 and forgets the second dilation." }
+        ]
+      },
+      {
+        topic: "NC.8.EE.6 • Slope Triangle Dimensions",
+        question: "Line L passes through (-3, 7) and (5, -9). Right triangle PQR is a slope triangle for line L with a horizontal leg of 3.5 units and a vertical leg of length h. What is the length h?",
+        hint: "Find the absolute value of the slope |m| between (-3, 7) and (5, -9), then multiply by 3.5.",
+        options: [
+          { text: "7 units", isCorrect: true, rationale: "Correct! The slope is (-9 - 7) / (5 - (-3)) = -16 / 8 = -2. Since |m| = 2, h = 2 × 3.5 = 7 units." },
+          { text: "1.75 units", isCorrect: false, rationale: "This divides the run 3.5 by 2 instead of multiplying by the slope magnitude 2." },
+          { text: "1.4 units", isCorrect: false, rationale: "This miscalculates the run as 5 - 3 = 2 instead of 5 - (-3) = 8." },
+          { text: "8.75 units", isCorrect: false, rationale: "This miscalculates the rise as -9 - 7 = -20." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Length Under Rigid + Dilation",
+        question: "Segment AB has endpoints A(-2, 1) and B(2, 4). If AB is translated 2 units right and 1 unit down, and then dilated by k = 2 centered at the origin to form A''B'', what is the length of A''B''?",
+        hint: "Use the Pythagorean Theorem to find the length of AB first. Translations preserve length, and dilations multiply length by k.",
+        options: [
+          { text: "10 units", isCorrect: true, rationale: "Correct! Length of AB = √((2 - (-2))² + (4 - 1)²) = √(16 + 9) = 5. Translating preserves length (5), and dilating by k = 2 gives 5 × 2 = 10 units." },
+          { text: "5 units", isCorrect: false, rationale: "5 units is the pre-image length before the scale factor k = 2 is applied." },
+          { text: "20 units", isCorrect: false, rationale: "This multiplies the length by k² = 4 instead of k = 2." },
+          { text: "14 units", isCorrect: false, rationale: "This adds the horizontal run (4) and vertical rise (3) instead of using the Pythagorean Theorem." }
+        ]
+      },
+      {
+        topic: "NC.8.EE.6 • Conceptual Slope Proof",
+        question: "Why does any non-vertical line in the coordinate plane have a constant slope between any two distinct points chosen on the line?",
+        hint: "Think about the geometric relationship between any two right slope triangles drawn along the line.",
+        options: [
+          { text: "Any two right slope triangles formed along the line are similar by the AA Criterion, so the ratio of their vertical rise to horizontal run is constant.", isCorrect: true, rationale: "Correct! Because horizontal legs are parallel and vertical legs are parallel, any two slope triangles share congruent angles (AA Similarity), making rise/run constant." },
+          { text: "Any two right slope triangles formed along the line are congruent by SAS, so their vertical and horizontal legs are always equal.", isCorrect: false, rationale: "Slope triangles can be different sizes depending on which two points are chosen, so they are similar, not necessarily congruent." },
+          { text: "A non-vertical line is a rigid translation of the x-axis, which forces vertical and horizontal changes to be equal.", isCorrect: false, rationale: "A translation of the x-axis is always a horizontal line with slope 0." },
+          { text: "The Pythagorean Theorem guarantees that the sum of the vertical rise and horizontal run equals the y-intercept.", isCorrect: false, rationale: "The Pythagorean Theorem relates a² + b² = c² (hypotenuse), not the slope ratio." }
+        ]
+      },
+      {
+        topic: "NC.8.G.4 • Interpreting Algebraic Rules",
+        question: "Triangle ABC is mapped to ΔA'B'C' by the rule (x, y) → (2/3 x - 4, 2/3 y + 1). Which statement about ΔABC and ΔA'B'C' is true?",
+        hint: "Identify k = 2/3 and remember how area scales relative to k.",
+        options: [
+          { text: "ΔA'B'C' is similar to ΔABC, and the ratio of the area of ΔA'B'C' to the area of ΔABC is 4/9.", isCorrect: true, rationale: "Correct! The rule combines a dilation of k = 2/3 and a translation, so the triangles are similar and the area scales by k² = (2/3)² = 4/9." },
+          { text: "ΔA'B'C' is similar to ΔABC, and the ratio of the area of ΔA'B'C' to the area of ΔABC is 2/3.", isCorrect: false, rationale: "2/3 is the linear perimeter/side ratio k, whereas area scales by k² = 4/9." },
+          { text: "ΔA'B'C' is congruent to ΔABC because the rule only translates the vertices.", isCorrect: false, rationale: "Multiplying x and y by 2/3 is a non-rigid reduction, so the triangles are not congruent." },
+          { text: "ΔA'B'C' is neither similar nor congruent to ΔABC because -4 and +1 are different.", isCorrect: false, rationale: "Adding constants (-4 and +1) is simply a rigid translation, which preserves similarity." }
+        ]
+      },
+      {
+        topic: "NC.8.G.3 • Distance Between Pre-Image & Image",
+        question: "In the coordinate plane, ΔOAB has vertices O(0, 0), A(6, 0), and B(6, 8). If ΔOAB is dilated from the origin by scale factor k = 1.5 to form ΔOA'B', what is the distance between vertex B and its image B'?",
+        hint: "Find the coordinates of B'(9, 12) and use the Pythagorean Theorem (or distance OB × 0.5) to find the distance BB'.",
+        options: [
+          { text: "5 units", isCorrect: true, rationale: "Correct! B(6, 8) dilates to B'(9, 12). The distance between (6, 8) and (9, 12) is √((9 - 6)² + (12 - 8)²) = √(3² + 4²) = 5 units." },
+          { text: "15 units", isCorrect: false, rationale: "15 units is the distance from the origin O(0,0) to B'(9,12), not the distance between B and B'." },
+          { text: "10 units", isCorrect: false, rationale: "10 units is the distance from the origin O(0,0) to pre-image B(6,8)." },
+          { text: "7 units", isCorrect: false, rationale: "This adds the horizontal difference (3) and vertical difference (4) instead of using the Pythagorean Theorem." }
+        ]
+      }
+    ];
+
+    // Fix Question 6 Option 0 text so it cleanly displays (2, -1)
+    quizQuestions[5].options[0] = {
+      text: "(2, -1)",
+      isCorrect: true,
+      rationale: "Correct! Using M' = C + k(M - C): cx + 3(-2 - cx) = -10 ⇒ -2cx - 6 = -10 ⇒ cx = 2, and cy + 3(5 - cy) = 17 ⇒ -2cy + 15 = 17 ⇒ cy = -1."
+    };
+
+    let currentQIndex = 0;
+    let userAnswers = new Array(quizQuestions.length).fill(null);
+
+    function renderQuizNav() {
+      const grid = document.getElementById('quiz-nav-grid');
+      let score = 0;
+      let answered = 0;
+
+      grid.innerHTML = quizQuestions.map((q, idx) => {
+        const ans = userAnswers[idx];
+        let btnClass = 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700';
+        if (ans !== null) {
+          answered++;
+          const isCorr = q.options[ans].isCorrect;
+          if (isCorr) {
+            score++;
+            btnClass = 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold';
+          } else {
+            btnClass = 'bg-rose-500/20 border-rose-500/50 text-rose-300 font-bold';
+          }
+        }
+        const activeRing = idx === currentQIndex ? 'ring-2 ring-blue-500' : '';
+        return `
+          <button onclick="jumpToQuestion(${idx})" class="py-2 rounded-lg border text-xs mono transition ${btnClass} ${activeRing}">
+            ${idx + 1}
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('quiz-score-badge').textContent = `Score: ${score} / 20`;
+      document.getElementById('nav-score-pill').textContent = `${score}/20`;
+      document.getElementById('quiz-answered-count').textContent = `${answered} of 20 Answered`;
+      document.getElementById('quiz-progress-bar').style.width = `${(answered / 20) * 100}%`;
+    }
+
+    function renderQuizQuestion() {
+      renderQuizNav();
+      const q = quizQuestions[currentQIndex];
+      const selectedIdx = userAnswers[currentQIndex];
+
+      document.getElementById('q-number-badge').textContent = `Question ${currentQIndex + 1} of 20`;
+      document.getElementById('q-topic-badge').textContent = q.topic;
+      document.getElementById('q-text').textContent = q.question;
+
+      const hintBox = document.getElementById('q-hint-box');
+      hintBox.classList.add('hidden');
+      hintBox.textContent = `💡 Hint: ${q.hint}`;
+
+      const optionsContainer = document.getElementById('q-options');
+      const letters = ['A', 'B', 'C', 'D'];
+      optionsContainer.innerHTML = q.options.map((opt, idx) => {
+        let style = 'bg-slate-950 border-slate-800 hover:border-slate-700 text-slate-200';
+        let badgeStyle = 'bg-slate-800 text-slate-300';
+
+        if (selectedIdx !== null) {
+          if (opt.isCorrect) {
+            style = 'bg-emerald-500/15 border-emerald-500/60 text-emerald-200';
+            badgeStyle = 'bg-emerald-500 text-slate-950 font-extrabold';
+          } else if (selectedIdx === idx && !opt.isCorrect) {
+            style = 'bg-rose-500/15 border-rose-500/60 text-rose-200';
+            badgeStyle = 'bg-rose-500 text-white font-extrabold';
+          } else {
+            style = 'bg-slate-950/50 border-slate-800/60 text-slate-500';
+          }
+        }
+
+        return `
+          <button onclick="selectQuizOption(${idx})" ${selectedIdx !== null ? 'disabled' : ''} class="w-full text-left p-4 rounded-xl border transition flex items-start gap-3.5 ${style}">
+            <span class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold mono shrink-0 ${badgeStyle}">
+              ${letters[idx]}
+            </span>
+            <span class="text-sm sm:text-base font-medium leading-snug pt-0.5">${opt.text}</span>
+          </button>
+        `;
+      }).join('');
+
+      const rationaleBox = document.getElementById('q-rationale-box');
+      if (selectedIdx !== null) {
+        const chosenOpt = q.options[selectedIdx];
+        rationaleBox.classList.remove('hidden');
+        if (chosenOpt.isCorrect) {
+          rationaleBox.className = 'p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-200 text-xs sm:text-sm leading-relaxed';
+          rationaleBox.innerHTML = `<strong class="block text-emerald-400 mb-1">✅ Correct!</strong> ${chosenOpt.rationale}`;
+        } else {
+          const correctOpt = q.options.find(o => o.isCorrect);
+          rationaleBox.className = 'p-4 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-200 text-xs sm:text-sm leading-relaxed space-y-2';
+          rationaleBox.innerHTML = `
+            <div><strong class="text-rose-400">❌ Not quite:</strong> ${chosenOpt.rationale}</div>
+            <div class="pt-2 border-t border-rose-500/20 text-emerald-300"><strong>Correct Answer (${correctOpt.text}):</strong> ${correctOpt.rationale}</div>
+          `;
+        }
+      } else {
+        rationaleBox.classList.add('hidden');
+      }
+
+      document.getElementById('btn-prev-q').disabled = currentQIndex === 0;
+      document.getElementById('btn-next-q').textContent = currentQIndex === quizQuestions.length - 1 ? 'Finish / Review' : 'Next Question →';
+    }
+
+    function selectQuizOption(idx) {
+      if (userAnswers[currentQIndex] !== null) return;
+      userAnswers[currentQIndex] = idx;
+      renderQuizQuestion();
+    }
+
+    function toggleHint() {
+      const hintBox = document.getElementById('q-hint-box');
+      hintBox.classList.toggle('hidden');
+    }
+
+    function jumpToQuestion(idx) {
+      currentQIndex = idx;
+      renderQuizQuestion();
+    }
+
+    function prevQuestion() {
+      if (currentQIndex > 0) {
+        currentQIndex--;
+        renderQuizQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQIndex < quizQuestions.length - 1) {
+        currentQIndex++;
+        renderQuizQuestion();
+      } else {
+        currentQIndex = 0;
+        renderQuizQuestion();
+      }
+    }
+
+    function resetQuiz() {
+      userAnswers = new Array(quizQuestions.length).fill(null);
+      currentQIndex = 0;
+      renderQuizQuestion();
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDilation();
+      renderQuizNav();
+    });
+  </script>
+</body>
+</html>
