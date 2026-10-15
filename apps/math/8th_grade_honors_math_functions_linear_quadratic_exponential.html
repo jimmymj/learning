@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS 8th Honors Math: Function Velocity & Growth Lab</title>
+  <meta name="description" content="Deep exploration of linear, exponential, and quadratic functions: notation, domain/range, and rates of change with interactive simulations and a 20-question mastery quiz." />
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    canvas { touch-action: none; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.65);
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff !important;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      border-color: rgba(96, 165, 250, 0.5);
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b1120; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+    .pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/90 bg-slate-900/90 backdrop-blur sticky top-0 z-40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+      
+      <!-- Left: Logo & Context -->
+      <div class="flex items-center gap-3">
+        <a href="../../index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-white border border-slate-700/80 transition-all shadow-sm group" title="Return to Learning Hub">
+          <svg class="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>Hub</span>
+        </a>
+        
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-600 to-cyan-500 flex items-center justify-center font-extrabold text-base shadow-lg shadow-blue-500/25 text-white mono">
+          f(x)
+        </div>
+        
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Function Velocity & Growth Lab</h1>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">8th Honors Math</span>
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">NC.8.F • Common Core 8.F</span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-400">Deep Exploration of Linear, Exponential & Quadratic Functions (Notation, Domain/Range, & Rate of Change)</p>
+        </div>
+      </div>
+
+      <!-- Center / Right: Navigation Tabs & Download App Action -->
+      <div class="flex items-center gap-2 flex-wrap justify-between xl:justify-end">
+        <nav class="flex flex-wrap gap-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800/90 shadow-inner">
+          <button onclick="switchTab('concept')" id="tab-concept" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+            💡 1. Concept Hub
+          </button>
+          <button onclick="switchTab('visualizer')" id="tab-visualizer" class="tab-btn tab-active px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+            📈 2. Interactive Graph Lab
+          </button>
+          <button onclick="switchTab('race')" id="tab-race" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+            🏎️ 3. The Growth Race
+          </button>
+          <button onclick="switchTab('differences')" id="tab-differences" class="tab-btn px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+            📊 4. Difference Engine
+          </button>
+          <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn text-emerald-400 hover:text-white px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10">
+            <span>🎯 5. 20-Q Mastery Challenge</span>
+            <span id="navScoreBadge" class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 mono">0/20</span>
+          </button>
+        </nav>
+
+        <button onclick="downloadStandaloneApp()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 flex items-center gap-1.5 transition" title="Save this standalone interactive tool as an offline HTML file">
+          <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span class="hidden sm:inline">Save App</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: CONCEPT HUB & HONORS DEEP DIVE       -->
+    <!-- ========================================== -->
+    <section id="sec-concept" class="hidden space-y-6">
+      
+      <!-- Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 border border-blue-900/40 p-6 sm:p-8">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wider">
+            Instructional Blueprint & Core Foundations
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">
+            Demystifying Functions: From Input Machines to Growth Velocity
+          </h2>
+          <p class="text-sm sm:text-base text-slate-300 mt-2 leading-relaxed">
+            In 8th Grade Honors Math, functions graduate from simple "<span class="mono text-blue-400">y = mx + b</span>" tables into the universal mathematical language of physical modeling, computer algorithms, and financial compounding. Master the triad: <strong>Notation</strong>, <strong>Domain & Range</strong>, and <strong>Rate of Change</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Core Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Card 1: Function Notation -->
+        <div class="glass-card rounded-2xl p-5 border-t-2 border-t-blue-500 space-y-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold mono text-sm">
+            f(x)
+          </div>
+          <h3 class="text-base font-bold text-white">1. Function Notation Decoded</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <span class="mono text-blue-400 font-semibold">f(x)</span> is read as <em>"f of x"</em>. It is <strong>NOT</strong> multiplication! The symbol <span class="mono text-blue-300">f</span> is the rule's name, <span class="mono text-blue-300">x</span> is the input variable, and <span class="mono text-blue-300">f(x)</span> is the output (the dependent variable, traditionally <span class="mono">y</span>).
+          </p>
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs space-y-1.5 mono">
+            <div class="text-slate-400">Evaluating <span class="text-blue-400">f(x) = 3x² - 5</span> at <span class="text-amber-400">x = -2</span>:</div>
+            <div class="text-emerald-400">f(-2) = 3(-2)² - 5</div>
+            <div class="text-slate-300">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 3(4) - 5 = 12 - 5 = <strong>7</strong></div>
+            <div class="text-slate-400 text-[11px]">→ Coordinate on graph: <span class="text-cyan-300">(-2, 7)</span></div>
+          </div>
+          <div class="text-[11px] text-amber-300/90 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
+            ⚠️ <strong>Common Pitfall:</strong> Solving for $x$ vs evaluating! If $f(x) = 19$, you set the expression equal to 19. If asked for $f(19)$, you plug 19 into $x$!
+          </div>
+        </div>
+
+        <!-- Card 2: Domain & Range -->
+        <div class="glass-card rounded-2xl p-5 border-t-2 border-t-emerald-500 space-y-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mono text-sm">
+            [x,y]
+          </div>
+          <h3 class="text-base font-bold text-white">2. Domain & Range Boundaries</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            <strong>Domain</strong> represents all permissible <em>independent inputs</em> ($x$-axis span). <strong>Range</strong> represents all resulting <em>dependent outputs</em> ($y$-axis span).
+          </p>
+          <div class="space-y-2 text-xs">
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-emerald-400 font-semibold">Continuous Domains:</span> Real-world physics (time, temperature, height). Represented with inequalities ($0 \le t \le 6$) or interval notation.
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-amber-400 font-semibold">Discrete Domains:</span> Countable objects (people, bus tickets, number of game tokens). Values jump: $\{0, 1, 2, 3, \dots\}$.
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-purple-400 font-semibold">Asymptotic Ranges:</span> Exponential $f(x) = a \cdot b^x$ with $a > 0$ approaches $y = 0$ but never touches it $\Rightarrow$ Range is $y > 0$.
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Rate of Change -->
+        <div class="glass-card rounded-2xl p-5 border-t-2 border-t-purple-500 space-y-3">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold mono text-sm">
+            Δy/Δx
+          </div>
+          <h3 class="text-base font-bold text-white">3. Rate of Change Triad</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Rate of change answers: <em>"How fast does output change relative to input?"</em> Average rate of change on interval $[a, b]$ is the slope of the secant line:
+          </p>
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-center mono text-xs text-cyan-300 font-semibold">
+            Average Rate of Change = [f(b) - f(a)] / (b - a)
+          </div>
+          <div class="space-y-1.5 text-[11px] text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span><strong>Linear:</strong> Constant slope everywhere ($\Delta y / \Delta x = m$).</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span><strong>Quadratic:</strong> Rate of change changes linearly (constant 2nd differences).</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+              <span><strong>Exponential:</strong> Rate of change is proportional to output (constant ratio).</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Comparison Cheat Matrix -->
+      <div class="glass-card rounded-2xl p-6 border border-slate-800 overflow-x-auto">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <span>⚡</span> Function Family Master Comparison (Honors Reference)
+        </h3>
+        <table class="w-full text-left text-xs border-collapse min-w-[650px]">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+              <th class="py-2.5 px-3">Function Family</th>
+              <th class="py-2.5 px-3">Standard Algebraic Form</th>
+              <th class="py-2.5 px-3">Growth Behavior</th>
+              <th class="py-2.5 px-3">Differences Pattern</th>
+              <th class="py-2.5 px-3">Real-World Honors Model</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 text-slate-300">
+            <tr class="hover:bg-slate-900/50">
+              <td class="py-3 px-3 font-bold text-emerald-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Linear
+              </td>
+              <td class="py-3 px-3 mono text-cyan-300">f(x) = mx + b</td>
+              <td class="py-3 px-3">Adds constant amount each step ($+m$)</td>
+              <td class="py-3 px-3"><span class="text-emerald-300 font-semibold">1st Differences</span> are constant</td>
+              <td class="py-3 px-3 text-slate-400">Constant velocity, taxi fares, flat rates</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="py-3 px-3 font-bold text-amber-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span> Quadratic
+              </td>
+              <td class="py-3 px-3 mono text-cyan-300">f(x) = ax² + bx + c</td>
+              <td class="py-3 px-3">Accelerating growth; symmetrical parabola around vertex</td>
+              <td class="py-3 px-3"><span class="text-amber-300 font-semibold">2nd Differences</span> are constant ($2a$)</td>
+              <td class="py-3 px-3 text-slate-400">Gravity & projectile arcs ($h = -16t² + v_0t + h_0$), area expansion</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50">
+              <td class="py-3 px-3 font-bold text-purple-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span> Exponential
+              </td>
+              <td class="py-3 px-3 mono text-cyan-300">f(x) = a · bˣ</td>
+              <td class="py-3 px-3">Multiplies by constant ratio each step ($\times b$)</td>
+              <td class="py-3 px-3"><span class="text-purple-300 font-semibold">Ratios</span> between outputs are constant ($b$)</td>
+              <td class="py-3 px-3 text-slate-400">Viral epidemics, compound interest, radioactive half-life</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: INTERACTIVE GRAPH LAB               -->
+    <!-- ========================================== -->
+    <section id="sec-visualizer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: Controls & Dynamic Telemetry -->
+      <div class="lg:col-span-5 space-y-4">
+        
+        <!-- Lab Header Box -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              Active Curve & Parameter Engine
+            </h2>
+            <span id="activeModelBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Linear: f(x) = mx + b
+            </span>
+          </div>
+
+          <!-- Function Selector Radios -->
+          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs font-semibold">
+            <button onclick="selectCurveFamily('linear')" id="btn-family-linear" class="py-2 px-2 rounded-lg bg-emerald-600 text-white shadow transition text-center">
+              Linear
+            </button>
+            <button onclick="selectCurveFamily('quadratic')" id="btn-family-quadratic" class="py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center">
+              Quadratic
+            </button>
+            <button onclick="selectCurveFamily('exponential')" id="btn-family-exponential" class="py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center">
+              Exponential
+            </button>
+          </div>
+
+          <!-- Linear Controls -->
+          <div id="controls-linear" class="space-y-3 pt-2">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Slope (<span class="mono text-emerald-400">m</span>)</span>
+                <span id="label-linear-m" class="mono text-emerald-400 font-bold">1.5</span>
+              </div>
+              <input id="slider-linear-m" type="range" min="-4" max="4" step="0.25" value="1.5" oninput="onParamChange()" class="w-full accent-emerald-500 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>-4.0 (Decreasing)</span>
+                <span>0.0 (Horizontal)</span>
+                <span>+4.0 (Increasing)</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">y-Intercept (<span class="mono text-emerald-400">b</span>)</span>
+                <span id="label-linear-b" class="mono text-emerald-400 font-bold">2.0</span>
+              </div>
+              <input id="slider-linear-b" type="range" min="-8" max="8" step="0.5" value="2.0" oninput="onParamChange()" class="w-full accent-emerald-500 cursor-pointer" />
+            </div>
+          </div>
+
+          <!-- Quadratic Controls -->
+          <div id="controls-quadratic" class="hidden space-y-3 pt-2">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Leading Coefficient (<span class="mono text-amber-400">a</span>)</span>
+                <span id="label-quad-a" class="mono text-amber-400 font-bold">1.0</span>
+              </div>
+              <input id="slider-quad-a" type="range" min="-2.5" max="2.5" step="0.25" value="1.0" oninput="onParamChange()" class="w-full accent-amber-500 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>Opens Down (&lt; 0)</span>
+                <span>Linear (a=0)</span>
+                <span>Opens Up (&gt; 0)</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-slate-300">Linear Term (<span class="mono text-amber-400">b</span>)</span>
+                  <span id="label-quad-b" class="mono text-amber-400 font-bold">-2.0</span>
+                </div>
+                <input id="slider-quad-b" type="range" min="-6" max="6" step="0.5" value="-2.0" oninput="onParamChange()" class="w-full accent-amber-500 cursor-pointer" />
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                  <span class="text-slate-300">Constant (<span class="mono text-amber-400">c</span>)</span>
+                  <span id="label-quad-c" class="mono text-amber-400 font-bold">-1.0</span>
+                </div>
+                <input id="slider-quad-c" type="range" min="-8" max="8" step="0.5" value="-1.0" oninput="onParamChange()" class="w-full accent-amber-500 cursor-pointer" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Exponential Controls -->
+          <div id="controls-exponential" class="hidden space-y-3 pt-2">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Initial Value (<span class="mono text-purple-400">a</span>)</span>
+                <span id="label-exp-a" class="mono text-purple-400 font-bold">1.5</span>
+              </div>
+              <input id="slider-exp-a" type="range" min="0.25" max="4.0" step="0.25" value="1.5" oninput="onParamChange()" class="w-full accent-purple-500 cursor-pointer" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Growth/Decay Factor (<span class="mono text-purple-400">b</span>)</span>
+                <span id="label-exp-b" class="mono text-purple-400 font-bold">2.0</span>
+              </div>
+              <input id="slider-exp-b" type="range" min="0.25" max="3.5" step="0.25" value="2.0" oninput="onParamChange()" class="w-full accent-purple-500 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>0.25 (Decay: 0 &lt; b &lt; 1)</span>
+                <span>1.0 (Flat)</span>
+                <span>3.5 (Rapid Growth: b &gt; 1)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Secant Rate of Change Interval Inspector -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+              <span>📐</span> Average Rate of Change Secant Tool
+            </h3>
+            <span class="text-[11px] mono text-cyan-300 font-semibold">[x₁, x₂] Interval</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Drag the interval boundaries to see the secant line connect $(x_1, f(x_1))$ to $(x_2, f(x_2))$ with real-time rise over run ($\Delta y / \Delta x$).
+          </p>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Left Endpoint (<span class="mono text-cyan-400">x₁</span>)</span>
+                <span id="label-secant-x1" class="mono text-cyan-400 font-bold">-1.0</span>
+              </div>
+              <input id="slider-secant-x1" type="range" min="-5" max="3" step="0.5" value="-1.0" oninput="onSecantChange()" class="w-full accent-cyan-500 cursor-pointer" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Right Endpoint (<span class="mono text-cyan-400">x₂</span>)</span>
+                <span id="label-secant-x2" class="mono text-cyan-400 font-bold">2.0</span>
+              </div>
+              <input id="slider-secant-x2" type="range" min="-2" max="6" step="0.5" value="2.0" oninput="onSecantChange()" class="w-full accent-cyan-500 cursor-pointer" />
+            </div>
+          </div>
+
+          <!-- Live Secant Telemetry Box -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 mono text-xs">
+            <div class="flex justify-between text-slate-400">
+              <span>P₁: <span id="telemetry-p1" class="text-white">(-1.0, 0.5)</span></span>
+              <span>P₂: <span id="telemetry-p2" class="text-white">(2.0, 5.0)</span></span>
+            </div>
+            <div class="flex justify-between border-t border-slate-800/80 pt-1 text-slate-300">
+              <span>Δx = x₂ - x₁: <strong id="telemetry-dx" class="text-cyan-400">3.0</strong></span>
+              <span>Δy = f(x₂) - f(x₁): <strong id="telemetry-dy" class="text-cyan-400">4.5</strong></span>
+            </div>
+            <div class="bg-blue-950/60 p-2 rounded border border-blue-800/50 flex items-center justify-between font-bold text-xs">
+              <span class="text-slate-300">Average Rate of Change:</span>
+              <span id="telemetry-aroc" class="text-emerald-300 text-sm">1.50</span>
+            </div>
+          </div>
+
+          <!-- Domain & Range Status Card -->
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Domain on Graph:</span>
+              <span class="mono text-emerald-400 font-semibold">x ∈ (-∞, ∞)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Mathematical Range:</span>
+              <span id="telemetry-range" class="mono text-amber-400 font-semibold">y ∈ (-∞, ∞)</span>
+            </div>
+            <div id="telemetry-special-row" class="flex justify-between border-t border-slate-800 pt-1 text-slate-400">
+              <span id="telemetry-special-label">y-Intercept:</span>
+              <span id="telemetry-special-val" class="mono text-cyan-300 font-semibold">(0, 2.0)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Coordinate Plane Canvas -->
+      <div class="lg:col-span-7 flex flex-col space-y-3">
+        
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 flex-1 flex flex-col min-h-[500px]">
+          
+          <!-- Canvas Top Bar -->
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-white mono" id="canvasFunctionDisplay">f(x) = 1.5x + 2.0</span>
+            </div>
+            
+            <div class="flex items-center gap-2 text-xs">
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white select-none">
+                <input type="checkbox" id="check-show-secant" checked onchange="drawGraph()" class="accent-cyan-500 rounded" />
+                <span>Secant Line</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white select-none">
+                <input type="checkbox" id="check-show-grid" checked onchange="drawGraph()" class="accent-blue-500 rounded" />
+                <span>Grid</span>
+              </label>
+              <button onclick="resetGraphView()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold border border-slate-700 transition">
+                Reset View
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas Container -->
+          <div class="relative flex-1 w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80 shadow-inner">
+            <canvas id="functionCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+            
+            <!-- Floating Hover Coordinates Tag -->
+            <div id="canvasHoverBadge" class="absolute top-3 left-3 bg-slate-900/90 text-cyan-300 text-[11px] px-2.5 py-1 rounded-md border border-slate-700 mono shadow pointer-events-none hidden">
+              x: 0.0, y: 0.0
+            </div>
+
+            <!-- Legend Badge Overlay -->
+            <div class="absolute bottom-3 right-3 bg-slate-900/85 backdrop-blur text-[10px] p-2 rounded-lg border border-slate-800 space-y-1 mono pointer-events-none text-slate-300">
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-1 bg-emerald-400 rounded-full inline-block"></span> Main Function f(x)</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-1 bg-cyan-400 rounded-full inline-block"></span> Secant Line (AROC)</div>
+              <div class="flex items-center gap-1.5"><span class="w-2.5 h-1 border-t border-dashed border-amber-400 rounded-full inline-block"></span> Δx / Δy Triangle</div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2 px-1">
+            <span>💡 <em>Hover over the coordinate plane to inspect exact (x, y) coordinates.</em></span>
+            <span class="mono">Scale: [-8, 8]</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: THE GREAT FUNCTION GROWTH RACE       -->
+    <!-- ========================================== -->
+    <section id="sec-race" class="hidden space-y-6">
+      
+      <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🏎️</span>
+              <h2 class="text-lg font-bold text-white">The Great Function Growth Race: Linear vs. Quadratic vs. Exponential</h2>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              Watch what happens to three competitive algorithms as input <span class="mono text-cyan-400 font-semibold">x</span> steps from 0 to 10. Who starts fast, who takes the lead in the mid-range, and who dominates in the long run?
+            </p>
+          </div>
+
+          <!-- Simulation Controls -->
+          <div class="flex items-center gap-3">
+            <button id="btnRacePlay" onclick="toggleRaceAnimation()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-600/30 transition">
+              <span id="racePlayIcon">▶</span>
+              <span id="racePlayText">Start Race</span>
+            </button>
+            <button onclick="resetRaceAnimation()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Competitor Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-emerald-500/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400">Racer L: Linear Engine</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mono">Adds +10</span>
+            </div>
+            <div class="mono text-sm font-bold text-white">L(x) = 10x + 15</div>
+            <div class="text-[11px] text-slate-400">
+              Starts with a generous head start ($15$). Steadily adds $10$ per unit of $x$.
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex justify-between items-center text-xs">
+              <span class="text-slate-400">Current Output:</span>
+              <span id="raceValL" class="mono font-bold text-emerald-400">15.0</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-amber-500/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-400">Racer Q: Quadratic Engine</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 mono">Accelerates x²</span>
+            </div>
+            <div class="mono text-sm font-bold text-white">Q(x) = 2.5x²</div>
+            <div class="text-[11px] text-slate-400">
+              Starts sluggishly from zero, but its rate of change increases linearly every step!
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex justify-between items-center text-xs">
+              <span class="text-slate-400">Current Output:</span>
+              <span id="raceValQ" class="mono font-bold text-amber-400">0.0</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-purple-500/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-400">Racer E: Exponential Engine</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 mono">Multiplies × 2</span>
+            </div>
+            <div class="mono text-sm font-bold text-white">E(x) = 2ˣ</div>
+            <div class="text-[11px] text-slate-400">
+              Starts microscopic ($2^0 = 1$), but doubles exponentially at every integer interval.
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex justify-between items-center text-xs">
+              <span class="text-slate-400">Current Output:</span>
+              <span id="raceValE" class="mono font-bold text-purple-400">1.0</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Race Track Canvas -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-300">
+            <span>Race Progress: Input <span class="mono text-cyan-400 font-bold" id="raceCurrentXLabel">x = 0.0</span> of 10.0</span>
+            <span id="raceLeaderBadge" class="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+              Leader: Racer L (Linear)
+            </span>
+          </div>
+
+          <div class="relative w-full h-64 bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
+            <canvas id="raceCanvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Step scrubber slider -->
+          <div class="pt-2">
+            <input id="sliderRaceScrubber" type="range" min="0" max="10" step="0.05" value="0" oninput="onRaceScrub(this.value)" class="w-full accent-blue-500 cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+              <span>x = 0 (Start)</span>
+              <span>x = 2.5 (Linear dominates)</span>
+              <span>x = 5.5 (Quadratic surges)</span>
+              <span>x = 8.0 (Exponential takes lead)</span>
+              <span>x = 10.0 (Exponential dominates: 1024 vs 250 vs 115)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Mathematical Insight Box -->
+        <div class="bg-blue-950/40 border border-blue-800/40 rounded-xl p-4 text-xs text-slate-300 space-y-1.5">
+          <h4 class="font-bold text-white flex items-center gap-1.5">
+            <span>🎓</span> The Honors Math Takeaway: Fundamental Theorem of Exponential Growth
+          </h4>
+          <p class="leading-relaxed">
+            No matter how high the starting value or slope of a linear function is ($10x + 15$), and no matter how steep a quadratic parabola is ($2.5x^2$), any exponential function with a base $b > 1$ (like $2^x$) will <strong>always, eventually, permanently surpass every polynomial function</strong> as $x \to \infty$. This principle is foundational in computer science complexity theory ($O(n)$ vs $O(n^2)$ vs $O(2^n)$).
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: DIFFERENCE ENGINE & TABLE TEST      -->
+    <!-- ========================================== -->
+    <section id="sec-differences" class="hidden space-y-6">
+      
+      <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-5">
+        
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>📊</span> The Difference Engine: Proving Function Type from Data Tables
+          </h2>
+          <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+            On standardized Honors exams, you are frequently given an input-output table with no formula and asked: <em>"Is this linear, quadratic, exponential, or neither?"</em> Use this live analyzer to inspect 1st differences, 2nd differences, and successive ratios.
+          </p>
+        </div>
+
+        <!-- Interactive Presets / Custom Table Tester -->
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-xs font-semibold text-slate-400">Preset Scenarios:</span>
+          <button onclick="loadDiffPreset('linear')" class="px-3 py-1.5 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-xs font-semibold border border-emerald-500/40 transition">
+            Test Linear Table (y = 4x + 3)
+          </button>
+          <button onclick="loadDiffPreset('quadratic')" class="px-3 py-1.5 rounded-lg bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 text-xs font-semibold border border-amber-500/40 transition">
+            Test Quadratic Table (y = 2x² - 3x + 1)
+          </button>
+          <button onclick="loadDiffPreset('exponential')" class="px-3 py-1.5 rounded-lg bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 text-xs font-semibold border border-purple-500/40 transition">
+            Test Exponential Table (y = 3 · 2ˣ)
+          </button>
+        </div>
+
+        <!-- Dynamic Difference Table Display -->
+        <div class="overflow-x-auto bg-slate-950 p-4 rounded-xl border border-slate-800">
+          <table class="w-full text-center text-xs border-collapse min-w-[600px]" id="diffAnalysisTable">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 text-[11px] mono uppercase">
+                <th class="py-2.5 px-3">Input (x)</th>
+                <th class="py-2.5 px-3">Output (y)</th>
+                <th class="py-2.5 px-3 text-emerald-400">1st Difference (Δy = yₖ₊₁ - yₖ)</th>
+                <th class="py-2.5 px-3 text-amber-400">2nd Difference (Δ²y)</th>
+                <th class="py-2.5 px-3 text-purple-400">Successive Ratio (yₖ₊₁ / yₖ)</th>
+              </tr>
+            </thead>
+            <tbody id="diffTableBody" class="divide-y divide-slate-800/60 mono text-slate-200">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Proof Card -->
+        <div id="diffProofCard" class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+          <div class="flex items-center gap-2">
+            <span id="diffVerdictIcon" class="text-base">✅</span>
+            <h3 id="diffVerdictTitle" class="text-sm font-bold text-white">Analysis Result: Linear Function Confirmed</h3>
+          </div>
+          <p id="diffVerdictDesc" class="text-xs text-slate-300 leading-relaxed">
+            The first differences are completely constant at <strong>+4</strong> for every step of $\Delta x = 1$. Therefore, this table represents a Linear relationship with constant rate of change (slope $m = 4$).
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: 20-QUESTION MASTERY CHALLENGE       -->
+    <!-- ========================================== -->
+    <section id="sec-quiz" class="hidden space-y-5">
+      
+      <!-- Quiz HUD Bar -->
+      <div class="glass-card rounded-2xl p-4 sm:p-5 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- Left: Status & Score -->
+        <div class="flex items-center gap-4 flex-wrap">
+          <div>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Progress</span>
+            <div class="flex items-center gap-2">
+              <span id="quizProgressNum" class="text-lg sm:text-xl font-extrabold text-white mono">Q 1 of 20</span>
+              <span id="quizCategoryBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                Notation & Evaluation
+              </span>
+            </div>
+          </div>
+
+          <div class="h-8 w-px bg-slate-800 hidden sm:block"></div>
+
+          <div>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Current Score</span>
+            <div class="flex items-center gap-2">
+              <span id="quizScoreDisplay" class="text-lg sm:text-xl font-extrabold text-emerald-400 mono">0 pts</span>
+              <span id="quizStreakDisplay" class="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 mono">
+                1.0x 🔥 Streak: 0
+              </span>
+            </div>
+          </div>
+
+          <div class="h-8 w-px bg-slate-800 hidden sm:block"></div>
+
+          <div>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Honors Rank</span>
+            <div id="quizRankDisplay" class="text-xs font-bold text-cyan-300 mt-1">
+              🌱 Function Apprentice
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Timer Controls -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400">⏱️ Timer:</span>
+            <span id="quizTimerDisplay" class="text-sm font-bold mono text-white">45s</span>
+            <button onclick="toggleTimerPause()" id="btnTimerToggle" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition">
+              Pause
+            </button>
+          </div>
+
+          <button onclick="restartQuizFlow()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Start over">
+            Restart
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Quiz Progress Bar -->
+      <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+        <div id="quizProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 h-full w-[5%] transition-all duration-300"></div>
+      </div>
+
+      <!-- Active Question Container -->
+      <div id="quizCardContainer" class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 space-y-6">
+        
+        <!-- Question Prompt Header -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span id="quizStandardTag">NC.8.F.1 • Common Core 8.F</span>
+            <span id="quizPointsWorth" class="mono text-emerald-400 font-semibold">+100 pts</span>
+          </div>
+          <h3 id="quizQuestionPrompt" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+            Loading question...
+          </h3>
+          <div id="quizVisualSnippet" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 mono text-xs text-cyan-300"></div>
+        </div>
+
+        <!-- Options Container -->
+        <div id="quizOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <!-- Dynamically populated 4 options -->
+        </div>
+
+        <!-- Explanation Card (Appears after submission) -->
+        <div id="quizExplanationCard" class="hidden p-5 rounded-2xl border transition-all space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span id="quizFeedbackIcon" class="text-lg">✅</span>
+              <span id="quizFeedbackTitle" class="font-bold text-sm">Correct! Outstanding Work.</span>
+            </div>
+            <button id="btnRetryCurrentQ" onclick="retryActiveQuestion()" class="hidden text-xs font-semibold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/30 transition">
+              🔄 Try Again
+            </button>
+          </div>
+
+          <div class="text-xs text-slate-200 leading-relaxed space-y-2" id="quizExplanationContent">
+            <!-- Step-by-step breakdown injected here -->
+          </div>
+
+          <div class="pt-2 flex justify-end">
+            <button id="btnNextQuestion" onclick="advanceToNextQuestion()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-600/30 transition">
+              <span>Next Question</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quiz Summary / Mastery Screen (Hidden until finished) -->
+      <div id="quizSummaryModal" class="hidden glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 space-y-6 text-center">
+        
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-400 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20">
+          🏆
+        </div>
+
+        <div class="space-y-1">
+          <h2 class="text-2xl font-extrabold text-white">Honors Challenge Completed!</h2>
+          <p class="text-xs text-slate-300" id="summarySubtitle">
+            You evaluated notation, determined domain/range, and mastered rates of change across all 3 function families.
+          </p>
+        </div>
+
+        <!-- Score & Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto text-left">
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold">Final Score</span>
+            <div id="summaryFinalScore" class="text-xl font-extrabold text-emerald-400 mono mt-1">1900</div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold">Accuracy</span>
+            <div id="summaryAccuracy" class="text-xl font-extrabold text-blue-400 mono mt-1">95%</div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold">Correct Count</span>
+            <div id="summaryCorrectCount" class="text-xl font-extrabold text-cyan-400 mono mt-1">19 / 20</div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold">Mastery Rank</span>
+            <div id="summaryMasteryRank" class="text-sm font-bold text-amber-300 mt-1">👑 Master of Functions</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-center gap-3 flex-wrap pt-2">
+          <button id="btnRetryMissedOnly" onclick="startRetryMissedFlow()" class="hidden px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-lg shadow-amber-600/30 transition">
+            🔄 Retry Missed Questions (<span id="missedQuestionsCount">0</span>)
+          </button>
+          <button onclick="restartQuizFlow()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition">
+            🔁 Retake Full 20-Question Challenge
+          </button>
+          <button onclick="switchTab('visualizer')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition">
+            📈 Return to Graph Lab
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950/80 py-6 mt-12 text-slate-500 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+        <span>LearningHub STEM Suite • Charlotte-Mecklenburg Schools 8th Honors Math</span>
+      </div>
+      <div>
+        <span>NC Standards: NC.8.F.1 • NC.8.F.2 • NC.8.F.3 • NC.8.F.4 • NC.8.F.5</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT APPLICATION CORE                -->
+  <!-- ========================================== -->
+  <script>
+    /* -------------------------------------------------------------
+       STATE MANAGEMENT & GLOBAL VARIABLES
+    ------------------------------------------------------------- */
+    let currentTab = 'visualizer';
+    let currentCurveFamily = 'linear'; // 'linear', 'quadratic', 'exponential'
+
+    // Curve Parameters
+    let params = {
+      linear: { m: 1.5, b: 2.0 },
+      quadratic: { a: 1.0, b: -2.0, c: -1.0 },
+      exponential: { a: 1.5, b: 2.0 }
+    };
+
+    // Secant Tool Boundaries
+    let secant = { x1: -1.0, x2: 2.0 };
+
+    // Canvas Coordinate Window
+    const view = {
+      xMin: -8,
+      xMax: 8,
+      yMin: -8,
+      yMax: 8
+    };
+
+    /* -------------------------------------------------------------
+       20 HONORS QUESTIONS WITH STEP-BY-STEP EXPLANATIONS
+    ------------------------------------------------------------- */
+    const QUESTIONS = [
+      // 1. Notation & Evaluation
+      {
+        id: 1,
+        category: "Function Notation",
+        standard: "NC.8.F.1 • Common Core 8.F.1",
+        prompt: "Given the linear function f(x) = -3x + 7, what is the value of f(-4)?",
+        snippet: "f(x) = -3x + 7 \nFind f(-4)",
+        options: [
+          { text: "19", correct: true },
+          { text: "-5", correct: false },
+          { text: "5", correct: false },
+          { text: "-19", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Replace the input variable $x$ with the specified value $(-4)$:<br>
+          <code class="text-cyan-300">f(-4) = -3(-4) + 7</code><br>
+          <strong>Step 2:</strong> Multiply negative by negative: $-3 \\times -4 = +12$.<br>
+          <strong>Step 3:</strong> Add 7: $12 + 7 = 19$.<br>
+          <em class="text-amber-300">Common Pitfall:</em> Forgetting the negative sign rule ($-3 \\times -4 \\neq -12$). The corresponding coordinate on the graph is $(-4, 19)$.
+        `
+      },
+      {
+        id: 2,
+        category: "Quadratic Evaluation",
+        standard: "NC.8.F.1 • Quadratic Foundation",
+        prompt: "If g(x) = 2x² - 5x + 1, evaluate g(3).",
+        snippet: "g(x) = 2x² - 5x + 1 \nCalculate g(3)",
+        options: [
+          { text: "4", correct: true },
+          { text: "10", correct: false },
+          { text: "14", correct: false },
+          { text: "22", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Apply Order of Operations (PEMDAS). Substitute $x = 3$:<br>
+          <code class="text-cyan-300">g(3) = 2(3)² - 5(3) + 1</code><br>
+          <strong>Step 2:</strong> Evaluate exponent first: $3^2 = 9$. Then multiply: $2(9) = 18$.<br>
+          <strong>Step 3:</strong> Compute linear term: $-5(3) = -15$.<br>
+          <strong>Step 4:</strong> Combine all terms: $18 - 15 + 1 = 4$.
+        `
+      },
+      {
+        id: 3,
+        category: "Exponential Evaluation",
+        standard: "NC.8.F.1 • Exponential Foundation",
+        prompt: "Given the exponential function h(x) = 5 · 2ˣ, evaluate h(4).",
+        snippet: "h(x) = 5 · 2ˣ \nCalculate h(4)",
+        options: [
+          { text: "80", correct: true },
+          { text: "40", correct: false },
+          { text: "10,000", correct: false },
+          { text: "160", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Substitute $x = 4$: <code class="text-cyan-300">h(4) = 5 · (2⁴)</code>.<br>
+          <strong>Step 2:</strong> Calculate the power: $2^4 = 2 \\times 2 \\times 2 \\times 2 = 16$.<br>
+          <strong>Step 3:</strong> Multiply by the initial scale factor $5$: $5 \\times 16 = 80$.<br>
+          <em class="text-amber-300">Warning:</em> Do NOT multiply $5 \\times 2 = 10$ first and then compute $10^4 = 10,000$! The exponent belongs exclusively to the base $2$.
+        `
+      },
+      {
+        id: 4,
+        category: "Solving for Input",
+        standard: "NC.8.F.1 • Input vs Output",
+        prompt: "If f(x) = 4x - 9 and f(x) = 15, what is the value of the input x?",
+        snippet: "f(x) = 4x - 9 \nSolve for x when f(x) = 15",
+        options: [
+          { text: "x = 6", correct: true },
+          { text: "x = 51", correct: false },
+          { text: "x = 1.5", correct: false },
+          { text: "x = 24", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Notice that $15$ is the OUTPUT $f(x)$, not the input $x$.<br>
+          <strong>Step 2:</strong> Set up the linear equation: <code class="text-cyan-300">4x - 9 = 15</code>.<br>
+          <strong>Step 3:</strong> Add 9 to both sides: $4x = 24$.<br>
+          <strong>Step 4:</strong> Divide by 4: $x = 6$. Check: $f(6) = 4(6) - 9 = 24 - 9 = 15$.
+        `
+      },
+      // 2. Domain & Range
+      {
+        id: 5,
+        category: "Domain & Range",
+        standard: "NC.8.F.1 • Domain and Range",
+        prompt: "What is the mathematical domain and range of the linear function f(x) = ⅔x - 5 defined over all real numbers?",
+        snippet: "f(x) = (2/3)x - 5",
+        options: [
+          { text: "Domain: All Real Numbers; Range: All Real Numbers", correct: true },
+          { text: "Domain: x ≥ 0; Range: y ≥ -5", correct: false },
+          { text: "Domain: All Integers; Range: All Integers", correct: false },
+          { text: "Domain: x ≤ 5; Range: y ≥ 0", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Any non-vertical straight line extends infinitely left and right without breaks or holes. Thus, <strong>Domain = all real numbers</strong> ($-\\infty < x < \\infty$).<br>
+          <strong>Step 2:</strong> Because the slope $m = 2/3 \\neq 0$, the line rises infinitely upward and descends infinitely downward. Thus, <strong>Range = all real numbers</strong> ($-\\infty < y < \\infty$).
+        `
+      },
+      {
+        id: 6,
+        category: "Domain & Range (Quadratic)",
+        standard: "NC.8.F.1 • Maximums & Range",
+        prompt: "A drone's height in meters is given by h(t) = -5t² + 20t + 25. The vertex occurs at t = 2 seconds, where h(2) = 45 meters. What is the maximum height, and what is the theoretical range of h(t) over all real numbers t?",
+        snippet: "h(t) = -5t² + 20t + 25 \nVertex at (2, 45)",
+        options: [
+          { text: "Max height: 45 m; Range: y ≤ 45", correct: true },
+          { text: "Max height: 25 m; Range: y ≥ 25", correct: false },
+          { text: "Max height: 45 m; Range: All Real Numbers", correct: false },
+          { text: "Max height: 20 m; Range: 0 ≤ y ≤ 20", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> The leading coefficient is $a = -5 < 0$, which means the parabola opens downwards like an arch.<br>
+          <strong>Step 2:</strong> The highest peak (maximum) is the $y$-value of the vertex: $45$ meters.<br>
+          <strong>Step 3:</strong> Since the curve continues downward infinitely on both sides of the vertex, every $y$-value less than or equal to 45 is achieved: <strong>Range is $y \\le 45$</strong> (or $(-\\infty, 45]$).
+        `
+      },
+      {
+        id: 7,
+        category: "Domain & Range (Exponential)",
+        standard: "NC.8.F.1 • Asymptotes & Range",
+        prompt: "For the exponential function f(x) = 3 · (2)ˣ, which statement correctly describes its horizontal asymptote and range for all real inputs x?",
+        snippet: "f(x) = 3 · 2ˣ",
+        options: [
+          { text: "Asymptote at y = 0; Range is all real numbers greater than 0 (y > 0)", correct: true },
+          { text: "Asymptote at y = 3; Range is y ≥ 3", correct: false },
+          { text: "Asymptote at x = 0; Range is all real numbers", correct: false },
+          { text: "No asymptote; Range is all non-negative integers (y ≥ 0)", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> As $x$ becomes large negative (e.g. $x = -10$), $2^{-10} = \\frac{1}{1024}$, and $f(-10) = 3/1024 \\approx 0.0029$.<br>
+          <strong>Step 2:</strong> The graph gets infinitely close to the line $y = 0$ as $x \\to -\\infty$, but it NEVER touches or crosses zero.<br>
+          <strong>Step 3:</strong> Because $3 > 0$ and $2^x > 0$ for all real $x$, outputs are strictly positive: <strong>Range is $y > 0$</strong>.
+        `
+      },
+      {
+        id: 8,
+        category: "Discrete vs Continuous Domain",
+        standard: "NC.8.F.1 • Modeling Real Scenarios",
+        prompt: "An amusement park charges a $15 entry fee plus $3 per ride ticket purchased. If n represents the number of tickets, C(n) = 3n + 15. What is the appropriate domain for this situation?",
+        snippet: "C(n) = 3n + 15 \nn = number of tickets",
+        options: [
+          { text: "Non-negative integers / Whole numbers: {0, 1, 2, 3, ...}", correct: true },
+          { text: "All real numbers n ≥ 0", correct: false },
+          { text: "All integers: {..., -2, -1, 0, 1, 2, ...}", correct: false },
+          { text: "Positive rational fractions only", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> You cannot purchase a negative number of tickets ($-2$ tickets makes no sense).<br>
+          <strong>Step 2:</strong> The ticket booth does not sell fractional tickets (you cannot buy $2.7$ or $\\pi$ tickets).<br>
+          <strong>Step 3:</strong> A domain restricted to separate, isolated countable points is called a <strong>discrete domain</strong>: Whole numbers $\\{0, 1, 2, 3, \\dots\\}$.
+        `
+      },
+      // 3. Rate of Change & Slope
+      {
+        id: 9,
+        category: "Linear Rate of Change",
+        standard: "NC.8.F.2 • NC.8.F.4 • Slope as Rate",
+        prompt: "For the linear function f(x) = -¾x + 8, what is the average rate of change between x = 4 and x = 12?",
+        snippet: "f(x) = -(3/4)x + 8 \nInterval: [4, 12]",
+        options: [
+          { text: "-3/4", correct: true },
+          { text: "+3/4", correct: false },
+          { text: "-6", correct: false },
+          { text: "-4/3", correct: false }
+        ],
+        explanation: `
+          <strong>Honors Shortcut:</strong> By definition, every Linear function has a <strong>constant rate of change</strong> equal to its slope $m$. You don't even have to calculate: $m = -3/4$!<br>
+          <strong>Verification via Formula:</strong><br>
+          $f(4) = -3/4(4) + 8 = -3 + 8 = 5$<br>
+          $f(12) = -3/4(12) + 8 = -9 + 8 = -1$<br>
+          $\\text{AROC} = \\frac{-1 - 5}{12 - 4} = \\frac{-6}{8} = -\\frac{3}{4}$.
+        `
+      },
+      {
+        id: 10,
+        category: "Quadratic Rate of Change",
+        standard: "NC.8.F.2 • Average Rate of Change",
+        prompt: "Find the average rate of change of f(x) = x² + 2x on the interval [1, 4].",
+        snippet: "f(x) = x² + 2x \nInterval: [1, 4]",
+        options: [
+          { text: "7", correct: true },
+          { text: "5", correct: false },
+          { text: "21", correct: false },
+          { text: "9", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Compute the function outputs at the interval endpoints:<br>
+          $f(1) = (1)^2 + 2(1) = 1 + 2 = 3$<br>
+          $f(4) = (4)^2 + 2(4) = 16 + 8 = 24$<br>
+          <strong>Step 2:</strong> Use the Average Rate of Change formula $\\frac{\\Delta y}{\\Delta x} = \\frac{f(b) - f(a)}{b - a}$:<br>
+          <code class="text-cyan-300">AROC = (24 - 3) / (4 - 1) = 21 / 3 = 7</code>.
+        `
+      },
+      {
+        id: 11,
+        category: "Quadratic Rate Acceleration",
+        standard: "NC.8.F.2 • Honors Comparison",
+        prompt: "For the parent quadratic function f(x) = x², how does the average rate of change on [0, 2] compare to the average rate of change on [2, 4]?",
+        snippet: "f(x) = x² \nInterval A: [0, 2] vs Interval B: [2, 4]",
+        options: [
+          { text: "[0, 2] has AROC = 2, while [2, 4] has AROC = 6 (the rate of change is increasing)", correct: true },
+          { text: "Both intervals have an equal AROC of 4", correct: false },
+          { text: "[0, 2] has AROC = 4, while [2, 4] has AROC = 2 (the rate of change is decreasing)", correct: false },
+          { text: "[0, 2] has AROC = 0, while [2, 4] has AROC = 8", correct: false }
+        ],
+        explanation: `
+          <strong>Interval [0, 2]:</strong> $f(0) = 0$, $f(2) = 4$. $\\text{AROC} = \\frac{4 - 0}{2 - 0} = 2$.<br>
+          <strong>Interval [2, 4]:</strong> $f(2) = 4$, $f(4) = 16$. $\\text{AROC} = \\frac{16 - 4}{4 - 2} = \\frac{12}{2} = 6$.<br>
+          <strong>Honors Insight:</strong> Because a parabola curves upward, the secant slopes grow steeper as $x$ increases. Notice that $6 - 2 = 4$, reflecting the constant second difference of $x^2$ ($2a = 2(1) = 2$, scaled across interval length 2: $2 \\times 2 = 4$).
+        `
+      },
+      {
+        id: 12,
+        category: "Exponential Rate of Change",
+        standard: "NC.8.F.2 • Exponential Average Rate",
+        prompt: "Calculate the average rate of change of g(x) = 2ˣ on the interval [1, 5].",
+        snippet: "g(x) = 2ˣ \nInterval: [1, 5]",
+        options: [
+          { text: "7.5", correct: true },
+          { text: "6.0", correct: false },
+          { text: "8.0", correct: false },
+          { text: "30.0", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> Evaluate endpoints:<br>
+          $g(1) = 2^1 = 2$<br>
+          $g(5) = 2^5 = 32$<br>
+          <strong>Step 2:</strong> Compute change in output: $\\Delta y = 32 - 2 = 30$.<br>
+          <strong>Step 3:</strong> Compute change in input: $\\Delta x = 5 - 1 = 4$.<br>
+          <strong>Step 4:</strong> $\\text{AROC} = \\frac{30}{4} = 7.5$.
+        `
+      },
+      {
+        id: 13,
+        category: "Rate of Change in Context",
+        standard: "NC.8.F.4 • Real-World Context",
+        prompt: "A weather balloon's altitude A(t) in meters after t minutes is recorded. At t = 3 min, A(3) = 180 m. At t = 8 min, A(8) = 530 m. What is the average rate of change and what does it represent?",
+        snippet: "(3, 180) and (8, 530) \nAltitude vs Time",
+        options: [
+          { text: "70 m/min; represents average vertical ascent speed", correct: true },
+          { text: "350 m/min; represents total distance ascended", correct: false },
+          { text: "14 m/min; represents acceleration of the balloon", correct: false },
+          { text: "43.75 m/min; represents balloon's cruising altitude", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1:</strong> $\\Delta \\text{Altitude} = 530 - 180 = 350$ meters.<br>
+          <strong>Step 2:</strong> $\\Delta \\text{Time} = 8 - 3 = 5$ minutes.<br>
+          <strong>Step 3:</strong> $\\text{Rate of Change} = \\frac{350\\text{ m}}{5\\text{ min}} = 70\\text{ meters per minute}$.<br>
+          In physical terms, the change in distance over time represents average velocity (ascent speed).
+        `
+      },
+      // 4. Identifying Function Types from Tables & Patterns
+      {
+        id: 14,
+        category: "Table Differences (Linear)",
+        standard: "NC.8.F.3 • Linear vs Non-Linear",
+        prompt: "Examine the table: (0, 7), (1, 12), (2, 17), (3, 22), (4, 27). Which function family models this relationship and why?",
+        snippet: "x: 0,  1,  2,  3,  4\ny: 7, 12, 17, 22, 27",
+        options: [
+          { text: "Linear, because the 1st differences (Δy) are constant (+5)", correct: true },
+          { text: "Quadratic, because the numbers are increasing", correct: false },
+          { text: "Exponential, because the values grow by a constant multiplier", correct: false },
+          { text: "Linear, because the y-intercept is an odd number", correct: false }
+        ],
+        explanation: `
+          <strong>Check 1st differences:</strong><br>
+          $12 - 7 = 5$<br>
+          $17 - 12 = 5$<br>
+          $22 - 17 = 5$<br>
+          $27 - 22 = 5$<br>
+          Because consecutive $y$-values have a <strong>constant first difference ($+5$)</strong> for equal increments of $x$ ($+1$), the function is guaranteed to be <strong>Linear</strong> ($y = 5x + 7$).
+        `
+      },
+      {
+        id: 15,
+        category: "Table Differences (Quadratic)",
+        standard: "NC.8.F.3 • Second Differences",
+        prompt: "Examine the table: (0, 3), (1, 6), (2, 13), (3, 24), (4, 39). What type of function is this?",
+        snippet: "x: 0, 1,  2,  3,  4\ny: 3, 6, 13, 24, 39",
+        options: [
+          { text: "Quadratic, because the 2nd differences (Δ²y) are constant (+4)", correct: true },
+          { text: "Linear, because x increases by 1 each time", correct: false },
+          { text: "Exponential, because 6 / 3 = 2", correct: false },
+          { text: "Cubic, because 39 is a composite number", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1: Compute 1st differences (Δy):</strong><br>
+          $6 - 3 = 3$, $13 - 6 = 7$, $24 - 13 = 11$, $39 - 24 = 15$. (Not constant, so not linear).<br>
+          <strong>Step 2: Compute 2nd differences (Δ²y):</strong><br>
+          $7 - 3 = 4$, $11 - 7 = 4$, $15 - 11 = 4$.<br>
+          A constant second difference proves the relation is <strong>Quadratic</strong> ($y = ax^2 + bx + c$, where $2a = 4 \\Rightarrow a = 2$).
+        `
+      },
+      {
+        id: 16,
+        category: "Table Differences (Exponential)",
+        standard: "NC.8.F.3 • Constant Ratio Test",
+        prompt: "Examine the table: (0, 4), (1, 12), (2, 36), (3, 108), (4, 324). Which explicit equation represents this function?",
+        snippet: "x: 0,  1,  2,   3,   4\ny: 4, 12, 36, 108, 324",
+        options: [
+          { text: "y = 4 · (3)ˣ", correct: true },
+          { text: "y = 3 · (4)ˣ", correct: false },
+          { text: "y = 8x + 4", correct: false },
+          { text: "y = 4x² + 8", correct: false }
+        ],
+        explanation: `
+          <strong>Step 1: Test consecutive ratios:</strong><br>
+          $12 / 4 = 3$<br>
+          $36 / 12 = 3$<br>
+          $108 / 36 = 3$<br>
+          $324 / 108 = 3$<br>
+          A constant multiplier (common ratio) indicates an <strong>Exponential</strong> function $y = a \\cdot b^x$ with base $b = 3$.<br>
+          <strong>Step 2:</strong> Find the initial value $a$ at $x = 0$: $y = 4$. Therefore, $y = 4(3)^x$.
+        `
+      },
+      {
+        id: 17,
+        category: "Definition of a Function",
+        standard: "NC.8.F.1 • Mapping & Uniqueness",
+        prompt: "Which of the following relation sets does NOT represent a valid mathematical function?",
+        snippet: "Test: Exactly one output y for each input x",
+        options: [
+          { text: "{(2, 5), (3, 8), (2, 9), (4, 11)}", correct: true },
+          { text: "{(1, 4), (2, 4), (3, 4), (4, 4)}", correct: false },
+          { text: "{(-1, 2), (0, 0), (1, 2), (2, 8)}", correct: false },
+          { text: "{(0, 1), (1, 2), (2, 4), (3, 8)}", correct: false }
+        ],
+        explanation: `
+          <strong>Core Definition:</strong> A relation is a function if and only if <strong>each unique input $x$ maps to exactly one output $y$</strong>.<br>
+          In set 1: the input $x = 2$ is paired with two distinct outputs: $y = 5$ and $y = 9$! This fails the Vertical Line Test and violates the definition of a function.<br>
+          <em>Note:</em> Option 2 IS a valid function (horizontal line $y = 4$). Multiple inputs can share the same output, but one input cannot have multiple outputs!
+        `
+      },
+      // 5. Growth Race & Real-World Synthesis
+      {
+        id: 18,
+        category: "Long-Term Growth Theorem",
+        standard: "NC.8.F.3 • Honors Growth Hierarchy",
+        prompt: "Three functions are modeled for x ≥ 0:\n• L(x) = 5,000x + 20,000 (Linear)\n• Q(x) = 150x² + 500 (Quadratic)\n• E(x) = 2 · (1.4)ˣ (Exponential)\nAs x becomes arbitrarily large (x → ∞), which function will inevitably produce the largest values?",
+        snippet: "L(x) = 5000x + 20000\nQ(x) = 150x² + 500\nE(x) = 2 · (1.4)ˣ",
+        options: [
+          { text: "E(x) (Exponential)", correct: true },
+          { text: "Q(x) (Quadratic)", correct: false },
+          { text: "L(x) (Linear)", correct: false },
+          { text: "L(x) and Q(x) will remain permanently larger because their coefficients are much bigger", correct: false }
+        ],
+        explanation: `
+          <strong>The Fundamental Theorem of Growth:</strong> An exponential function with base $b > 1$ (like $1.4^x$) will <strong>always, eventually, permanently outgrow any polynomial function</strong> (whether linear, quadratic, or higher degree), no matter how massive the starting coefficients are!<br>
+          While $L(x)$ and $Q(x)$ dominate for small $x$, compounding exponential multiplication always overtakes polynomial addition as $x$ increases.
+        `
+      },
+      {
+        id: 19,
+        category: "Quadratic Symmetry & Velocity",
+        standard: "NC.8.F.5 • Qualitative Graph Features",
+        prompt: "A soccer ball is kicked. Its height in meters is h(t) = -5t² + 20t, landing at t = 4 seconds. The vertex is at t = 2, where h(2) = 20 m. What is the average rate of change on [0, 2] compared to [2, 4]?",
+        snippet: "h(t) = -5t² + 20t \nPeak at (2, 20), lands at (4, 0)",
+        options: [
+          { text: "[0, 2]: +10 m/s; [2, 4]: -10 m/s (Equal magnitude, opposite directions)", correct: true },
+          { text: "[0, 2]: +20 m/s; [2, 4]: -20 m/s", correct: false },
+          { text: "[0, 2]: +5 m/s; [2, 4]: -5 m/s", correct: false },
+          { text: "[0, 2]: +10 m/s; [2, 4]: +10 m/s", correct: false }
+        ],
+        explanation: `
+          <strong>Interval [0, 2] (Ascending):</strong><br>
+          $h(0) = 0$, $h(2) = 20$. $\\text{AROC} = \\frac{20 - 0}{2 - 0} = +10\\text{ m/s}$ (rising speed).<br>
+          <strong>Interval [2, 4] (Descending):</strong><br>
+          $h(2) = 20$, $h(4) = 0$. $\\text{AROC} = \\frac{0 - 20}{4 - 2} = \\frac{-20}{2} = -10\\text{ m/s}$ (falling speed).<br>
+          <strong>Symmetry:</strong> Because gravity decelerates the ball on the way up and accelerates it downward at the exact same rate, a parabolic trajectory is perfectly symmetrical around its vertex!
+        `
+      },
+      {
+        id: 20,
+        category: "Real-World Mathematical Modeling",
+        standard: "NC.8.F.4 • Modeling Triad",
+        prompt: "Match each real-world scenario to its mathematical function model:\n(1) Radioactive decay of an isotope losing 50% of remaining mass every hour.\n(2) Braking stopping distance of a car, which is proportional to the square of its speed (d = k · v²).\n(3) Total cost of renting a cargo van for $29.95 plus $0.85 per mile driven.",
+        snippet: "1: 50% loss per hour\n2: Distance proportional to v²\n3: $29.95 + $0.85/mile",
+        options: [
+          { text: "(1) Exponential, (2) Quadratic, (3) Linear", correct: true },
+          { text: "(1) Linear, (2) Exponential, (3) Quadratic", correct: false },
+          { text: "(1) Exponential, (2) Linear, (3) Quadratic", correct: false },
+          { text: "(1) Quadratic, (2) Exponential, (3) Linear", correct: false }
+        ],
+        explanation: `
+          • <strong>(1) Exponential Decay:</strong> Losing a fixed percentage ($50\%$) means multiplying by a factor of $0.5$ repeatedly: $M(t) = M_0(0.5)^t$.<br>
+          • <strong>(2) Quadratic:</strong> Kinetic energy is $\\frac{1}{2}mv^2$, meaning braking work and stopping distance scale with the square of speed ($v^2$): $d = kv^2$.<br>
+          • <strong>(3) Linear:</strong> Adding a fixed cost per unit ($+\\$0.85$) plus a constant starting fee is a classic linear equation: $C(m) = 0.85m + 29.95$.
+        `
+      }
+    ];
+
+    /* -------------------------------------------------------------
+       QUIZ STATE
+    ------------------------------------------------------------- */
+    let quizState = {
+      activeQIndex: 0,
+      score: 0,
+      streak: 0,
+      maxStreak: 0,
+      correctCount: 0,
+      timerSeconds: 45,
+      timerPaused: false,
+      timerInterval: null,
+      userAnswers: {}, // id -> { selectedIndex, isCorrect, retried }
+      missedQuestionIds: []
+    };
+
+    /* -------------------------------------------------------------
+       INITIALIZATION
+    ------------------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      initGraphCanvas();
+      initRaceCanvas();
+      loadDiffPreset('linear');
+      initQuiz();
+    });
+
+    /* -------------------------------------------------------------
+       TAB SWITCHING LOGIC
+    ------------------------------------------------------------- */
+    function switchTab(tabId) {
+      currentTab = tabId;
+      const sections = ['concept', 'visualizer', 'race', 'differences', 'quiz'];
+      sections.forEach(s => {
+        const secEl = document.getElementById(`sec-${s}`);
+        const tabBtn = document.getElementById(`tab-${s}`);
+        if (s === tabId) {
+          secEl.classList.remove('hidden');
+          tabBtn.classList.add('tab-active');
+          tabBtn.classList.remove('text-slate-400');
+        } else {
+          secEl.classList.add('hidden');
+          tabBtn.classList.remove('tab-active');
+          if (s !== 'quiz') tabBtn.classList.add('text-slate-400');
+        }
+      });
+
+      if (tabId === 'visualizer') {
+        setTimeout(drawGraph, 50);
+      } else if (tabId === 'race') {
+        setTimeout(renderRaceFrame, 50);
+      }
+    }
+
+    /* -------------------------------------------------------------
+       GRAPH LAB & CANVAS LOGIC
+    ------------------------------------------------------------- */
+    let canvas, ctx;
+
+    function initGraphCanvas() {
+      canvas = document.getElementById('functionCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        drawGraph();
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Mouse Hover coordinate inspection
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const mathX = screenToMathX(mouseX, rect.width);
+        const mathY = screenToMathY(mouseY, rect.height);
+
+        const badge = document.getElementById('canvasHoverBadge');
+        if (badge) {
+          badge.classList.remove('hidden');
+          badge.style.left = `${Math.min(mouseX + 12, rect.width - 130)}px`;
+          badge.style.top = `${Math.max(mouseY - 28, 10)}px`;
+          badge.textContent = `x: ${mathX.toFixed(2)}, y: ${mathY.toFixed(2)}`;
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        const badge = document.getElementById('canvasHoverBadge');
+        if (badge) badge.classList.add('hidden');
+      });
+    }
+
+    function selectCurveFamily(family) {
+      currentCurveFamily = family;
+      ['linear', 'quadratic', 'exponential'].forEach(f => {
+        const btn = document.getElementById(`btn-family-${f}`);
+        const ctrl = document.getElementById(`controls-${f}`);
+        if (f === family) {
+          btn.className = 'py-2 px-2 rounded-lg bg-emerald-600 text-white shadow transition text-center';
+          ctrl.classList.remove('hidden');
+        } else {
+          btn.className = 'py-2 px-2 rounded-lg text-slate-400 hover:text-white transition text-center';
+          ctrl.classList.add('hidden');
+        }
+      });
+
+      const badge = document.getElementById('activeModelBadge');
+      if (family === 'linear') {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        badge.textContent = 'Linear: f(x) = mx + b';
+      } else if (family === 'quadratic') {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        badge.textContent = 'Quadratic: f(x) = ax² + bx + c';
+      } else {
+        badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30';
+        badge.textContent = 'Exponential: f(x) = a · bˣ';
+      }
+
+      onParamChange();
+    }
+
+    function onParamChange() {
+      // Read Sliders
+      if (currentCurveFamily === 'linear') {
+        params.linear.m = parseFloat(document.getElementById('slider-linear-m').value);
+        params.linear.b = parseFloat(document.getElementById('slider-linear-b').value);
+        document.getElementById('label-linear-m').textContent = params.linear.m.toFixed(2);
+        document.getElementById('label-linear-b').textContent = params.linear.b.toFixed(2);
+      } else if (currentCurveFamily === 'quadratic') {
+        params.quadratic.a = parseFloat(document.getElementById('slider-quad-a').value);
+        params.quadratic.b = parseFloat(document.getElementById('slider-quad-b').value);
+        params.quadratic.c = parseFloat(document.getElementById('slider-quad-c').value);
+        document.getElementById('label-quad-a').textContent = params.quadratic.a.toFixed(2);
+        document.getElementById('label-quad-b').textContent = params.quadratic.b.toFixed(2);
+        document.getElementById('label-quad-c').textContent = params.quadratic.c.toFixed(2);
+      } else {
+        params.exponential.a = parseFloat(document.getElementById('slider-exp-a').value);
+        params.exponential.b = parseFloat(document.getElementById('slider-exp-b').value);
+        document.getElementById('label-exp-a').textContent = params.exponential.a.toFixed(2);
+        document.getElementById('label-exp-b').textContent = params.exponential.b.toFixed(2);
+      }
+
+      updateFormulaDisplay();
+      updateSecantTelemetry();
+      drawGraph();
+    }
+
+    function onSecantChange() {
+      secant.x1 = parseFloat(document.getElementById('slider-secant-x1').value);
+      secant.x2 = parseFloat(document.getElementById('slider-secant-x2').value);
+
+      if (secant.x1 === secant.x2) {
+        secant.x2 += 0.5;
+        document.getElementById('slider-secant-x2').value = secant.x2;
+      }
+      if (secant.x1 > secant.x2) {
+        const tmp = secant.x1;
+        secant.x1 = secant.x2;
+        secant.x2 = tmp;
+        document.getElementById('slider-secant-x1').value = secant.x1;
+        document.getElementById('slider-secant-x2').value = secant.x2;
+      }
+
+      document.getElementById('label-secant-x1').textContent = secant.x1.toFixed(1);
+      document.getElementById('label-secant-x2').textContent = secant.x2.toFixed(1);
+
+      updateSecantTelemetry();
+      drawGraph();
+    }
+
+    function evaluateCurrentFunction(x) {
+      if (currentCurveFamily === 'linear') {
+        return params.linear.m * x + params.linear.b;
+      } else if (currentCurveFamily === 'quadratic') {
+        return params.quadratic.a * x * x + params.quadratic.b * x + params.quadratic.c;
+      } else {
+        return params.exponential.a * Math.pow(params.exponential.b, x);
+      }
+    }
+
+    function updateFormulaDisplay() {
+      const el = document.getElementById('canvasFunctionDisplay');
+      if (currentCurveFamily === 'linear') {
+        const m = params.linear.m;
+        const b = params.linear.b;
+        const sign = b >= 0 ? `+ ${b.toFixed(1)}` : `- ${Math.abs(b).toFixed(1)}`;
+        el.textContent = `f(x) = ${m.toFixed(1)}x ${sign}`;
+      } else if (currentCurveFamily === 'quadratic') {
+        const a = params.quadratic.a;
+        const b = params.quadratic.b;
+        const c = params.quadratic.c;
+        const bSign = b >= 0 ? `+ ${b.toFixed(1)}x` : `- ${Math.abs(b).toFixed(1)}x`;
+        const cSign = c >= 0 ? `+ ${c.toFixed(1)}` : `- ${Math.abs(c).toFixed(1)}`;
+        el.textContent = `f(x) = ${a.toFixed(1)}x² ${bSign} ${cSign}`;
+      } else {
+        const a = params.exponential.a;
+        const b = params.exponential.b;
+        el.textContent = `f(x) = ${a.toFixed(2)} · (${b.toFixed(2)})ˣ`;
+      }
+    }
+
+    function updateSecantTelemetry() {
+      const y1 = evaluateCurrentFunction(secant.x1);
+      const y2 = evaluateCurrentFunction(secant.x2);
+
+      const dx = secant.x2 - secant.x1;
+      const dy = y2 - y1;
+      const aroc = dy / dx;
+
+      document.getElementById('telemetry-p1').textContent = `(${secant.x1.toFixed(1)}, ${y1.toFixed(2)})`;
+      document.getElementById('telemetry-p2').textContent = `(${secant.x2.toFixed(1)}, ${y2.toFixed(2)})`;
+      document.getElementById('telemetry-dx').textContent = dx.toFixed(1);
+      document.getElementById('telemetry-dy').textContent = dy.toFixed(2);
+      document.getElementById('telemetry-aroc').textContent = aroc.toFixed(2);
+
+      // Domain & Range readouts
+      const rangeEl = document.getElementById('telemetry-range');
+      const specLabel = document.getElementById('telemetry-special-label');
+      const specVal = document.getElementById('telemetry-special-val');
+
+      if (currentCurveFamily === 'linear') {
+        rangeEl.textContent = 'y ∈ (-∞, ∞)';
+        specLabel.textContent = 'y-Intercept:';
+        specVal.textContent = `(0, ${params.linear.b.toFixed(1)})`;
+      } else if (currentCurveFamily === 'quadratic') {
+        const a = params.quadratic.a;
+        const b = params.quadratic.b;
+        const c = params.quadratic.c;
+        const vx = a !== 0 ? -b / (2 * a) : 0;
+        const vy = evaluateCurrentFunction(vx);
+        if (a > 0) {
+          rangeEl.textContent = `y ≥ ${vy.toFixed(2)} [${vy.toFixed(1)}, ∞)`;
+        } else if (a < 0) {
+          rangeEl.textContent = `y ≤ ${vy.toFixed(2)} (-∞, ${vy.toFixed(1)}]`;
+        } else {
+          rangeEl.textContent = 'Linear degenerate: y ∈ (-∞, ∞)';
+        }
+        specLabel.textContent = 'Parabola Vertex:';
+        specVal.textContent = `(${vx.toFixed(2)}, ${vy.toFixed(2)})`;
+      } else {
+        rangeEl.textContent = params.exponential.a > 0 ? 'y > 0 (strictly positive)' : 'y < 0';
+        specLabel.textContent = 'Horizontal Asymptote:';
+        specVal.textContent = 'y = 0 (x-axis)';
+      }
+    }
+
+    function resetGraphView() {
+      view.xMin = -8;
+      view.xMax = 8;
+      view.yMin = -8;
+      view.yMax = 8;
+      drawGraph();
+    }
+
+    // Coordinate Conversion Helpers
+    function mathToScreenX(x, width) {
+      return ((x - view.xMin) / (view.xMax - view.xMin)) * width;
+    }
+    function mathToScreenY(y, height) {
+      return height - ((y - view.yMin) / (view.yMax - view.yMin)) * height;
+    }
+    function screenToMathX(px, width) {
+      return view.xMin + (px / width) * (view.xMax - view.xMin);
+    }
+    function screenToMathY(py, height) {
+      return view.yMax - (py / height) * (view.yMax - view.yMin);
+    }
+
+    function drawGraph() {
+      if (!canvas || !ctx) return;
+      const width = canvas.getBoundingClientRect().width;
+      const height = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const showGrid = document.getElementById('check-show-grid')?.checked ?? true;
+      const showSecant = document.getElementById('check-show-secant')?.checked ?? true;
+
+      // 1. Draw Grid
+      if (showGrid) {
+        ctx.strokeStyle = 'rgba(51, 65, 85, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillStyle = '#64748b';
+
+        for (let x = Math.ceil(view.xMin); x <= Math.floor(view.xMax); x++) {
+          if (x === 0) continue;
+          const sx = mathToScreenX(x, width);
+          ctx.beginPath();
+          ctx.moveTo(sx, 0);
+          ctx.lineTo(sx, height);
+          ctx.stroke();
+
+          // Axis tick labels
+          const originY = mathToScreenY(0, height);
+          ctx.fillText(x.toString(), sx - 4, Math.min(Math.max(originY + 14, 14), height - 4));
+        }
+
+        for (let y = Math.ceil(view.yMin); y <= Math.floor(view.yMax); y++) {
+          if (y === 0) continue;
+          const sy = mathToScreenY(y, height);
+          ctx.beginPath();
+          ctx.moveTo(0, sy);
+          ctx.lineTo(width, sy);
+          ctx.stroke();
+
+          // Axis tick labels
+          const originX = mathToScreenX(0, width);
+          ctx.fillText(y.toString(), Math.min(Math.max(originX + 6, 4), width - 20), sy + 3);
+        }
+      }
+
+      // 2. Draw Main Axes
+      const ox = mathToScreenX(0, width);
+      const oy = mathToScreenY(0, height);
+
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+
+      // X-Axis
+      ctx.beginPath();
+      ctx.moveTo(0, oy);
+      ctx.lineTo(width, oy);
+      ctx.stroke();
+
+      // Y-Axis
+      ctx.beginPath();
+      ctx.moveTo(ox, 0);
+      ctx.lineTo(ox, height);
+      ctx.stroke();
+
+      // Axis Arrows
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px JetBrains Mono';
+      ctx.fillText('+x', width - 18, oy - 6);
+      ctx.fillText('+y', ox + 6, 14);
+
+      // 3. Draw Exponential Asymptote if applicable
+      if (currentCurveFamily === 'exponential') {
+        ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+        ctx.setLineDash([6, 4]);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, oy);
+        ctx.lineTo(width, oy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // 4. Draw Parabola Axis of Symmetry if applicable
+      if (currentCurveFamily === 'quadratic' && params.quadratic.a !== 0) {
+        const vx = -params.quadratic.b / (2 * params.quadratic.a);
+        const svx = mathToScreenX(vx, width);
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(svx, 0);
+        ctx.lineTo(svx, height);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // 5. Draw Main Function Curve f(x)
+      ctx.lineWidth = 3;
+      if (currentCurveFamily === 'linear') {
+        ctx.strokeStyle = '#10b981';
+      } else if (currentCurveFamily === 'quadratic') {
+        ctx.strokeStyle = '#f59e0b';
+      } else {
+        ctx.strokeStyle = '#a855f7';
+      }
+
+      ctx.beginPath();
+      let started = false;
+      const stepPx = 2;
+
+      for (let px = 0; px <= width; px += stepPx) {
+        const mx = screenToMathX(px, width);
+        const my = evaluateCurrentFunction(mx);
+        const py = mathToScreenY(my, height);
+
+        if (!isFinite(py) || py < -1000 || py > height + 1000) {
+          started = false;
+          continue;
+        }
+
+        if (!started) {
+          ctx.moveTo(px, py);
+          started = true;
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+
+      // 6. Draw Secant Line, Points & Slope Triangle
+      if (showSecant) {
+        const x1 = secant.x1;
+        const x2 = secant.x2;
+        const y1 = evaluateCurrentFunction(x1);
+        const y2 = evaluateCurrentFunction(x2);
+
+        const sx1 = mathToScreenX(x1, width);
+        const sy1 = mathToScreenY(y1, height);
+        const sx2 = mathToScreenX(x2, width);
+        const sy2 = mathToScreenY(y2, height);
+
+        // Slope Triangle (Rise / Run)
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.5;
+
+        // Horizontal run Δx
+        ctx.beginPath();
+        ctx.moveTo(sx1, sy1);
+        ctx.lineTo(sx2, sy1);
+        ctx.stroke();
+
+        // Vertical rise Δy
+        ctx.beginPath();
+        ctx.moveTo(sx2, sy1);
+        ctx.lineTo(sx2, sy2);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+
+        // Extended Secant Line
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const slope = dy / dx;
+
+        const leftY = y1 + slope * (view.xMin - x1);
+        const rightY = y1 + slope * (view.xMax - x1);
+
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(mathToScreenX(view.xMin, width), mathToScreenY(leftY, height));
+        ctx.lineTo(mathToScreenX(view.xMax, width), mathToScreenY(rightY, height));
+        ctx.stroke();
+
+        // Secant Endpoint Dots
+        drawPoint(sx1, sy1, '#06b6d4', '#ffffff', 5);
+        drawPoint(sx2, sy2, '#06b6d4', '#ffffff', 5);
+
+        // Triangle Label Badges
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillText(`Δx = ${dx.toFixed(1)}`, (sx1 + sx2) / 2 - 15, sy1 + (sy2 < sy1 ? 14 : -6));
+        ctx.fillText(`Δy = ${dy.toFixed(1)}`, sx2 + 6, (sy1 + sy2) / 2);
+      }
+
+      // 7. Draw y-intercept point
+      const yInt = evaluateCurrentFunction(0);
+      drawPoint(ox, mathToScreenY(yInt, height), '#ffffff', '#3b82f6', 4);
+    }
+
+    function drawPoint(x, y, strokeColor, fillColor, radius) {
+      ctx.fillStyle = fillColor;
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    /* -------------------------------------------------------------
+       TAB 3: THE GREAT GROWTH RACE ANIMATION
+    ------------------------------------------------------------- */
+    let raceCanvas, raceCtx;
+    let raceX = 0;
+    let raceRunning = false;
+    let raceAnimId = null;
+
+    function initRaceCanvas() {
+      raceCanvas = document.getElementById('raceCanvas');
+      if (!raceCanvas) return;
+      raceCtx = raceCanvas.getContext('2d');
+
+      function resize() {
+        const rect = raceCanvas.getBoundingClientRect();
+        raceCanvas.width = rect.width * window.devicePixelRatio;
+        raceCanvas.height = rect.height * window.devicePixelRatio;
+        raceCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        renderRaceFrame();
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+    }
+
+    function toggleRaceAnimation() {
+      if (raceRunning) {
+        pauseRaceAnimation();
+      } else {
+        startRaceAnimation();
+      }
+    }
+
+    function startRaceAnimation() {
+      raceRunning = true;
+      document.getElementById('racePlayIcon').textContent = '⏸';
+      document.getElementById('racePlayText').textContent = 'Pause';
+
+      let lastTime = performance.now();
+
+      function step(now) {
+        const delta = (now - lastTime) / 1000;
+        lastTime = now;
+
+        raceX += delta * 1.5; // Advances x
+        if (raceX >= 10) {
+          raceX = 10;
+          pauseRaceAnimation();
+        }
+
+        document.getElementById('sliderRaceScrubber').value = raceX;
+        renderRaceFrame();
+
+        if (raceRunning) {
+          raceAnimId = requestAnimationFrame(step);
+        }
+      }
+
+      raceAnimId = requestAnimationFrame(step);
+    }
+
+    function pauseRaceAnimation() {
+      raceRunning = false;
+      document.getElementById('racePlayIcon').textContent = '▶';
+      document.getElementById('racePlayText').textContent = 'Resume';
+      if (raceAnimId) cancelAnimationFrame(raceAnimId);
+    }
+
+    function resetRaceAnimation() {
+      pauseRaceAnimation();
+      raceX = 0;
+      document.getElementById('sliderRaceScrubber').value = 0;
+      document.getElementById('racePlayText').textContent = 'Start Race';
+      renderRaceFrame();
+    }
+
+    function onRaceScrub(val) {
+      raceX = parseFloat(val);
+      renderRaceFrame();
+    }
+
+    function renderRaceFrame() {
+      if (!raceCanvas || !raceCtx) return;
+      const width = raceCanvas.getBoundingClientRect().width;
+      const height = raceCanvas.getBoundingClientRect().height;
+
+      raceCtx.clearRect(0, 0, width, height);
+
+      // Formula definitions:
+      // Linear: L(x) = 10x + 15
+      // Quadratic: Q(x) = 2.5x²
+      // Exponential: E(x) = 2ˣ
+      const valL = 10 * raceX + 15;
+      const valQ = 2.5 * raceX * raceX;
+      const valE = Math.pow(2, raceX);
+
+      // Update HUD Labels
+      document.getElementById('raceCurrentXLabel').textContent = `x = ${raceX.toFixed(2)}`;
+      document.getElementById('raceValL').textContent = valL.toFixed(1);
+      document.getElementById('raceValQ').textContent = valQ.toFixed(1);
+      document.getElementById('raceValE').textContent = valE.toFixed(1);
+
+      // Leader detection
+      const leaderBadge = document.getElementById('raceLeaderBadge');
+      if (valL >= valQ && valL >= valE) {
+        leaderBadge.className = 'text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        leaderBadge.textContent = 'Leader: Racer L (Linear - Fast Start)';
+      } else if (valQ >= valL && valQ >= valE) {
+        leaderBadge.className = 'text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        leaderBadge.textContent = 'Leader: Racer Q (Quadratic Surge)';
+      } else {
+        leaderBadge.className = 'text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30';
+        leaderBadge.textContent = 'Leader: Racer E (Exponential Dominance)';
+      }
+
+      // Drawing 3 Race Tracks
+      const trackHeight = height / 3;
+      const tracks = [
+        { name: 'Linear: 10x + 15', val: valL, max: 115, color: '#10b981', y: trackHeight * 0.5 },
+        { name: 'Quadratic: 2.5x²', val: valQ, max: 250, color: '#f59e0b', y: trackHeight * 1.5 },
+        { name: 'Exponential: 2ˣ', val: valE, max: 1024, color: '#ec4899', y: trackHeight * 2.5 }
+      ];
+
+      // Draw Grid / Lane separators
+      raceCtx.strokeStyle = 'rgba(51, 65, 85, 0.5)';
+      raceCtx.lineWidth = 1;
+      raceCtx.beginPath();
+      raceCtx.moveTo(0, trackHeight);
+      raceCtx.lineTo(width, trackHeight);
+      raceCtx.moveTo(0, trackHeight * 2);
+      raceCtx.lineTo(width, trackHeight * 2);
+      raceCtx.stroke();
+
+      tracks.forEach(tr => {
+        // Track Base Line
+        raceCtx.strokeStyle = 'rgba(30, 41, 59, 0.8)';
+        raceCtx.lineWidth = 6;
+        raceCtx.beginPath();
+        raceCtx.moveTo(140, tr.y);
+        raceCtx.lineTo(width - 50, tr.y);
+        raceCtx.stroke();
+
+        // Runner progress
+        // Logarithmic or proportional mapping to keep visual comparisons intuitive
+        const progressFrac = Math.min(tr.val / 1024, 1.0);
+        const runnerPx = 140 + progressFrac * (width - 190);
+
+        // Filled active bar
+        raceCtx.strokeStyle = tr.color;
+        raceCtx.lineWidth = 6;
+        raceCtx.beginPath();
+        raceCtx.moveTo(140, tr.y);
+        raceCtx.lineTo(runnerPx, tr.y);
+        raceCtx.stroke();
+
+        // Runner Orb
+        raceCtx.fillStyle = tr.color;
+        raceCtx.shadowColor = tr.color;
+        raceCtx.shadowBlur = 10;
+        raceCtx.beginPath();
+        raceCtx.arc(runnerPx, tr.y, 8, 0, Math.PI * 2);
+        raceCtx.fill();
+        raceCtx.shadowBlur = 0;
+
+        // Runner Label Left
+        raceCtx.font = '11px JetBrains Mono';
+        raceCtx.fillStyle = tr.color;
+        raceCtx.fillText(tr.name, 12, tr.y + 4);
+
+        // Output Value Tag Right
+        raceCtx.fillStyle = '#ffffff';
+        raceCtx.fillText(tr.val.toFixed(0), runnerPx + 14, tr.y + 4);
+      });
+    }
+
+    /* -------------------------------------------------------------
+       TAB 4: DIFFERENCE ENGINE
+    ------------------------------------------------------------- */
+    function loadDiffPreset(type) {
+      const tbody = document.getElementById('diffTableBody');
+      tbody.innerHTML = '';
+
+      let rows = [];
+      let verdictTitle = '';
+      let verdictDesc = '';
+      let icon = '✅';
+
+      if (type === 'linear') {
+        // y = 4x + 3
+        rows = [
+          { x: 0, y: 3, d1: 4, d2: 0, ratio: '-' },
+          { x: 1, y: 7, d1: 4, d2: 0, ratio: '2.33' },
+          { x: 2, y: 11, d1: 4, d2: 0, ratio: '1.57' },
+          { x: 3, y: 15, d1: 4, d2: 0, ratio: '1.36' },
+          { x: 4, y: 19, d1: 4, d2: 0, ratio: '1.27' },
+          { x: 5, y: 23, d1: '-', d2: '-', ratio: '1.21' }
+        ];
+        verdictTitle = 'Classification: Strictly Linear Function';
+        verdictDesc = 'The First Differences (Δy) are completely constant (+4) for equal intervals of Δx = 1. Therefore, this data represents a linear equation with constant slope m = 4 and equation y = 4x + 3.';
+      } else if (type === 'quadratic') {
+        // y = 2x² - 3x + 1
+        rows = [
+          { x: 0, y: 1, d1: -1, d2: 4, ratio: '-' },
+          { x: 1, y: 0, d1: 3, d2: 4, ratio: '0.00' },
+          { x: 2, y: 3, d1: 7, d2: 4, ratio: 'undef' },
+          { x: 3, y: 10, d1: 11, d2: 4, ratio: '3.33' },
+          { x: 4, y: 21, d1: 15, d2: 4, ratio: '2.10' },
+          { x: 5, y: 36, d1: '-', d2: '-', ratio: '1.71' }
+        ];
+        verdictTitle = 'Classification: Strictly Quadratic Function';
+        verdictDesc = 'The First Differences change continuously (-1, 3, 7, 11, 15), but the Second Differences (Δ²y) are completely constant (+4). In algebra, a constant 2nd difference proves a quadratic function y = ax² + bx + c with 2a = 4 ⇒ a = 2.';
+      } else {
+        // y = 3 · 2ˣ
+        rows = [
+          { x: 0, y: 3, d1: 3, d2: 3, ratio: '2.00' },
+          { x: 1, y: 6, d1: 6, d2: 6, ratio: '2.00' },
+          { x: 2, y: 12, d1: 12, d2: 12, ratio: '2.00' },
+          { x: 3, y: 24, d1: 24, d2: 24, ratio: '2.00' },
+          { x: 4, y: 48, d1: 48, d2: 48, ratio: '2.00' },
+          { x: 5, y: 96, d1: '-', d2: '-', ratio: '2.00' }
+        ];
+        verdictTitle = 'Classification: Strictly Exponential Function';
+        verdictDesc = 'Neither the 1st nor 2nd differences are constant (they both double!). Instead, consecutive outputs have a constant multiplicative ratio of exactly 2.00 (6/3 = 2, 12/6 = 2). This confirms an exponential model y = 3 · 2ˣ.';
+      }
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-900/50';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-bold text-white">${r.x}</td>
+          <td class="py-2.5 px-3 font-semibold text-cyan-300">${r.y}</td>
+          <td class="py-2.5 px-3 font-bold text-emerald-400">${r.d1}</td>
+          <td class="py-2.5 px-3 font-bold text-amber-400">${r.d2}</td>
+          <td class="py-2.5 px-3 font-bold text-purple-400">${r.ratio}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('diffVerdictTitle').textContent = verdictTitle;
+      document.getElementById('diffVerdictDesc').innerHTML = verdictDesc;
+    }
+
+    /* -------------------------------------------------------------
+       TAB 5: 20-QUESTION QUIZ ENGINE
+    ------------------------------------------------------------- */
+    function initQuiz() {
+      quizState.activeQIndex = 0;
+      quizState.score = 0;
+      quizState.streak = 0;
+      quizState.maxStreak = 0;
+      quizState.correctCount = 0;
+      quizState.userAnswers = {};
+      quizState.missedQuestionIds = [];
+
+      renderActiveQuestion();
+      startQuestionTimer();
+    }
+
+    function renderActiveQuestion() {
+      const q = QUESTIONS[quizState.activeQIndex];
+      if (!q) return;
+
+      // Update HUD
+      document.getElementById('quizProgressNum').textContent = `Q ${quizState.activeQIndex + 1} of 20`;
+      document.getElementById('quizCategoryBadge').textContent = q.category;
+      document.getElementById('quizStandardTag').textContent = q.standard;
+      document.getElementById('quizQuestionPrompt').textContent = q.prompt;
+
+      const pct = ((quizState.activeQIndex + 1) / 20) * 100;
+      document.getElementById('quizProgressBar').style.width = `${pct}%`;
+
+      // Visual Code Snippet
+      const snipEl = document.getElementById('quizVisualSnippet');
+      if (q.snippet) {
+        snipEl.classList.remove('hidden');
+        snipEl.textContent = q.snippet;
+      } else {
+        snipEl.classList.add('hidden');
+      }
+
+      // Hide explanation card
+      const expCard = document.getElementById('quizExplanationCard');
+      expCard.classList.add('hidden');
+
+      // Populate Options
+      const grid = document.getElementById('quizOptionsGrid');
+      grid.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `optBtn-${idx}`;
+        btn.className = 'w-full text-left p-4 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs text-slate-200 font-semibold transition-all shadow-sm flex items-start gap-3 group';
+        btn.onclick = () => submitAnswer(idx);
+
+        const badge = document.createElement('span');
+        badge.className = 'w-6 h-6 rounded-lg bg-slate-800 text-slate-400 group-hover:text-white flex items-center justify-center font-bold text-xs shrink-0 mono border border-slate-700';
+        badge.textContent = String.fromCharCode(65 + idx); // 'A', 'B', 'C', 'D'
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'leading-relaxed pt-0.5';
+        textSpan.innerHTML = opt.text;
+
+        btn.appendChild(badge);
+        btn.appendChild(textSpan);
+        grid.appendChild(btn);
+      });
+    }
+
+    function submitAnswer(chosenIdx) {
+      const q = QUESTIONS[quizState.activeQIndex];
+      const chosenOpt = q.options[chosenIdx];
+      const isCorrect = chosenOpt.correct;
+
+      // Stop timer for this question
+      clearInterval(quizState.timerInterval);
+
+      // Disable all option buttons
+      q.options.forEach((opt, idx) => {
+        const btn = document.getElementById(`optBtn-${idx}`);
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-slate-800', 'cursor-pointer');
+        if (opt.correct) {
+          btn.className = 'w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 text-xs text-emerald-200 font-bold flex items-start gap-3';
+        } else if (idx === chosenIdx && !isCorrect) {
+          btn.className = 'w-full text-left p-4 rounded-xl bg-rose-950/60 border-2 border-rose-500 text-xs text-rose-200 font-bold flex items-start gap-3';
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      });
+
+      // Update Scoring & Streaks
+      if (isCorrect) {
+        quizState.streak++;
+        if (quizState.streak > quizState.maxStreak) quizState.maxStreak = quizState.streak;
+        quizState.correctCount++;
+
+        const multiplier = quizState.streak >= 3 ? 1.5 : 1.0;
+        const pts = Math.round(100 * multiplier);
+        quizState.score += pts;
+
+        document.getElementById('quizFeedbackIcon').textContent = '✅';
+        document.getElementById('quizFeedbackTitle').textContent = `Correct! +${pts} pts (Honors Streak: ${quizState.streak}x 🔥)`;
+        document.getElementById('quizFeedbackTitle').className = 'font-bold text-sm text-emerald-400';
+        document.getElementById('btnRetryCurrentQ').classList.add('hidden');
+      } else {
+        quizState.streak = 0;
+        if (!quizState.missedQuestionIds.includes(q.id)) {
+          quizState.missedQuestionIds.push(q.id);
+        }
+
+        document.getElementById('quizFeedbackIcon').textContent = '❌';
+        document.getElementById('quizFeedbackTitle').textContent = 'Incorrect. Review the step-by-step breakdown below:';
+        document.getElementById('quizFeedbackTitle').className = 'font-bold text-sm text-rose-400';
+        document.getElementById('btnRetryCurrentQ').classList.remove('hidden');
+      }
+
+      // Update HUD
+      updateQuizHUD();
+
+      // Show Explanation Card
+      const expCard = document.getElementById('quizExplanationCard');
+      expCard.classList.remove('hidden');
+      expCard.className = isCorrect 
+        ? 'p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/20 space-y-3' 
+        : 'p-5 rounded-2xl border border-rose-500/40 bg-rose-950/20 space-y-3';
+      
+      document.getElementById('quizExplanationContent').innerHTML = q.explanation;
+    }
+
+    function retryActiveQuestion() {
+      renderActiveQuestion();
+      startQuestionTimer();
+    }
+
+    function advanceToNextQuestion() {
+      if (quizState.activeQIndex < QUESTIONS.length - 1) {
+        quizState.activeQIndex++;
+        renderActiveQuestion();
+        startQuestionTimer();
+      } else {
+        showQuizSummary();
+      }
+    }
+
+    function updateQuizHUD() {
+      document.getElementById('quizScoreDisplay').textContent = `${quizState.score} pts`;
+      document.getElementById('navScoreBadge').textContent = `${quizState.correctCount}/20`;
+
+      const streakEl = document.getElementById('quizStreakDisplay');
+      streakEl.textContent = `${quizState.streak >= 3 ? '1.5x 🔥' : '1.0x'} Streak: ${quizState.streak}`;
+
+      // Honors Rank Logic
+      const rankEl = document.getElementById('quizRankDisplay');
+      const pts = quizState.score;
+      if (pts < 400) {
+        rankEl.textContent = '🌱 Function Apprentice';
+        rankEl.className = 'text-xs font-bold text-cyan-300 mt-1';
+      } else if (pts < 900) {
+        rankEl.textContent = '⚡ Slope Specialist';
+        rankEl.className = 'text-xs font-bold text-emerald-400 mt-1';
+      } else if (pts < 1400) {
+        rankEl.textContent = '📐 Parabola Pilot';
+        rankEl.className = 'text-xs font-bold text-amber-400 mt-1';
+      } else if (pts < 1800) {
+        rankEl.textContent = '🚀 Exponential Architect';
+        rankEl.className = 'text-xs font-bold text-purple-400 mt-1';
+      } else {
+        rankEl.textContent = '👑 Grand Master of Functions';
+        rankEl.className = 'text-xs font-bold text-emerald-300 mt-1';
+      }
+    }
+
+    function startQuestionTimer() {
+      clearInterval(quizState.timerInterval);
+      quizState.timerSeconds = 45;
+      quizState.timerPaused = false;
+      document.getElementById('btnTimerToggle').textContent = 'Pause';
+      document.getElementById('quizTimerDisplay').textContent = `${quizState.timerSeconds}s`;
+
+      quizState.timerInterval = setInterval(() => {
+        if (!quizState.timerPaused) {
+          quizState.timerSeconds--;
+          document.getElementById('quizTimerDisplay').textContent = `${quizState.timerSeconds}s`;
+
+          if (quizState.timerSeconds <= 0) {
+            clearInterval(quizState.timerInterval);
+            handleTimeExpired();
+          }
+        }
+      }, 1000);
+    }
+
+    function toggleTimerPause() {
+      quizState.timerPaused = !quizState.timerPaused;
+      const btn = document.getElementById('btnTimerToggle');
+      btn.textContent = quizState.timerPaused ? 'Resume' : 'Pause';
+    }
+
+    function handleTimeExpired() {
+      const q = QUESTIONS[quizState.activeQIndex];
+      if (!quizState.missedQuestionIds.includes(q.id)) {
+        quizState.missedQuestionIds.push(q.id);
+      }
+      quizState.streak = 0;
+      updateQuizHUD();
+
+      // Show expired notice
+      document.getElementById('quizFeedbackIcon').textContent = '⏱️';
+      document.getElementById('quizFeedbackTitle').textContent = 'Time Expired! Here is the complete solution:';
+      document.getElementById('quizFeedbackTitle').className = 'font-bold text-sm text-amber-400';
+      document.getElementById('btnRetryCurrentQ').classList.remove('hidden');
+
+      const expCard = document.getElementById('quizExplanationCard');
+      expCard.classList.remove('hidden');
+      expCard.className = 'p-5 rounded-2xl border border-amber-500/40 bg-amber-950/20 space-y-3';
+      document.getElementById('quizExplanationContent').innerHTML = q.explanation;
+    }
+
+    function showQuizSummary() {
+      clearInterval(quizState.timerInterval);
+      document.getElementById('quizCardContainer').classList.add('hidden');
+      const summaryModal = document.getElementById('quizSummaryModal');
+      summaryModal.classList.remove('hidden');
+
+      const accuracy = Math.round((quizState.correctCount / 20) * 100);
+      document.getElementById('summaryFinalScore').textContent = `${quizState.score}`;
+      document.getElementById('summaryAccuracy').textContent = `${accuracy}%`;
+      document.getElementById('summaryCorrectCount').textContent = `${quizState.correctCount} / 20`;
+
+      let rankStr = '🌱 Function Apprentice';
+      if (accuracy >= 90) rankStr = '👑 Grand Master of Functions';
+      else if (accuracy >= 80) rankStr = '🚀 Exponential Architect';
+      else if (accuracy >= 65) rankStr = '📐 Parabola Pilot';
+      else if (accuracy >= 50) rankStr = '⚡ Slope Specialist';
+      document.getElementById('summaryMasteryRank').textContent = rankStr;
+
+      const missedBtn = document.getElementById('btnRetryMissedOnly');
+      const missedCount = quizState.missedQuestionIds.length;
+      document.getElementById('missedQuestionsCount').textContent = missedCount;
+      if (missedCount > 0) {
+        missedBtn.classList.remove('hidden');
+      } else {
+        missedBtn.classList.add('hidden');
+      }
+    }
+
+    function startRetryMissedFlow() {
+      if (quizState.missedQuestionIds.length === 0) return;
+      // Filter questions to only missed ones
+      const missedSet = new Set(quizState.missedQuestionIds);
+      const missedList = QUESTIONS.filter(q => missedSet.has(q.id));
+
+      document.getElementById('quizSummaryModal').classList.add('hidden');
+      document.getElementById('quizCardContainer').classList.remove('hidden');
+
+      quizState.activeQIndex = 0;
+      quizState.missedQuestionIds = [];
+      renderActiveQuestion();
+      startQuestionTimer();
+    }
+
+    function restartQuizFlow() {
+      document.getElementById('quizSummaryModal').classList.add('hidden');
+      document.getElementById('quizCardContainer').classList.remove('hidden');
+      initQuiz();
+    }
+
+    /* -------------------------------------------------------------
+       STANDALONE APPLICATION DOWNLOAD (BLOB)
+    ------------------------------------------------------------- */
+    function downloadStandaloneApp() {
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '8th_grade_honors_math_functions_lab.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

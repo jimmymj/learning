@@ -106,15 +106,85 @@
       </div>
 
       <div class="filter-pills" role="tablist">
-        <button class="filter-pill active" data-category="all" id="pillAll">All Subjects (1)</button>
-        <button class="filter-pill" data-category="math" id="pillMath">📐 Mathematics (1)</button>
+        <button class="filter-pill active" data-category="all" id="pillAll">All Subjects (2)</button>
+        <button class="filter-pill" data-category="math" id="pillMath">📐 Mathematics (2)</button>
         <button class="filter-pill" data-category="physics" id="pillPhysics">⚡ Physics (Coming Soon)</button>
         <button class="filter-pill" data-category="cs" id="pillCS">💻 Computer Science (Coming Soon)</button>
       </div>
     </section>
 
-    <!-- Featured App Showcase Card -->
-    <section id="featured-section">
+    <!-- Featured App Showcase Cards -->
+    <section id="featured-section" style="display: flex; flex-direction: column; gap: 32px;">
+      
+      <!-- App Card 1: Functions Lab -->
+      <article class="featured-card glass-panel app-item-card" data-category="math" id="cardFunctionsVisualizer">
+        <div class="card-top-glow" style="background: radial-gradient(circle, rgba(14, 165, 233, 0.45) 0%, transparent 70%);"></div>
+        <div class="featured-grid">
+          
+          <!-- Content Left -->
+          <div>
+            <div class="featured-badge-group">
+              <span class="badge badge-featured" style="background: linear-gradient(135deg, #0ea5e9, #6366f1); border-color: rgba(14, 165, 233, 0.5);">New Release</span>
+              <span class="badge badge-grade">CMS 8th Honors Math</span>
+              <span class="badge badge-standard">NC.8.F.1 • NC.8.F.2 • NC.8.F.3 • NC.8.F.4 • NC.8.F.5</span>
+            </div>
+
+            <h2 class="card-heading searchable-title">Function Velocity & Growth Lab</h2>
+            <p class="card-desc searchable-desc">
+              A deep, interactive exploration of linear, exponential, and quadratic functions. Students manipulate parameters, examine domain and range boundaries, analyze average rates of change with a dynamic secant tool, race growth algorithms, and take an exhaustive 20-question Honors mastery quiz with step-by-step explanations.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Function Triad Explorer:</strong> Real-time coordinate grapher for Linear ($mx+b$), Quadratic ($ax^2+bx+c$), and Exponential ($a \cdot b^x$).</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Secant Rate-of-Change Tool:</strong> Interactive $[x_1, x_2]$ interval slider calculating rise over run ($\frac{\Delta y}{\Delta x}$) with live slope triangle.</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>The Great Growth Race:</strong> Particle race demonstrating why exponential growth ($b > 1$) permanently overtakes linear and polynomial models.</span>
+              </li>
+              <li class="feature-item">
+                <span class="feature-bullet">✓</span>
+                <span><strong>Difference Engine & 20-Q Quiz:</strong> Proves function classifications via 1st and 2nd differences, paired with a 20-question graded challenge with hints and retry mode.</span>
+              </li>
+            </ul>
+
+            <div class="card-actions">
+              <a href="apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html" class="btn btn-primary" id="launchFunctionsLabBtn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <span>Launch Fullscreen Lab</span>
+              </a>
+              <button type="button" class="btn btn-secondary open-modal-btn" data-url="apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html" data-title="Function Velocity & Growth Lab" id="previewFunctionsLabBtn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <span>Quick View in Modal</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Mini-Visualizer Canvas Right -->
+          <div class="visual-preview-box">
+            <div class="preview-header">
+              <div class="window-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="mono" style="font-size: 0.72rem; color: #94a3b8;">Rate of Change Engine</span>
+            </div>
+            <div class="preview-canvas-container">
+              <canvas id="previewCanvasFunctions"></canvas>
+              <span class="canvas-overlay-tag mono" style="background: rgba(14, 165, 233, 0.2); color: #38bdf8; border-color: rgba(14, 165, 233, 0.4);">f(x) Real-Time Model</span>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- App Card 2: Dilations, Similarity & Slope Lab -->
       <article class="featured-card glass-panel app-item-card" data-category="math" id="cardMathVisualizer">
         <div class="card-top-glow"></div>
         <div class="featured-grid">
@@ -181,6 +251,7 @@
 
         </div>
       </article>
+
     </section>
 
     <!-- Standards & Curriculum Alignment Section -->
@@ -193,6 +264,13 @@
       </div>
 
       <div class="roadmap-grid">
+        <div class="glass-panel" style="padding: 24px; border-radius: var(--radius-lg);">
+          <span class="badge badge-standard" style="margin-bottom: 12px; background: rgba(14, 165, 233, 0.2); color: #38bdf8; border-color: rgba(14, 165, 233, 0.4);">NC.8.F.1 - NC.8.F.5</span>
+          <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Function Foundations & Growth Rates</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+            Define, evaluate, and compare functions algebraically, graphically, and numerically. Distinguish linear from non-linear relationships, interpret rate of change ($m = \Delta y / \Delta x$), and analyze quadratic and exponential behavior.
+          </p>
+        </div>
         <div class="glass-panel" style="padding: 24px; border-radius: var(--radius-lg);">
           <span class="badge badge-standard" style="margin-bottom: 12px;">Standard NC.8.G.3</span>
           <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 8px;">Coordinate Transformations</h3>

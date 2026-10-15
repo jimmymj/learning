@@ -13,8 +13,12 @@ learning/
 ├── index.html                                        # Central LearningHub Portal & App Launcher
 ├── README.md                                         # Project Documentation & Guide
 ├── .gitignore                                        # Standard repository ignores
+├── .agents/                                          # Workspace Customizations & Skills
+│   └── skills/
+│       └── educational-visualizer-engine/            # AI Educational Software Architect Skill
 ├── apps/                                             # Interactive Learning Applications
 │   └── math/                                         # Mathematics Subject Area
+│       ├── 8th_grade_honors_math_functions_linear_quadratic_exponential.html # Function Velocity & Growth Lab
 │       └── 8th_grade_honors_math_visualizer_dilations_similarity_slope.html  # Dilations, Similarity & Slope Lab
 └── assets/                                           # Shared Portal Assets
     ├── css/
@@ -27,7 +31,23 @@ learning/
 
 ## 🚀 Available Learning Apps
 
-### 1. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
+### 1. 📈 CMS 8th Honors Math: Function Velocity & Growth Lab
+- **Location:** [`apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html`](apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html)
+- **Target Audience:** 8th Grade Honors Mathematics / Math 1 Bridge
+- **Curriculum Standards:**
+  - **NC.8.F.1:** Function definition, notation $f(x)$, mapping, evaluating functions, continuous vs. discrete domain/range, and asymptotic behavior.
+  - **NC.8.F.2:** Comparing properties and rates of change of two functions represented algebraically, graphically, or numerically.
+  - **NC.8.F.3:** Distinguishing linear from non-linear relationships via first differences, second differences, and constant ratios.
+  - **NC.8.F.4:** Constructing function models to interpret rate of change ($m = \Delta y / \Delta x$) and initial values in real-world contexts.
+  - **NC.8.F.5:** Qualitative graphing, analyzing symmetry, intervals of increase/decrease, and long-term exponential growth dominance.
+- **Features:**
+  - **Function Triad Explorer:** Real-time graphing canvas for Linear ($mx+b$), Quadratic ($ax^2+bx+c$), and Exponential ($a \cdot b^x$) functions with responsive parameter sliders.
+  - **Secant Rate-of-Change Engine:** Interactive $[x_1, x_2]$ interval selector displaying the secant line, slope triangle ($\Delta x, \Delta y$), and live computed Average Rate of Change ($\frac{\Delta y}{\Delta x}$).
+  - **The Great Growth Race:** Particle race simulation visualizing how exponential growth inevitably overtakes linear and polynomial models.
+  - **Difference Engine:** Dynamic table tester computing 1st differences, 2nd differences, and ratios to prove algebraic classification.
+  - **20-Question Honors Mastery Challenge:** Graded quiz with 45s countdown timer, score HUD, streak multipliers, step-by-step explanations, and a "Retry Missed Questions" flow.
+
+### 2. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
 - **Location:** [`apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html`](apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Accelerated Pre-Algebra & Math 1
 - **Curriculum Standards:**
