@@ -15,7 +15,7 @@ learning/
 ├── .gitignore                                        # Standard repository ignores
 ├── .agents/                                          # Workspace Customizations & Skills
 │   └── skills/
-│       └── educational-visualizer-engine/            # AI Educational Software Architect Skill
+│       └── learning-app/                             # AI Learning App & Simulation Architect Skill
 ├── apps/                                             # Interactive Learning Applications
 │   └── math/                                         # Mathematics Subject Area
 │       ├── 8th_grade_honors_math_functions_linear_quadratic_exponential.html # Function Velocity & Growth Lab
