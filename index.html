@@ -65,13 +65,17 @@
         A curated collection of zero-dependency, browser-native simulations and interactive laboratory experiments designed for Honors Mathematics and STEM learners.
       </p>
 
-      <div class="card-actions" style="justify-content: center; margin-bottom: 24px;">
-        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="btn btn-primary btn-lg" id="heroLaunchFeaturedBtn">
-          <span>⚡ Launch Math Lab</span>
+      <div class="card-actions" style="justify-content: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+        <a href="apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html" class="btn btn-primary btn-lg" id="heroLaunchFunctionsBtn" style="background: linear-gradient(135deg, #0ea5e9, #6366f1); border: 1px solid rgba(56, 189, 248, 0.4); box-shadow: 0 4px 18px rgba(14, 165, 233, 0.35);">
+          <span>📈 Launch Functions Lab</span>
           <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </a>
-        <button type="button" class="btn btn-secondary btn-lg open-modal-btn" data-url="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" data-title="CMS 8th Honors Math: Dilations, Similarity & Slope Lab" id="heroPreviewBtn">
-          <span>👁️ Live Preview</span>
+        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="btn btn-secondary btn-lg" id="heroLaunchDilationsBtn">
+          <span>📐 Launch Dilations Lab</span>
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+        <button type="button" class="btn btn-outline btn-lg open-modal-btn" data-url="apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html" data-title="CMS 8th Honors Math: Function Velocity & Growth Lab" id="heroPreviewFunctionsBtn">
+          <span>👁️ Quick Preview</span>
         </button>
       </div>
 
@@ -82,16 +86,16 @@
           <span class="stat-label">Client-Side</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">8th Honors</span>
-          <span class="stat-label">Target Grade</span>
+          <span class="stat-num">2 Active Labs</span>
+          <span class="stat-label">Honors Modules</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">NC.8.G / EE</span>
+          <span class="stat-num">NC.8.F • G • EE</span>
           <span class="stat-label">Curriculum Aligned</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">20 Q</span>
-          <span class="stat-label">Graded Quiz</span>
+          <span class="stat-num">40 Q</span>
+          <span class="stat-label">Graded Challenges</span>
         </div>
       </div>
     </section>
@@ -117,7 +121,7 @@
     <section id="featured-section" style="display: flex; flex-direction: column; gap: 32px;">
       
       <!-- App Card 1: Functions Lab -->
-      <article class="featured-card glass-panel app-item-card" data-category="math" id="cardFunctionsVisualizer">
+      <article class="featured-card glass-panel app-item-card" data-category="math" data-filename="8th_grade_honors_math_functions_linear_quadratic_exponential.html" data-keywords="8th_grade_honors_math_functions_linear_quadratic_exponential functions linear quadratic exponential rate of change secant domain range nc.8.f" id="cardFunctionsVisualizer">
         <div class="card-top-glow" style="background: radial-gradient(circle, rgba(14, 165, 233, 0.45) 0%, transparent 70%);"></div>
         <div class="featured-grid">
           
@@ -130,6 +134,10 @@
             </div>
 
             <h2 class="card-heading searchable-title">Function Velocity & Growth Lab</h2>
+            <div style="margin: 8px 0 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="mono" style="font-size: 0.72rem; color: #38bdf8; background: rgba(14, 165, 233, 0.14); padding: 3px 10px; border-radius: 6px; border: 1px solid rgba(14, 165, 233, 0.35);">📄 apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html</span>
+              <span class="badge" style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">20 Graded Questions</span>
+            </div>
             <p class="card-desc searchable-desc">
               A deep, interactive exploration of linear, exponential, and quadratic functions. Students manipulate parameters, examine domain and range boundaries, analyze average rates of change with a dynamic secant tool, race growth algorithms, and take an exhaustive 20-question Honors mastery quiz with step-by-step explanations.
             </p>
@@ -185,7 +193,7 @@
       </article>
 
       <!-- App Card 2: Dilations, Similarity & Slope Lab -->
-      <article class="featured-card glass-panel app-item-card" data-category="math" id="cardMathVisualizer">
+      <article class="featured-card glass-panel app-item-card" data-category="math" data-filename="8th_grade_honors_math_visualizer_dilations_similarity_slope.html" data-keywords="8th_grade_honors_math_visualizer_dilations_similarity_slope dilations similarity slope coordinate transformations triangles nc.8.g nc.8.ee" id="cardMathVisualizer">
         <div class="card-top-glow"></div>
         <div class="featured-grid">
           
@@ -198,6 +206,10 @@
             </div>
 
             <h2 class="card-heading searchable-title">Dilations, Similarity & Slope Lab</h2>
+            <div style="margin: 8px 0 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="mono" style="font-size: 0.72rem; color: #a78bfa; background: rgba(167, 139, 250, 0.14); padding: 3px 10px; border-radius: 6px; border: 1px solid rgba(167, 139, 250, 0.35);">📄 apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html</span>
+              <span class="badge" style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">20 Graded Questions</span>
+            </div>
             <p class="card-desc searchable-desc">
               An exhaustive interactive visualizer combining non-rigid geometric transformations with coordinate geometry and constant rate-of-change proofs. Students manipulate scale factors, arbitrarily positioned dilation centers, and sequenced similarity mappings.
             </p>
@@ -365,7 +377,8 @@
       </div>
       <div class="footer-links">
         <a href="https://github.com/jimmymj/learning" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Repository</a>
-        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="footer-link">Math Lab Direct</a>
+        <a href="apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html" class="footer-link">📈 Functions Lab Direct</a>
+        <a href="apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html" class="footer-link">📐 Dilations Lab Direct</a>
       </div>
     </div>
   </footer>

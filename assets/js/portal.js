@@ -299,15 +299,27 @@ function initSearchAndFilter() {
   const cards = document.querySelectorAll('.app-item-card');
 
   function filterCards() {
-    const query = (searchInput?.value || '').toLowerCase().trim();
+    const rawQuery = (searchInput?.value || '').toLowerCase().trim();
+    const query = rawQuery;
+    const normalizedQuery = rawQuery.replace(/[_-\s]+/g, ' ').trim();
     const activePill = document.querySelector('.filter-pill.active')?.dataset.category || 'all';
 
     cards.forEach(card => {
       const title = card.querySelector('.searchable-title')?.textContent.toLowerCase() || '';
       const desc = card.querySelector('.searchable-desc')?.textContent.toLowerCase() || '';
+      const filename = (card.dataset.filename || '').toLowerCase();
+      const keywords = (card.dataset.keywords || '').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
       const category = card.dataset.category || '';
 
-      const matchesQuery = !query || title.includes(query) || desc.includes(query);
+      const combinedText = `${title} ${desc} ${filename} ${keywords} ${cardText}`;
+      const normalizedCombined = combinedText.replace(/[_-\s]+/g, ' ');
+
+      const matchesQuery = !query || 
+        combinedText.includes(query) || 
+        (normalizedQuery && normalizedCombined.includes(normalizedQuery)) ||
+        filename.includes(query);
+
       const matchesCategory = activePill === 'all' || category === activePill;
 
       if (matchesQuery && matchesCategory) {
