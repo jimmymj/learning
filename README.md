@@ -35,14 +35,14 @@ learning/
 - **Location:** [`apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html`](apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Math 1 Bridge
 - **Curriculum Standards:**
-  - **NC.8.F.1:** Function definition, notation $f(x)$, mapping, evaluating functions, continuous vs. discrete domain/range, and asymptotic behavior.
+  - **NC.8.F.1:** Function definition, notation `f(x)`, mapping, evaluating functions, continuous vs. discrete domain/range, and asymptotic behavior.
   - **NC.8.F.2:** Comparing properties and rates of change of two functions represented algebraically, graphically, or numerically.
   - **NC.8.F.3:** Distinguishing linear from non-linear relationships via first differences, second differences, and constant ratios.
-  - **NC.8.F.4:** Constructing function models to interpret rate of change ($m = \Delta y / \Delta x$) and initial values in real-world contexts.
+  - **NC.8.F.4:** Constructing function models to interpret rate of change (`m = Δy / Δx`) and initial values in real-world contexts.
   - **NC.8.F.5:** Qualitative graphing, analyzing symmetry, intervals of increase/decrease, and long-term exponential growth dominance.
 - **Features:**
-  - **Function Triad Explorer:** Real-time graphing canvas for Linear ($mx+b$), Quadratic ($ax^2+bx+c$), and Exponential ($a \cdot b^x$) functions with responsive parameter sliders.
-  - **Secant Rate-of-Change Engine:** Interactive $[x_1, x_2]$ interval selector displaying the secant line, slope triangle ($\Delta x, \Delta y$), and live computed Average Rate of Change ($\frac{\Delta y}{\Delta x}$).
+  - **Function Triad Explorer:** Real-time graphing canvas for Linear (`mx + b`), Quadratic (`ax² + bx + c`), and Exponential (`a · bˣ`) functions with responsive parameter sliders.
+  - **Secant Rate-of-Change Engine:** Interactive `[x₁, x₂]` interval selector displaying the secant line, slope triangle (`Δx, Δy`), and live computed Average Rate of Change (`Δy / Δx`).
   - **The Great Growth Race:** Particle race simulation visualizing how exponential growth inevitably overtakes linear and polynomial models.
   - **Difference Engine:** Dynamic table tester computing 1st differences, 2nd differences, and ratios to prove algebraic classification.
   - **20-Question Honors Mastery Challenge:** Graded quiz with 45s countdown timer, score HUD, streak multipliers, step-by-step explanations, and a "Retry Missed Questions" flow.
@@ -51,13 +51,13 @@ learning/
 - **Location:** [`apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html`](apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Accelerated Pre-Algebra & Math 1
 - **Curriculum Standards:**
-  - **NC.8.G.3:** Coordinate transformations and algebraic rules $(x, y) \rightarrow (kx, ky)$ with arbitrary center of dilation $(cx, cy)$.
+  - **NC.8.G.3:** Coordinate transformations and algebraic rules `(x, y) → (kx, ky)` with arbitrary center of dilation `(cx, cy)`.
   - **NC.8.G.4:** Similarity transformation sequences (composition of translations, reflections, rotations, and dilations).
-  - **NC.8.EE.6:** Using similar right slope triangles to prove constant rate of change and derive $y = mx + b$.
+  - **NC.8.EE.6:** Using similar right slope triangles to prove constant rate of change and derive `y = mx + b`.
 - **Features:**
-  - **Coordinate Dilations Explorer:** Real-time scaling from origin $(0,0)$ or any custom center $(cx, cy)$ with reduction ($k < 1$) and enlargement ($k > 1$) indicators.
+  - **Coordinate Dilations Explorer:** Real-time scaling from origin `(0, 0)` or any custom center `(cx, cy)` with reduction (`k < 1`) and enlargement (`k > 1`) indicators.
   - **Similarity Sequence Laboratory:** Step-by-step animated multi-transformation pipeline demonstrating angle preservation and proportionality.
-  - **Slope Triangles Engine:** Visual proof showing that the ratio of vertical change to horizontal change ($\frac{\Delta y}{\Delta x}$) is constant along any two points on a line.
+  - **Slope Triangles Engine:** Visual proof showing that the ratio of vertical change to horizontal change (`Δy / Δx`) is constant along any two points on a line.
   - **Honors Formula Cheat Sheet:** Comprehensive definitions, scale factor rules, and algebraic notation summary.
   - **20-Question Graded Quiz:** Rigorous multiple-choice assessment with instant answer validation and scoring.
 
