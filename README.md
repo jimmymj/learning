@@ -12,12 +12,14 @@ Deployed at: **[GitHub Repository](https://github.com/jimmymj/learning)**
 learning/
 ├── index.html                                        # Central LearningHub Portal & App Launcher
 ├── README.md                                         # Project Documentation & Guide
+├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Curriculum & Spec
 ├── .gitignore                                        # Standard repository ignores
 ├── .agents/                                          # Workspace Customizations & Skills
 │   └── skills/
 │       └── learning-app/                             # AI Learning App & Simulation Architect Skill
 ├── apps/                                             # Interactive Learning Applications
 │   └── math/                                         # Mathematics Subject Area
+│       ├── 4th_grade_math_factors_fractions_operations.html                  # Factors, Multiples & Fractions Lab
 │       ├── 8th_grade_honors_math_functions_linear_quadratic_exponential.html # Function Velocity & Growth Lab
 │       └── 8th_grade_honors_math_visualizer_dilations_similarity_slope.html  # Dilations, Similarity & Slope Lab
 └── assets/                                           # Shared Portal Assets
@@ -31,7 +33,22 @@ learning/
 
 ## 🚀 Available Learning Apps
 
-### 1. 📈 CMS 8th Honors Math: Function Velocity & Growth Lab
+### 1. 🦊 CMS 4th Grade Math: Factors, Multiples & Fractions Lab
+- **Location:** [`apps/math/4th_grade_math_factors_fractions_operations.html`](apps/math/4th_grade_math_factors_fractions_operations.html)
+- **Target Audience:** 4th Grade Elementary Mathematics (CMS Quarter 1 / Illustrative Math / NC SCOS)
+- **Curriculum Standards:**
+  - **NC.4.OA.4:** Factors and multiples for whole numbers 1–100, factor pairs, prime and composite classification, and multiplicative thinking.
+  - **NC.4.NF.1 & NC.4.NF.2:** Fraction equivalence `a/b = (n × a)/(n × b)` and benchmark comparisons against 0, 1/2, and 1 for standard denominators (2, 3, 4, 5, 6, 8, 10, 12, 100).
+  - **NC.4.NF.3 & NC.4.NF.4:** Decomposing fractions into unit fractions, addition and subtraction with like denominators, and multiplying whole numbers by unit fractions (`n × 1/b`) via repeated addition jump models.
+- **Features:**
+  - **9 Interactive Visual Manipulatives:** Area Grid Arrays, 12 × 12 Skip-Count Matrices, Equal-Group Remainder Bundlers, Stacked Tape Strips, Dual Number Lines, Area Partitioners, Decomposition Tile Canvases, Length Tape Models, and Repeated Addition Jump Tools.
+  - **Pip the Math Fox Mascot:** Friendly, voice-enabled guide offering encouraging feedback, mastery tracking, and Socratic hints.
+  - **Interactive Whiteboard Scratchpad:** Canvas overlay with pen, highlighter, eraser, multi-color palette, and full undo/clear support for student problem-solving.
+  - **60-Question Adaptive Mastery Quest:** 20 questions per unit (6 Easy, 8 Medium, 6 Hard) across Multiple Choice, Visual Selection, Interactive Number Line, and Drag & Drop formats.
+  - **Balanced Answer Choices & Shuffling:** Dynamic runtime Fisher-Yates shuffling across options and trays with object-level answer validation.
+  - **Misconception Remediation Drawers:** Interactive slide-up mini-interventions diagnosing root mathematical misconceptions in real time with visual diagram breakdowns.
+
+### 2. 📈 CMS 8th Honors Math: Function Velocity & Growth Lab
 - **Location:** [`apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html`](apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Math 1 Bridge
 - **Curriculum Standards:**
@@ -47,7 +64,7 @@ learning/
   - **Difference Engine:** Dynamic table tester computing 1st differences, 2nd differences, and ratios to prove algebraic classification.
   - **20-Question Honors Mastery Challenge:** Graded quiz with 45s countdown timer, score HUD, streak multipliers, step-by-step explanations, and a "Retry Missed Questions" flow.
 
-### 2. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
+### 3. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
 - **Location:** [`apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html`](apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Accelerated Pre-Algebra & Math 1
 - **Curriculum Standards:**
@@ -62,6 +79,7 @@ learning/
   - **20-Question Graded Quiz:** Rigorous multiple-choice assessment with instant answer validation and scoring.
 
 ---
+
 
 ## 💻 How to Run Locally
 

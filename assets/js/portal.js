@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initMiniCanvas();
   initFunctionsMiniCanvas();
+  initGrade4MiniCanvas();
   initSearchAndFilter();
   initModalRunner();
 });
@@ -286,6 +287,121 @@ function initFunctionsMiniCanvas() {
     ctx.fillText('Linear • Quadratic • Exponential', 20, height - 16);
 
     t += 0.025;
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+}
+
+// 1c. Dynamic Mini Canvas for 4th Grade Math Featured Card
+function initGrade4MiniCanvas() {
+  const canvas = document.getElementById('previewCanvasGrade4');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  let frame = 0;
+
+  function render() {
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background Grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += 22) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    }
+    for (let y = 0; y < height; y += 22) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+    }
+
+    // 1. Dynamic Factor Array (oscillating between 3x4 and 2x6)
+    const arrayPhase = Math.sin(frame * 0.03);
+    const cols = (arrayPhase > 0) ? 4 : 6;
+    const rows = (arrayPhase > 0) ? 3 : 2;
+    const tileSize = 16;
+    const startX = 24;
+    const startY = 40;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const tx = startX + c * tileSize;
+        const ty = startY + r * tileSize;
+        ctx.fillStyle = ((r + c) % 2 === 0) ? 'rgba(245, 158, 11, 0.35)' : 'rgba(217, 119, 6, 0.2)';
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.2;
+        ctx.fillRect(tx, ty, tileSize - 2, tileSize - 2);
+        ctx.strokeRect(tx, ty, tileSize - 2, tileSize - 2);
+      }
+    }
+
+    // Array label
+    ctx.font = 'bold 11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText(`${rows} × ${cols} = 12 Array`, startX, startY - 8);
+
+    // 2. Aligned Stacked Fraction Strips (2/3 and 4/6)
+    const stripX = width * 0.52;
+    const stripW = width * 0.42;
+    const stripH = 18;
+
+    // Top Strip: 2/3
+    const strip1Y = 36;
+    ctx.strokeStyle = '#38bdf8';
+    ctx.strokeRect(stripX, strip1Y, stripW, stripH);
+    for (let i = 0; i < 3; i++) {
+      const partW = stripW / 3;
+      const px = stripX + i * partW;
+      if (i < 2) {
+        ctx.fillStyle = 'rgba(14, 165, 233, 0.4)';
+        ctx.fillRect(px, strip1Y, partW, stripH);
+      }
+      ctx.strokeStyle = '#334155';
+      ctx.strokeRect(px, strip1Y, partW, stripH);
+    }
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('2/3', stripX + stripW + 8, strip1Y + 13);
+
+    // Bottom Strip: 4/6
+    const strip2Y = strip1Y + stripH + 8;
+    ctx.strokeStyle = '#10b981';
+    ctx.strokeRect(stripX, strip2Y, stripW, stripH);
+    for (let i = 0; i < 6; i++) {
+      const partW = stripW / 6;
+      const px = stripX + i * partW;
+      if (i < 4) {
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
+        ctx.fillRect(px, strip2Y, partW, stripH);
+      }
+      ctx.strokeStyle = '#334155';
+      ctx.strokeRect(px, strip2Y, partW, stripH);
+    }
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('4/6', stripX + stripW + 8, strip2Y + 13);
+
+    // Equivalence indicator
+    ctx.font = '10px "Inter", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('Aligned: 2/3 = 4/6', stripX, strip2Y + stripH + 16);
+
+    // Bottom Telemetry
+    ctx.font = '11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#a78bfa';
+    ctx.fillText('Factors • Equivalence • Operations', 20, height - 16);
+
+    frame++;
     requestAnimationFrame(render);
   }
 
