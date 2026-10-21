@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMiniCanvas();
   initFunctionsMiniCanvas();
   initGrade4MiniCanvas();
+  initGrade4Q2MiniCanvas();
   initSearchAndFilter();
   initModalRunner();
 });
@@ -400,6 +401,145 @@ function initGrade4MiniCanvas() {
     ctx.font = '11px "JetBrains Mono", monospace';
     ctx.fillStyle = '#a78bfa';
     ctx.fillText('Factors • Equivalence • Operations', 20, height - 16);
+
+    frame++;
+    requestAnimationFrame(render);
+  }
+
+}
+
+// 1d. Dynamic Mini Canvas for 4th Grade Math Q2 Featured Card
+function initGrade4Q2MiniCanvas() {
+  const canvas = document.getElementById('previewCanvasGrade4Q2');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  let frame = 0;
+
+  function render() {
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Subtle background grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += 22) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    }
+    for (let y = 0; y < height; y += 22) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+    }
+
+    // Left Visualizer: 10x10 Decimal Hundredths Grid (Tenths Equivalence)
+    const gridX = 22;
+    const gridY = 32;
+    const gridSide = Math.min(84, height - 60);
+    const cellSize = gridSide / 10;
+
+    // Oscillation between 3 tenths (30 hundredths) and 5 tenths (50 hundredths)
+    const tenthsCount = 3 + Math.floor(((Math.sin(frame * 0.025) + 1) / 2) * 3); // 3, 4, or 5
+    const shadedHundredths = tenthsCount * 10;
+
+    // Draw 10x10 Hundredths Grid
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        const cx = gridX + col * cellSize;
+        const cy = gridY + row * cellSize;
+        const isShaded = col < tenthsCount;
+
+        if (isShaded) {
+          ctx.fillStyle = ((row + col) % 2 === 0) ? 'rgba(16, 185, 129, 0.45)' : 'rgba(5, 150, 105, 0.35)';
+        } else {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.5)';
+        }
+        ctx.fillRect(cx, cy, cellSize, cellSize);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+        ctx.strokeRect(cx, cy, cellSize, cellSize);
+      }
+    }
+
+    // Outer grid border & tenths columns divider
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(gridX, gridY, gridSide, gridSide);
+
+    for (let col = 1; col < 10; col++) {
+      ctx.strokeStyle = (col === tenthsCount) ? '#34d399' : 'rgba(16, 185, 129, 0.3)';
+      ctx.lineWidth = (col === tenthsCount) ? 2 : 1;
+      ctx.beginPath();
+      ctx.moveTo(gridX + col * cellSize, gridY);
+      ctx.lineTo(gridX + col * cellSize, gridY + gridSide);
+      ctx.stroke();
+    }
+
+    // Left Label
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#34d399';
+    ctx.fillText(`${tenthsCount}/10 = ${shadedHundredths}/100 = 0.${tenthsCount}`, gridX, gridY - 8);
+
+    // Right Visualizer: Rectilinear L-Shaped Area Decomposition
+    const polyLeft = width * 0.48;
+    const polyTop = 32;
+    const unitScale = Math.min(10, (width * 0.45) / 10);
+
+    // Box A: 6m wide x 4m high -> Area 24 m²
+    const wA = 6 * unitScale;
+    const hA = 4 * unitScale;
+    // Box B: 2m wide x 3m high attached underneath -> Area 6 m²
+    const wB = 3 * unitScale;
+    const hB = 3 * unitScale;
+
+    // Draw Box A
+    ctx.fillStyle = 'rgba(14, 165, 233, 0.35)';
+    ctx.fillRect(polyLeft, polyTop, wA, hA);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(polyLeft, polyTop, wA, hA);
+
+    // Draw Box B
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.35)';
+    ctx.fillRect(polyLeft, polyTop + hA, wB, hB);
+    ctx.strokeStyle = '#c084fc';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(polyLeft, polyTop + hA, wB, hB);
+
+    // Dashed internal decomposition line
+    ctx.strokeStyle = '#fbbf24';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(polyLeft, polyTop + hA);
+    ctx.lineTo(polyLeft + wB, polyTop + hA);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Area labels inside boxes
+    ctx.font = 'bold 9px "Inter", sans-serif';
+    ctx.fillStyle = '#bae6fd';
+    ctx.fillText('A = 24 m²', polyLeft + 8, polyTop + hA / 2 + 3);
+    ctx.fillStyle = '#f3e8ff';
+    ctx.fillText('B = 9 m²', polyLeft + 4, polyTop + hA + hB / 2 + 3);
+
+    // Total area computation label
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#22d3ee';
+    ctx.fillText('24 + 9 = 33 m²', polyLeft, polyTop - 8);
+
+    // Bottom Telemetry
+    ctx.font = '11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('Decimals • Partial Products • Area & Line Plots', 20, height - 16);
 
     frame++;
     requestAnimationFrame(render);

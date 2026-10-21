@@ -12,14 +12,16 @@ Deployed at: **[GitHub Repository](https://github.com/jimmymj/learning)**
 learning/
 ├── index.html                                        # Central LearningHub Portal & App Launcher
 ├── README.md                                         # Project Documentation & Guide
-├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Curriculum & Spec
+├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Q1 Spec
+├── 4th_grade_math_q2_spec.md                         # Comprehensive 4th Grade Math Q2 Spec
 ├── .gitignore                                        # Standard repository ignores
 ├── .agents/                                          # Workspace Customizations & Skills
 │   └── skills/
 │       └── learning-app/                             # AI Learning App & Simulation Architect Skill
 ├── apps/                                             # Interactive Learning Applications
 │   └── math/                                         # Mathematics Subject Area
-│       ├── 4th_grade_math_factors_fractions_operations.html                  # Factors, Multiples & Fractions Lab
+│       ├── 4th_grade_math_decimals_multi_digit_measurement_q2.html           # Decimals, Operations & Measurement (Q2)
+│       ├── 4th_grade_math_factors_fractions_operations.html                  # Factors, Multiples & Fractions Lab (Q1)
 │       ├── 8th_grade_honors_math_functions_linear_quadratic_exponential.html # Function Velocity & Growth Lab
 │       └── 8th_grade_honors_math_visualizer_dilations_similarity_slope.html  # Dilations, Similarity & Slope Lab
 └── assets/                                           # Shared Portal Assets
@@ -33,7 +35,22 @@ learning/
 
 ## 🚀 Available Learning Apps
 
-### 1. 🦊 CMS 4th Grade Math: Factors, Multiples & Fractions Lab
+### 1. 📊 CMS 4th Grade Math: Decimals, Multi-Digit Operations & Measurement Lab (Q2)
+- **Location:** [`apps/math/4th_grade_math_decimals_multi_digit_measurement_q2.html`](apps/math/4th_grade_math_decimals_multi_digit_measurement_q2.html)
+- **Target Audience:** 4th Grade Elementary Mathematics (CMS Quarter 2 / Illustrative Math / NC SCOS)
+- **Curriculum Standards:**
+  - **Cluster 1 (NC.4.NF.1, 2, 3, 6, 7):** Fractions Continuation & Decimal Notation (tenths/hundredths equivalence `0.4 = 40/100`, decimal number line with 10× zoom, decimal comparisons `<, =, >`, mixed number decimal conversions).
+  - **Cluster 2 (NC.4.NBT.1, 2, 5, 6; NC.4.OA.1, 2, 3):** Place Value, Multi-Digit Operations & Multiplicative Comparison (10× place-value shifter, multi-digit partial products area model `243 × 6 = 1,200 + 240 + 18 = 1,458`, partial quotients division visualizer `432 ÷ 4`, two-step word problems).
+  - **Cluster 3 (NC.4.MD.1, 2, 3, 4, 8):** Area, Perimeter, Measurement & Fractional Data (rectilinear composite polygon decomposition `24 + 6 = 30 m²`, two-pan metric/customary conversion balance, fractional pencil line plot with difference calculations, analog/digital elapsed time timeline).
+- **Features:**
+  - **9 Interactive Digital Manipulatives:** Dual Tenths/Hundredths Grids, Decimal Number Line with 10× Magnifying Zoom, Place-Value Base-Ten Shifter, Multi-Digit Partial Products Area Model, Partial Quotients Visualizer, Rectilinear L-Shaped Polygon Decomposer, Two-Pan Measurement Unit Balance, Fractional Pencil Line Plot, and Elapsed Time Timeline.
+  - **Pip the Math Fox Mascot:** Friendly, voice-enabled guide offering encouraging feedback, mastery tracking, and Socratic hints.
+  - **Interactive Whiteboard Scratchpad:** Canvas overlay with pen, highlighter, eraser, multi-color palette, and full undo/clear support for student problem-solving.
+  - **60-Question Adaptive Mastery Quest:** 20 questions per cluster (6 Easy, 10 Medium, 4 Hard) across Multiple Choice, Visual Selection, Interactive Number Line, and Drag & Drop formats.
+  - **Balanced Answer Choices & Shuffling:** Dynamic runtime Fisher-Yates shuffling across options and trays with object-level answer validation.
+  - **Misconception Remediation Drawers:** Interactive slide-up mini-interventions diagnosing root mathematical misconceptions in real time with visual diagram breakdowns.
+
+### 2. 🦊 CMS 4th Grade Math: Factors, Multiples & Fractions Lab (Q1)
 - **Location:** [`apps/math/4th_grade_math_factors_fractions_operations.html`](apps/math/4th_grade_math_factors_fractions_operations.html)
 - **Target Audience:** 4th Grade Elementary Mathematics (CMS Quarter 1 / Illustrative Math / NC SCOS)
 - **Curriculum Standards:**
@@ -48,7 +65,7 @@ learning/
   - **Balanced Answer Choices & Shuffling:** Dynamic runtime Fisher-Yates shuffling across options and trays with object-level answer validation.
   - **Misconception Remediation Drawers:** Interactive slide-up mini-interventions diagnosing root mathematical misconceptions in real time with visual diagram breakdowns.
 
-### 2. 📈 CMS 8th Honors Math: Function Velocity & Growth Lab
+### 3. 📈 CMS 8th Honors Math: Function Velocity & Growth Lab
 - **Location:** [`apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html`](apps/math/8th_grade_honors_math_functions_linear_quadratic_exponential.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Math 1 Bridge
 - **Curriculum Standards:**
@@ -64,7 +81,7 @@ learning/
   - **Difference Engine:** Dynamic table tester computing 1st differences, 2nd differences, and ratios to prove algebraic classification.
   - **20-Question Honors Mastery Challenge:** Graded quiz with 45s countdown timer, score HUD, streak multipliers, step-by-step explanations, and a "Retry Missed Questions" flow.
 
-### 3. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
+### 4. 📐 CMS 8th Honors Math: Dilations, Similarity & Slope Lab
 - **Location:** [`apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html`](apps/math/8th_grade_honors_math_visualizer_dilations_similarity_slope.html)
 - **Target Audience:** 8th Grade Honors Mathematics / Accelerated Pre-Algebra & Math 1
 - **Curriculum Standards:**
