@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFunctionsMiniCanvas();
   initGrade4MiniCanvas();
   initGrade4Q2MiniCanvas();
+  initGrade5AigMiniCanvas();
   initSearchAndFilter();
   initModalRunner();
 });
@@ -542,6 +543,158 @@ function initGrade4Q2MiniCanvas() {
     ctx.fillText('Decimals • Partial Products • Area & Line Plots', 20, height - 16);
 
     frame++;
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+}
+
+// 1e. Dynamic Mini Canvas for 5th Grade AIG Math Featured Card (3D Isometric Prism & Space Diagonal)
+function initGrade5AigMiniCanvas() {
+  const canvas = document.getElementById('previewCanvasGrade5Aig');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  let angle = 0.5;
+
+  function project(x, y, z, cx, cy) {
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const pitch = 0.45;
+    const cosP = Math.cos(pitch);
+    const sinP = Math.sin(pitch);
+
+    const x1 = x * cosA - z * sinA;
+    const z1 = x * sinA + z * cosA;
+
+    const y2 = y * cosP - z1 * sinP;
+
+    const scale = 1.0;
+    return {
+      x: cx + x1 * scale,
+      y: cy + y2 * scale
+    };
+  }
+
+  function render() {
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Subtle background grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += 22) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    }
+    for (let y = 0; y < height; y += 22) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+    }
+
+    const cx = width * 0.42;
+    const cy = height * 0.52;
+
+    // Prism dimensions in 3D units
+    const L = 80;  // length (x)
+    const H = 55;  // height (y)
+    const W = 65;  // width/depth (z)
+
+    // 8 vertices centered at origin
+    const v = [
+      project(-L/2,  H/2, -W/2, cx, cy), // 0: bottom-left-back
+      project( L/2,  H/2, -W/2, cx, cy), // 1: bottom-right-back
+      project( L/2,  H/2,  W/2, cx, cy), // 2: bottom-right-front
+      project(-L/2,  H/2,  W/2, cx, cy), // 3: bottom-left-front
+      project(-L/2, -H/2, -W/2, cx, cy), // 4: top-left-back
+      project( L/2, -H/2, -W/2, cx, cy), // 5: top-right-back
+      project( L/2, -H/2,  W/2, cx, cy), // 6: top-right-front
+      project(-L/2, -H/2,  W/2, cx, cy)  // 7: top-left-front
+    ];
+
+    // Shaded base layer (y = H/2)
+    ctx.fillStyle = 'rgba(6, 182, 212, 0.16)';
+    ctx.beginPath();
+    ctx.moveTo(v[0].x, v[0].y);
+    ctx.lineTo(v[1].x, v[1].y);
+    ctx.lineTo(v[2].x, v[2].y);
+    ctx.lineTo(v[3].x, v[3].y);
+    ctx.closePath();
+    ctx.fill();
+
+    // Shaded front-top face
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.12)';
+    ctx.beginPath();
+    ctx.moveTo(v[4].x, v[4].y);
+    ctx.lineTo(v[5].x, v[5].y);
+    ctx.lineTo(v[6].x, v[6].y);
+    ctx.lineTo(v[7].x, v[7].y);
+    ctx.closePath();
+    ctx.fill();
+
+    // Wireframe edges
+    const edges = [
+      [0,1],[1,2],[2,3],[3,0], // bottom
+      [4,5],[5,6],[6,7],[7,4], // top
+      [0,4],[1,5],[2,6],[3,7]  // vertical pillars
+    ];
+
+    ctx.strokeStyle = '#06b6d4';
+    ctx.lineWidth = 1.6;
+    edges.forEach(([p1, p2]) => {
+      ctx.beginPath();
+      ctx.moveTo(v[p1].x, v[p1].y);
+      ctx.lineTo(v[p2].x, v[p2].y);
+      ctx.stroke();
+    });
+
+    // Internal space diagonal (vertex 3 bottom-left-front to vertex 5 top-right-back)
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(v[3].x, v[3].y);
+    ctx.lineTo(v[5].x, v[5].y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Glowing nodes on space diagonal ends
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(v[3].x, v[3].y, 4, 0, Math.PI * 2);
+    ctx.arc(v[5].x, v[5].y, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Telemetry text overlay
+    ctx.font = 'bold 11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('V = B × h = 6 × 4 × 5 = 120 u³', 20, 26);
+
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText('d = √(6² + 4² + 5²) ≈ 8.77', 20, 42);
+
+    // Right-hand callout
+    ctx.font = '10px "Inter", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('Interactive 3D Prism', width - 125, 26);
+    ctx.fillText('Space Diagonal d', width - 125, 42);
+
+    // Bottom Telemetry
+    ctx.font = '11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#22d3ee';
+    ctx.fillText('Spatial Volume • Algorithmic Cryptarithms • Base-10 Exponents', 20, height - 16);
+
+    angle += 0.012;
     requestAnimationFrame(render);
   }
 

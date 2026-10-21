@@ -12,14 +12,16 @@ Deployed at: **[GitHub Repository](https://github.com/jimmymj/learning)**
 learning/
 ├── index.html                                        # Central LearningHub Portal & App Launcher
 ├── README.md                                         # Project Documentation & Guide
-├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Q1 Spec
+├── 5th_grade_aig_math_q1_spec.md                     # Comprehensive 5th Grade AIG Math Q1 Spec
 ├── 4th_grade_math_q2_spec.md                         # Comprehensive 4th Grade Math Q2 Spec
+├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Q1 Spec
 ├── .gitignore                                        # Standard repository ignores
 ├── .agents/                                          # Workspace Customizations & Skills
 │   └── skills/
 │       └── learning-app/                             # AI Learning App & Simulation Architect Skill
 ├── apps/                                             # Interactive Learning Applications
 │   └── math/                                         # Mathematics Subject Area
+│       ├── 5th_grade_aig_math_volume_operations_decimals_q1.html             # Spatial Volume, Algorithms & Decimal Systems Lab (Q1 AIG)
 │       ├── 4th_grade_math_decimals_multi_digit_measurement_q2.html           # Decimals, Operations & Measurement (Q2)
 │       ├── 4th_grade_math_factors_fractions_operations.html                  # Factors, Multiples & Fractions Lab (Q1)
 │       ├── 8th_grade_honors_math_functions_linear_quadratic_exponential.html # Function Velocity & Growth Lab
@@ -35,7 +37,23 @@ learning/
 
 ## 🚀 Available Learning Apps
 
-### 1. 📊 CMS 4th Grade Math: Decimals, Multi-Digit Operations & Measurement Lab (Q2)
+### 1. 🧊 CMS 5th Grade AIG Math: Spatial Volume, Algorithms & Decimal Systems Lab (Q1)
+- **Location:** [`apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html`](apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html)
+- **Target Audience:** 5th Grade Academically or Intellectually Gifted (AIG) Mathematics (CMS Quarter 1 / Illustrative Math Units 1, 4, 5 / NC SCOS)
+- **Curriculum Standards:**
+  - **Module 1 (NC.5.MD.3, 4, 5a-c; NC.5.OA.2):** Spatial Volume Reasoning & 3D Geometry (unit cube packing, associative volume `V = (l × w) × h`, layer-by-layer slicing `V = B × h`, composite L-shaped solids, hollow-core cavity void subtraction `V_outer - V_void`, surface-area-to-volume ratio optimization, space diagonal `d = √(l² + w² + h²)`).
+  - **Module 2 (NC.5.NBT.5, 6):** Multi-Digit Whole Number Operations & Algorithmic Reasoning (standard algorithm place-value alignment, partial products area models up to 3-digit × 2-digit, partial quotients division up to 4-digit ÷ 2-digit, algorithmic cryptarithms `3A5 × B4 = 11,810`, and real-world remainder interpretations).
+  - **Module 3 (NC.5.NBT.1, 2, 3a-b, 7):** Decimal Place Value Patterns, Exponents & Operations (base-10 exponential powers `10⁻³` to `10⁶`, metric metric prefix shifts, thousandths expanded notation, decimal inequalities `<, =, >`, benchmark rounding, and mental compensation arithmetic).
+- **Features:**
+  - **Interactive 3D Prism Sandbox:** Rotatable 3D wireframe prism with pitch/yaw mouse drag, dynamic wireframe render, internal space diagonal telemetry, layer-by-layer slicing toggle, and live volume calculations.
+  - **Partial Products Area Model & Cryptarithm Solver:** Interactive 3×2 grid multiplier with live digit cryptarithm puzzle generator.
+  - **Base-10 Exponential Shifter:** Interactive slider exploring powers of 10 from $10^{-3}$ to $10^{6}$ with place-value column migration.
+  - **60-Question AIG Mastery Quest:** 20 questions per module across 10 curriculum topics spanning 3 rigor tiers (Tier 1 Level 4/5 Mastery, Tier 2 Non-Routine AIG Logic, Tier 3 Pre-Algebra/Competition).
+  - **4-Part Diagnostic Feedback Panels:** Every question features Step-by-Step Walkthrough, Core Mathematical Principle, Common Misconceptions Diagnosis, and Fast-Track Competition Shortcut.
+  - **Aria Vance Gifted Scholar Persona:** Elegant, high-density, low-friction dark obsidian interface calibrated for intellectual rigor without childish clutter.
+  - **Interactive Whiteboard Scratchpad & Audio Synth:** Full canvas scratchpad with pen, highlighter, eraser, multi-color palette, and Web Audio sound feedback.
+
+### 2. 📊 CMS 4th Grade Math: Decimals, Multi-Digit Operations & Measurement Lab (Q2)
 - **Location:** [`apps/math/4th_grade_math_decimals_multi_digit_measurement_q2.html`](apps/math/4th_grade_math_decimals_multi_digit_measurement_q2.html)
 - **Target Audience:** 4th Grade Elementary Mathematics (CMS Quarter 2 / Illustrative Math / NC SCOS)
 - **Curriculum Standards:**
