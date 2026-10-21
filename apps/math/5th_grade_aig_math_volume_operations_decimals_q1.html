@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CMS 5th Grade AIG Math: Spatial Volume, Algorithms & Decimal Systems Lab (Q1)</title>
-  <meta name="description" content="Elite, interactive mathematical learning suite for CMS 5th Grade AIG students (Weeks 1–9 / NC SCOS / IM Units 1, 4, 5). Features 9 manipulatives, 3D rotatable volume sandbox, algorithm cryptarithm solver, and 60-question adaptive quest." />
+  <meta name="description" content="Elite, interactive mathematical learning suite for CMS 5th Grade AIG students (Weeks 1–9 / NC SCOS / IM Units 1, 4, 5). Features 9 manipulatives, 3D rotatable volume sandbox, algorithm cryptarithm solver, 10-topic navigator, and 60-question adaptive quest." />
 
   <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,7 +66,7 @@
     /* Top Navigation Header */
     header.app-header {
       border-bottom: 1px solid var(--border-subtle);
-      background: rgba(9, 13, 22, 0.8);
+      background: rgba(9, 13, 22, 0.85);
       backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
@@ -138,6 +138,12 @@
       outline: none;
     }
 
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+    }
+
     .btn-secondary {
       background: rgba(255, 255, 255, 0.05);
       border-color: var(--border-subtle);
@@ -156,6 +162,17 @@
     }
 
     .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+    }
+
+    .btn-accent:hover {
       opacity: 0.95;
       transform: translateY(-1px);
     }
@@ -208,6 +225,135 @@
       background: rgba(245, 158, 11, 0.1);
     }
 
+    /* Topic Quick Navigation Bar */
+    .topic-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 10px 16px;
+      margin: 18px 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .topic-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .topic-selector-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 5px 12px;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .topic-nav-icon {
+      font-size: 1.1rem;
+    }
+
+    .topic-select {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .topic-select option, .topic-select optgroup {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: var(--font-body);
+      font-size: 0.86rem;
+    }
+
+    .topic-stepper-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topic-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Horizontal Topic Pills Bar */
+    .topic-pills-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+    }
+
+    .topic-pills-bar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .topic-pills-bar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-full);
+    }
+
+    .topic-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .topic-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .topic-pill.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--primary);
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .pill-dot.m1 { background: var(--primary); }
+    .pill-dot.m2 { background: var(--accent-indigo); }
+    .pill-dot.m3 { background: var(--accent-emerald); }
+
     /* Main Tab Navigation */
     .tab-bar {
       display: flex;
@@ -216,7 +362,7 @@
       padding: 6px;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
-      margin: 24px 0;
+      margin-bottom: 24px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -227,7 +373,7 @@
 
     .tab-btn {
       flex: 1;
-      min-width: 180px;
+      min-width: 170px;
       padding: 10px 16px;
       border-radius: var(--radius-md);
       font-family: var(--font-heading);
@@ -482,6 +628,7 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .filter-btn {
@@ -500,6 +647,71 @@
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
+    }
+
+    /* Question Matrix Panel in Quest */
+    .question-matrix-panel {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 8px;
+    }
+
+    .matrix-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+      gap: 6px;
+    }
+
+    .matrix-chip {
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .matrix-chip:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .matrix-chip.current {
+      border-color: var(--primary);
+      background: rgba(6, 182, 212, 0.25);
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+    }
+
+    .matrix-chip.correct {
+      border-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+    }
+
+    .matrix-chip.incorrect {
+      border-color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.25);
+      color: #fb7185;
     }
 
     .question-card {
@@ -697,6 +909,71 @@
       display: block;
     }
 
+    /* Topic Directory Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-container {
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 980px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .topic-directory-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: var(--transition);
+    }
+
+    .topic-directory-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(6, 182, 212, 0.4);
+      transform: translateY(-2px);
+    }
+
     /* Footer */
     footer.app-footer {
       border-top: 1px solid var(--border-subtle);
@@ -722,14 +999,17 @@
       </a>
 
       <div class="header-controls">
-        <button id="soundToggleBtn" class="btn btn-secondary" title="Toggle Sound">
+        <button id="soundToggleBtn" class="btn btn-secondary btn-sm" title="Toggle Sound">
           <span id="soundIcon">🔊</span>
           <span id="soundLabel">Sound</span>
         </button>
-        <button id="scratchpadToggleBtn" class="btn btn-secondary">
+        <button id="scratchpadToggleBtn" class="btn btn-secondary btn-sm">
           <span>✏️ Whiteboard</span>
         </button>
-        <a href="../../index.html" class="btn btn-outline">
+        <button id="btnOpenTopicDirectoryHeader" class="btn btn-secondary btn-sm">
+          <span>🗺️ Topics Index</span>
+        </button>
+        <a href="../../index.html" class="btn btn-outline btn-sm">
           <span>← LearningHub</span>
         </a>
       </div>
@@ -738,22 +1018,84 @@
 
   <main class="container" style="padding-bottom: 40px;">
 
+    <!-- TOPIC QUICK NAVIGATION BAR (SIMPLE & EASY) -->
+    <div class="topic-nav-bar" id="topicNavBar">
+      <div class="topic-nav-left">
+        <div class="topic-selector-container">
+          <span class="topic-nav-icon">📚</span>
+          <select id="globalTopicSelect" class="topic-select" aria-label="Select Learning Topic">
+            <optgroup label="Module 1: Spatial Volume Reasoning & 3D Geometry (NC.5.MD)">
+              <option value="1">Topic 1: Unit Cube Packing & SA:V Ratios (NC.5.MD.3/4)</option>
+              <option value="2">Topic 2: Volume Fluency & Layering V = B × h (NC.5.MD.5a/b)</option>
+              <option value="3">Topic 3: Additive Volume & Composite Solids (NC.5.MD.5c)</option>
+              <option value="4">Topic 4: Real-World Dimension Constraints (NC.5.MD.5b)</option>
+            </optgroup>
+            <optgroup label="Module 2: Multi-Digit Algorithms & Logic (NC.5.NBT)">
+              <option value="5">Topic 5: Standard Algorithm Mechanics (NC.5.NBT.5)</option>
+              <option value="6">Topic 6: Division & Remainder Models (NC.5.NBT.6)</option>
+              <option value="7">Topic 7: Algorithmic Cryptarithms & Error Analysis (NC.5.NBT.5/6)</option>
+            </optgroup>
+            <optgroup label="Module 3: Decimal Place Value & Exponents (NC.5.NBT)">
+              <option value="8">Topic 8: Base-Ten Patterns & Exponential Powers (NC.5.NBT.1/2)</option>
+              <option value="9">Topic 9: Thousandths Inequalities & Value Density (NC.5.NBT.3a/b)</option>
+              <option value="10">Topic 10: High-Precision Decimal Operations & Mental Math (NC.5.NBT.7)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Stepper Buttons -->
+        <div class="topic-stepper-group">
+          <button id="prevTopicBtn" class="btn btn-sm btn-secondary" title="Previous Topic">◀ Prev</button>
+          <span id="topicCounterChip" class="badge badge-primary">Topic 1 / 10</span>
+          <button id="nextTopicBtn" class="btn btn-sm btn-secondary" title="Next Topic">Next ▶</button>
+        </div>
+      </div>
+
+      <!-- Direct 1-Click Action Launchers for Selected Topic -->
+      <div class="topic-nav-right">
+        <button id="btnOpenTopicLab" class="btn btn-sm btn-primary" title="Launch Interactive Manipulative for this topic">
+          <span>🔬 Open Lab</span>
+        </button>
+        <button id="btnOpenTopicQuest" class="btn btn-sm btn-accent" title="Practice Questions for this topic">
+          <span>🎯 Practice Quest</span>
+          <span class="badge" id="topicQCountChip" style="background: rgba(0,0,0,0.35); font-size: 0.68rem; color: #fff;">5 Qs</span>
+        </button>
+        <button id="btnOpenTopicDirectory" class="btn btn-sm btn-secondary" title="View All 10 Topics Index">
+          <span>🗺️ All Topics</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Topic Pills (Horizontal Scrollable Strip) -->
+    <div class="topic-pills-bar" id="topicPillsBar">
+      <button class="topic-pill active" data-topic="1"><span class="pill-dot m1"></span>T1: Cube Packing</button>
+      <button class="topic-pill" data-topic="2"><span class="pill-dot m1"></span>T2: Layering V=B×h</button>
+      <button class="topic-pill" data-topic="3"><span class="pill-dot m1"></span>T3: Composite Solids</button>
+      <button class="topic-pill" data-topic="4"><span class="pill-dot m1"></span>T4: Dimension Limits</button>
+      <button class="topic-pill" data-topic="5"><span class="pill-dot m2"></span>T5: Multi-Digit Multiply</button>
+      <button class="topic-pill" data-topic="6"><span class="pill-dot m2"></span>T6: Division & Remainders</button>
+      <button class="topic-pill" data-topic="7"><span class="pill-dot m2"></span>T7: Cryptarithms</button>
+      <button class="topic-pill" data-topic="8"><span class="pill-dot m3"></span>T8: Powers of 10</button>
+      <button class="topic-pill" data-topic="9"><span class="pill-dot m3"></span>T9: Thousandths Values</button>
+      <button class="topic-pill" data-topic="10"><span class="pill-dot m3"></span>T10: Decimal Operations</button>
+    </div>
+
     <!-- Tab Navigation Bar -->
     <nav class="tab-bar" role="tablist">
       <button class="tab-btn active" data-tab="tabVolume" id="tabBtnVolume">
-        <span>🏛️ 3D Volume Lab</span>
+        <span>🏛️ 1. 3D Volume Lab</span>
         <span class="badge badge-primary">NC.5.MD</span>
       </button>
       <button class="tab-btn" data-tab="tabAlgorithms" id="tabBtnAlgorithms">
-        <span>⚙️ Multi-Digit Algorithms</span>
+        <span>⚙️ 2. Multi-Digit Algorithms</span>
         <span class="badge badge-indigo">NC.5.NBT.5/6</span>
       </button>
       <button class="tab-btn" data-tab="tabDecimals" id="tabBtnDecimals">
-        <span>🔢 Decimal Systems</span>
+        <span>🔢 3. Decimal Systems</span>
         <span class="badge badge-emerald">NC.5.NBT.1/2/7</span>
       </button>
       <button class="tab-btn" data-tab="tabQuest" id="tabBtnQuest">
-        <span>🏆 60-Q AIG Mastery Quest</span>
+        <span>🏆 4. 60-Q AIG Quest</span>
         <span class="badge badge-amber" id="questCountBadge">60 Qs</span>
       </button>
     </nav>
@@ -763,12 +1105,16 @@
       <div class="glass-card">
         <div class="card-title-group">
           <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="badge badge-primary">Module 1 • Topics 1–4</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">NC.5.MD.3 • NC.5.MD.4 • NC.5.MD.5a-c • NC.5.OA.2</span>
+            </div>
             <h2 class="card-title">Interactive 3D Rectangular Prism Sandbox</h2>
             <p class="card-desc">Drag to rotate the prism in 3D. Manipulate dimensions to investigate base area layering (V = B × h), discrete unit cube packing, and the 3D space diagonal.</p>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary" id="resetPrismBtn">↺ Reset View</button>
-            <button class="btn btn-secondary" id="toggleWireframeBtn">🔲 Toggle Mesh</button>
+            <button class="btn btn-secondary btn-sm" id="resetPrismBtn">↺ Reset View</button>
+            <button class="btn btn-secondary btn-sm" id="toggleWireframeBtn">🔲 Toggle Mesh</button>
           </div>
         </div>
 
@@ -841,6 +1187,10 @@
       <div class="glass-card">
         <div class="card-title-group">
           <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="badge badge-indigo">Module 2 • Topics 5–7</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">NC.5.NBT.5 • NC.5.NBT.6</span>
+            </div>
             <h2 class="card-title">Multi-Digit Operations & Cryptarithm Studio</h2>
             <p class="card-desc">Inspect partial products area models and solve missing-digit cryptarithms under NC.5.NBT.5 and NC.5.NBT.6.</p>
           </div>
@@ -850,11 +1200,11 @@
           <!-- Partial Products Model -->
           <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); padding: 20px; border-radius: var(--radius-md);">
             <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary);">Interactive 3-Digit × 2-Digit Area Model</div>
-            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
               <input type="number" id="inputFactorA" value="487" style="width: 100px; padding: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; color: #fff; font-family: var(--font-mono);" />
               <span style="font-size: 1.2rem; align-self: center;">×</span>
               <input type="number" id="inputFactorB" value="63" style="width: 80px; padding: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; color: #fff; font-family: var(--font-mono);" />
-              <button class="btn btn-secondary" id="btnCalculateProduct">Calculate</button>
+              <button class="btn btn-secondary btn-sm" id="btnCalculateProduct">Calculate</button>
             </div>
             <div id="partialProductsDisplay" style="font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.8; color: #cbd5e1;">
               Row 1: 487 × 3 = 1,461<br />
@@ -866,45 +1216,67 @@
           <!-- Cryptarithm Challenge Box -->
           <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); padding: 20px; border-radius: var(--radius-md);">
             <div style="font-weight: 700; margin-bottom: 12px; color: #a5b4fc;">Live Cryptarithm Puzzle: 3A5 × B4 = 11,810</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Select digits A and B to verify row alignments in real time.</p>
-            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 14px;">
-              <label>Digit A: <select id="selectDigitA" style="padding: 6px 12px; background: #090d16; color: #fff; border: 1px solid var(--border-subtle); border-radius: 6px; font-family: var(--font-mono);"><option value="4">4</option><option value="5">5</option><option value="6" selected>6</option><option value="7">7</option></select></label>
-              <label>Digit B: <select id="selectDigitB" style="padding: 6px 12px; background: #090d16; color: #fff; border: 1px solid var(--border-subtle); border-radius: 6px; font-family: var(--font-mono);"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></label>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Select digits A and B to reconstruct the multiplication problem.</p>
+            
+            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                Digit A:
+                <select id="selectDigitA" style="padding: 6px 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); border-radius: 6px; color: #fff; font-family: var(--font-mono);">
+                  <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                  <option value="4" selected>4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                </select>
+              </label>
+
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                Digit B:
+                <select id="selectDigitB" style="padding: 6px 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); border-radius: 6px; color: #fff; font-family: var(--font-mono);">
+                  <option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option>
+                  <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                </select>
+              </label>
             </div>
-            <div id="cryptarithmResult" style="font-family: var(--font-mono); font-size: 0.88rem; color: #34d399; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);">
-              ✓ 365 × 4 = 1,460 | 365 × 30 = 10,350 | Sum = 11,810 (Exact Match!)
+
+            <div id="cryptarithmResultBox" style="font-family: var(--font-mono); font-size: 0.85rem; padding: 12px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;">
+              ✓ 345 × 4 = 1,380 | 345 × 30 = 10,350 | Sum = 11,730 (Keep testing!)
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Tab 3: Decimal Place Value & Operations -->
+    <!-- Tab 3: Decimal Place Value & Exponents -->
     <section id="tabDecimals" class="tab-pane">
       <div class="glass-card">
         <div class="card-title-group">
           <div>
-            <h2 class="card-title">Exponential Base-10 Scale & Decimal Balancer</h2>
-            <p class="card-desc">Shift digits across powers of 10 and test landmark compensation subtraction under NC.5.NBT.1, 2, and 7.</p>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="badge badge-emerald">Module 3 • Topics 8–10</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">NC.5.NBT.1 • NC.5.NBT.2 • NC.5.NBT.3a-b • NC.5.NBT.7</span>
+            </div>
+            <h2 class="card-title">Decimal Place Value & Exponential Shifter</h2>
+            <p class="card-desc">Slide to multiply and divide by powers of 10 from 10⁻³ to 10⁶. Observe decimal point shifts and metric unit transitions.</p>
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <!-- Power of 10 Shifter -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <!-- Exponent Slider -->
           <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); padding: 20px; border-radius: var(--radius-md);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-weight: 700; color: var(--primary);">Base Value: 48.5 × 10ⁿ Shift Engine</span>
-              <span class="hud-num" id="exponentDisplay" style="color: var(--primary);">Power n = 2 (10² = 100)</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-weight: 700; color: var(--primary);">Base Value: 48.5</span>
+              <span id="exponentDisplay" style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-amber);">Power n = 2 (10² = 100)</span>
             </div>
-            <input type="range" id="sliderExponent" class="control-slider" min="-3" max="4" value="2" step="1" />
-            <div style="margin-top: 16px; font-family: var(--font-mono); font-size: 1.1rem; text-align: center; color: #fff;" id="exponentOutput">
-              48.5 × 10² = 4,850
+
+            <input type="range" id="sliderExponent" class="control-slider" min="-3" max="6" value="2" style="margin: 16px 0;" />
+
+            <div class="telemetry-box" style="margin-top: 14px;">
+              <div class="telemetry-label">Shifted Decimal Value</div>
+              <div id="exponentOutput" class="telemetry-val" style="color: #38bdf8;">48.5 × 10² = 4,850</div>
             </div>
           </div>
 
           <!-- Decimal Compensation Subtraction -->
           <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); padding: 20px; border-radius: var(--radius-md);">
-            <div style="font-weight: 700; color: #a5b4fc; margin-bottom: 8px;">Mental Math Compensation Tool: 64.382 - 29.995</div>
+            <div style="font-weight: 700; margin-bottom: 10px; color: #a5b4fc;">Landmark Compensation: 64.382 - 29.995</div>
             <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">29.995 is 0.005 less than 30.000. Subtract 30, then add back 0.005.</p>
             <div class="math-formula" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.3); color: #c7d2fe;">
               <span>64.382 - 30.000 = 34.382 ➔ 34.382 + 0.005 = <strong>34.387</strong></span>
@@ -925,15 +1297,20 @@
             <span class="badge badge-indigo" id="questTierChip">Tier 1</span>
           </div>
 
-          <!-- Module Filter Buttons -->
+          <!-- Module & Topic Filter Controls -->
           <div class="filter-group">
             <button class="filter-btn active" data-filter="all" id="filterAll">All (60)</button>
             <button class="filter-btn" data-filter="Module 1" id="filterM1">Volume (20)</button>
             <button class="filter-btn" data-filter="Module 2" id="filterM2">Algorithms (20)</button>
             <button class="filter-btn" data-filter="Module 3" id="filterM3">Decimals (20)</button>
+            
+            <!-- Quick Question Grid Toggle -->
+            <button class="btn btn-sm btn-secondary" id="toggleMatrixBtn" title="Toggle 1-60 Question Matrix">
+              <span>🔢 Jump Matrix</span>
+            </button>
           </div>
 
-          <!-- Score & Timer -->
+          <!-- Score & Streak -->
           <div style="display: flex; align-items: center; gap: 16px;">
             <div class="hud-stat">
               <span style="font-size: 0.8rem; color: var(--text-muted);">Score:</span>
@@ -946,11 +1323,25 @@
           </div>
         </div>
 
+        <!-- Collapsible 60-Question Matrix Jump Grid -->
+        <div class="question-matrix-panel" id="questionMatrixPanel" style="display: none;">
+          <div class="matrix-header">
+            <span><strong>Quick Jump Matrix:</strong> Click any number to jump directly to that question.</span>
+            <span style="font-size: 0.75rem;">🟢 Correct • 🔴 Misconception • 🔵 Active</span>
+          </div>
+          <div class="matrix-grid" id="matrixGridContainer">
+            <!-- 60 matrix chips injected via JS -->
+          </div>
+        </div>
+
         <!-- Question Presentation Card -->
         <div class="question-card">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <span class="badge badge-emerald" id="standardBadge">NC.5.MD.3</span>
-            <span style="font-size: 0.8rem; color: var(--text-muted);" id="topicLabel">Topic 1: Unit Cube Packing & SA:V Ratios</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge badge-emerald" id="standardBadge">NC.5.MD.3</span>
+              <span class="badge badge-primary" id="topicBadge">Topic 1</span>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="topicLabel">Topic 1: Unit Cube Packing & SA:V Ratios</span>
           </div>
 
           <div class="question-prompt" id="questionText">
@@ -962,11 +1353,14 @@
           </div>
 
           <!-- Action Buttons -->
-          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <button class="btn btn-primary" id="submitBtn" disabled>Submit Answer</button>
             <button class="btn btn-secondary" id="hintBtn">💡 Need a Hint?</button>
             <button class="btn btn-secondary" id="scratchpadBtn">✏️ Scratchpad</button>
-            <button class="btn btn-outline" id="nextBtn" style="display: none; margin-left: auto;">Next Question →</button>
+            <div style="margin-left: auto; display: flex; gap: 8px;">
+              <button class="btn btn-outline" id="prevBtn">← Previous</button>
+              <button class="btn btn-outline" id="nextBtn">Next →</button>
+            </div>
           </div>
 
           <!-- Socratic Hint Drawer -->
@@ -1008,6 +1402,22 @@
 
   </main>
 
+  <!-- All 10 Topics Directory Modal -->
+  <div class="modal-overlay" id="topicDirectoryModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <div style="font-weight: 700; font-size: 1.15rem; color: #fff;">🗺️ Curriculum Topic Directory</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">CMS 5th Grade AIG Math Q1 • All 10 Core Topics</div>
+        </div>
+        <button id="closeTopicDirectoryBtn" class="btn btn-sm btn-secondary" style="font-size: 1rem; width: 32px; height: 32px; padding: 0;">✕</button>
+      </div>
+      <div class="modal-body" id="topicDirectoryBody">
+        <!-- 10 Topic Cards injected via JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- Whiteboard Scratchpad Overlay -->
   <div class="scratchpad-overlay" id="scratchpadOverlay">
     <div class="scratchpad-bar">
@@ -1016,11 +1426,11 @@
         <span class="badge badge-primary">Touch / Pointer</span>
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
-        <button class="btn btn-secondary" id="penToolBtn" style="border-color: var(--primary);">Pen</button>
-        <button class="btn btn-secondary" id="highlighterToolBtn">Highlighter</button>
-        <button class="btn btn-secondary" id="eraserToolBtn">Eraser</button>
-        <button class="btn btn-secondary" id="clearScratchpadBtn">Clear</button>
-        <button class="btn btn-primary" id="closeScratchpadBtn">Done</button>
+        <button id="penToolBtn" class="btn btn-secondary btn-sm" style="border-color: var(--primary);">🖊️ Pen</button>
+        <button id="highlighterToolBtn" class="btn btn-secondary btn-sm">🖍️ Highlighter</button>
+        <button id="eraserToolBtn" class="btn btn-secondary btn-sm">🧹 Eraser</button>
+        <button id="clearScratchpadBtn" class="btn btn-secondary btn-sm">Clear</button>
+        <button id="closeScratchpadBtn" class="btn btn-secondary btn-sm">✕ Close</button>
       </div>
     </div>
     <div class="scratchpad-canvas-wrapper" id="scratchpadWrapper">
@@ -1031,8 +1441,8 @@
   <!-- Footer -->
   <footer class="app-footer">
     <div class="container">
-      <p>CMS 5th Grade AIG Mathematics • Quarter 1 Laboratory Suite • Illustrative Math K–5 / NC SCOS</p>
-      <p style="margin-top: 4px;">Zero External Dependencies • Offline Capable • Native Web Audio & Unicode Math</p>
+      <p>CMS 5th Grade AIG Mathematics • Quarter 1 Accelerated Curriculum Lab</p>
+      <p style="margin-top: 6px; color: var(--text-muted);">Aligned to NC SCOS (NC.5.MD, NC.5.NBT, NC.5.OA) • Standalone Single-File Architecture</p>
     </div>
   </footer>
 
@@ -2659,14 +3069,30 @@
   }
 ];
 
+    // Metadata for the 10 Curriculum Topics
+    const TOPICS_META = [
+      { id: 1, module: "Module 1", tab: "tabVolume", name: "Topic 1: Unit Cube Packing & SA:V Ratios", standard: "NC.5.MD.3/4", qCount: 5, qStart: 0, desc: "Packing 1-cm & 1-inch unit cubes, floor base layer counts, and surface-area-to-volume ratio optimization." },
+      { id: 2, module: "Module 1", tab: "tabVolume", name: "Topic 2: Volume Fluency & Layering V = B × h", standard: "NC.5.MD.5a/b", qCount: 5, qStart: 5, desc: "Base area layering (V = B × h), associative property V = (l × w) × h, and 3D internal space diagonal." },
+      { id: 3, module: "Module 1", tab: "tabVolume", name: "Topic 3: Additive Volume & Composite Solids", standard: "NC.5.MD.5c", qCount: 5, qStart: 10, desc: "Non-overlapping L-shaped decomposition, hollow-core cavity void subtraction, and nested bracket operations." },
+      { id: 4, module: "Module 1", tab: "tabVolume", name: "Topic 4: Real-World Dimension Constraints", standard: "NC.5.MD.5b", qCount: 5, qStart: 15, desc: "Fixed volume dimension factorizations, perimeter and height constraints, and minimal material packaging." },
+      { id: 5, module: "Module 2", tab: "tabAlgorithms", name: "Topic 5: Standard Algorithm Mechanics", standard: "NC.5.NBT.5", qCount: 5, qStart: 20, desc: "3-digit × 2-digit multiplication, partial products area models, and zero placeholder shifts." },
+      { id: 6, module: "Module 2", tab: "tabAlgorithms", name: "Topic 6: Division & Remainder Models", standard: "NC.5.NBT.6", qCount: 5, qStart: 25, desc: "4-digit ÷ 2-digit partial quotients division, interpreting remainders in real-world contexts." },
+      { id: 7, module: "Module 2", tab: "tabAlgorithms", name: "Topic 7: Algorithmic Cryptarithms & Error Analysis", standard: "NC.5.NBT.5/6", qCount: 10, qStart: 30, desc: "Reconstructing missing digits in multi-digit products (3A5 × B4 = 11,810) and carry propagation logic." },
+      { id: 8, module: "Module 3", tab: "tabDecimals", name: "Topic 8: Base-Ten Patterns & Exponential Powers", standard: "NC.5.NBT.1/2", qCount: 5, qStart: 40, desc: "Base-10 exponential powers (10⁻³ to 10⁶), metric prefix shifts (milli, centi, kilo), and decimal place migration." },
+      { id: 9, module: "Module 3", tab: "tabDecimals", name: "Topic 9: Thousandths Inequalities & Value Density", standard: "NC.5.NBT.3a/b", qCount: 5, qStart: 45, desc: "Comparing decimal magnitudes to thousandths, decimal sandwich density, and unit fraction expanded form." },
+      { id: 10, module: "Module 3", tab: "tabDecimals", name: "Topic 10: High-Precision Decimal Operations & Mental Math", standard: "NC.5.NBT.7", qCount: 10, qStart: 50, desc: "Compensation subtraction (64.382 - 29.995 = 34.387), decimal multiplication, and mental math shortcuts." }
+    ];
+
     // State
     let currentQuestions = [...QUESTION_BANK];
     let currentIndex = 0;
+    let currentTopicId = 1;
     let selectedOptionText = null;
     let score = 0;
     let streak = 0;
     let soundEnabled = true;
     let currentHintIndex = 0;
+    const userAnswers = {}; // qId -> boolean (correct/incorrect)
 
     // Web Audio Synthesizer
     let audioCtx = null;
@@ -2699,16 +3125,160 @@
     }
 
     // Tab Navigation
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tabId);
+      });
+      document.querySelectorAll('.tab-pane').forEach(p => {
+        p.classList.toggle('active', p.id === tabId);
+      });
+      if (tabId === 'tabVolume') {
+        setTimeout(resizePrismCanvas, 50);
+      }
+    }
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const tabId = btn.dataset.tab;
-        document.getElementById(tabId)?.classList.add('active');
-        if (tabId === 'tabVolume') resizePrismCanvas();
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Central Topic Navigation Function
+    function activateTopic(topicId, navigateTo) {
+      topicId = parseInt(topicId);
+      if (isNaN(topicId) || topicId < 1 || topicId > 10) topicId = 1;
+      currentTopicId = topicId;
+
+      const meta = TOPICS_META.find(t => t.id === topicId) || TOPICS_META[0];
+
+      // Update Select Dropdown
+      const sel = document.getElementById('globalTopicSelect');
+      if (sel) sel.value = String(topicId);
+
+      // Update Stepper Counter & Chips
+      const chip = document.getElementById('topicCounterChip');
+      if (chip) chip.textContent = `Topic ${topicId} / 10`;
+
+      const qChip = document.getElementById('topicQCountChip');
+      if (qChip) qChip.textContent = `${meta.qCount} Qs`;
+
+      // Update Pills Bar
+      document.querySelectorAll('.topic-pill').forEach(pill => {
+        const isAct = parseInt(pill.dataset.topic) === topicId;
+        pill.classList.toggle('active', isAct);
+        if (isAct) {
+          pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+
+      // Route Navigation
+      if (navigateTo === 'lab') {
+        switchTab(meta.tab);
+        const targetElem = document.getElementById(meta.tab);
+        if (targetElem) {
+          targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else if (navigateTo === 'quest') {
+        switchTab('tabQuest');
+        filterQuestByTopic(topicId);
+      }
+    }
+
+    function filterQuestByTopic(topicId) {
+      topicId = parseInt(topicId);
+      currentQuestions = QUESTION_BANK.filter(q => q.topic.startsWith(`Topic ${topicId}:`));
+      if (currentQuestions.length === 0) {
+        currentQuestions = [...QUESTION_BANK];
+      }
+      currentIndex = 0;
+
+      // Update module filter buttons
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+
+      renderQuestion();
+      renderQuestionMatrix();
+
+      const qCard = document.querySelector('.question-card');
+      if (qCard) qCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Topic Bar Event Listeners
+    document.getElementById('globalTopicSelect')?.addEventListener('change', e => {
+      activateTopic(e.target.value);
+    });
+
+    document.getElementById('prevTopicBtn')?.addEventListener('click', () => {
+      const prevId = currentTopicId > 1 ? currentTopicId - 1 : 10;
+      activateTopic(prevId);
+    });
+
+    document.getElementById('nextTopicBtn')?.addEventListener('click', () => {
+      const nextId = currentTopicId < 10 ? currentTopicId + 1 : 1;
+      activateTopic(nextId);
+    });
+
+    document.querySelectorAll('.topic-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        activateTopic(pill.dataset.topic);
       });
     });
+
+    document.getElementById('btnOpenTopicLab')?.addEventListener('click', () => {
+      activateTopic(currentTopicId, 'lab');
+    });
+
+    document.getElementById('btnOpenTopicQuest')?.addEventListener('click', () => {
+      activateTopic(currentTopicId, 'quest');
+    });
+
+    // Topic Directory Modal
+    const topicModal = document.getElementById('topicDirectoryModal');
+    function openTopicDirectory() {
+      renderTopicDirectoryCards();
+      topicModal?.classList.add('active');
+    }
+    function closeTopicDirectory() {
+      topicModal?.classList.remove('active');
+    }
+
+    document.getElementById('btnOpenTopicDirectory')?.addEventListener('click', openTopicDirectory);
+    document.getElementById('btnOpenTopicDirectoryHeader')?.addEventListener('click', openTopicDirectory);
+    document.getElementById('closeTopicDirectoryBtn')?.addEventListener('click', closeTopicDirectory);
+    topicModal?.addEventListener('click', e => {
+      if (e.target === topicModal) closeTopicDirectory();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && topicModal?.classList.contains('active')) {
+        closeTopicDirectory();
+      }
+    });
+
+    function renderTopicDirectoryCards() {
+      const body = document.getElementById('topicDirectoryBody');
+      if (!body) return;
+      body.innerHTML = '';
+
+      TOPICS_META.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'topic-directory-card';
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+            <span class="badge ${t.module === 'Module 1' ? 'badge-primary' : (t.module === 'Module 2' ? 'badge-indigo' : 'badge-emerald')}">${t.standard}</span>
+            <span class="badge" style="background: rgba(255,255,255,0.06); font-size: 0.7rem;">${t.qCount} Graded Qs</span>
+          </div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">${t.name}</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); flex: 1; line-height: 1.5;">${t.desc}</p>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <button class="btn btn-sm btn-secondary" style="flex: 1;" onclick="closeTopicDirectory(); activateTopic(${t.id}, 'lab');">
+              🔬 Open Lab
+            </button>
+            <button class="btn btn-sm btn-primary" style="flex: 1;" onclick="closeTopicDirectory(); activateTopic(${t.id}, 'quest');">
+              🎯 Practice
+            </button>
+          </div>
+        `;
+        body.appendChild(card);
+      });
+    }
 
     // 3D Prism Canvas Engine
     const prismCanvas = document.getElementById('prismCanvas');
@@ -2859,105 +3429,109 @@
       const cosY = Math.cos(angleY);
       const sinY = Math.sin(angleY);
 
-      const proj = vertices.map(v => {
-        // Yaw (rotate Y)
-        const x1 = v.x * cosY + v.z * sinY;
-        const z1 = -v.x * sinY + v.z * cosY;
-        // Pitch (rotate X)
+      const projected = vertices.map(v => {
+        const x1 = v.x * cosY - v.z * sinY;
+        const z1 = v.x * sinY + v.z * cosY;
+
         const y2 = v.y * cosX - z1 * sinX;
         const z2 = v.y * sinX + z1 * cosX;
-        // Isometric / Weak perspective projection
-        const factor = 400 / (400 + z2);
+
         return {
-          x: cx + x1 * factor,
-          y: cy + y2 * factor,
+          x: cx + x1,
+          y: cy + y2,
           z: z2
         };
       });
 
-      // 6 Faces (indices, normal, color)
+      // 6 Faces defined by vertex indices
       const faces = [
-        { indices: [0, 1, 2, 3], color: 'rgba(6, 182, 212, 0.45)', stroke: '#06b6d4' }, // Front
-        { indices: [4, 5, 6, 7], color: 'rgba(6, 182, 212, 0.35)', stroke: '#06b6d4' }, // Back
-        { indices: [0, 1, 5, 4], color: 'rgba(99, 102, 241, 0.45)', stroke: '#6366f1' }, // Top
-        { indices: [2, 3, 7, 6], color: 'rgba(16, 185, 129, 0.45)', stroke: '#10b981' }, // Bottom (Base)
-        { indices: [0, 3, 7, 4], color: 'rgba(14, 165, 233, 0.4)', stroke: '#0ea5e9' }, // Left
-        { indices: [1, 2, 6, 5], color: 'rgba(56, 189, 248, 0.4)', stroke: '#38bdf8' }  // Right
+        [0, 1, 2, 3], // back
+        [4, 5, 6, 7], // front
+        [0, 1, 5, 4], // top
+        [3, 2, 6, 7], // bottom
+        [0, 3, 7, 4], // left
+        [1, 2, 6, 5]  // right
       ];
 
-      // Sort faces back-to-front (Painter's algorithm)
-      faces.forEach(f => {
-        let avgZ = 0;
-        f.indices.forEach(idx => avgZ += proj[idx].z);
-        f.avgZ = avgZ / 4;
-      });
-      faces.sort((a, b) => b.avgZ - a.avgZ);
+      // Draw bottom face highlight (base area B = l × w)
+      pCtx.fillStyle = 'rgba(6, 182, 212, 0.22)';
+      pCtx.beginPath();
+      pCtx.moveTo(projected[3].x, projected[3].y);
+      pCtx.lineTo(projected[2].x, projected[2].y);
+      pCtx.lineTo(projected[6].x, projected[6].y);
+      pCtx.lineTo(projected[7].x, projected[7].y);
+      pCtx.closePath();
+      pCtx.fill();
 
-      // Draw Faces
-      faces.forEach(f => {
+      // Draw Edges
+      const edges = [
+        [0,1], [1,2], [2,3], [3,0],
+        [4,5], [5,6], [6,7], [7,4],
+        [0,4], [1,5], [2,6], [3,7]
+      ];
+
+      pCtx.strokeStyle = showWireframe ? '#06b6d4' : 'rgba(6, 182, 212, 0.4)';
+      pCtx.lineWidth = 1.8;
+      edges.forEach(([i, j]) => {
         pCtx.beginPath();
-        pCtx.moveTo(proj[f.indices[0]].x, proj[f.indices[0]].y);
-        for (let i = 1; i < 4; i++) {
-          pCtx.lineTo(proj[f.indices[i]].x, proj[f.indices[i]].y);
-        }
-        pCtx.closePath();
-        pCtx.fillStyle = f.color;
+        pCtx.moveTo(projected[i].x, projected[i].y);
+        pCtx.lineTo(projected[j].x, projected[j].y);
+        pCtx.stroke();
+      });
+
+      // Draw Internal Space Diagonal (connecting vertex 3 [bottom-left-back] to vertex 5 [top-right-front])
+      pCtx.strokeStyle = '#f59e0b';
+      pCtx.lineWidth = 2.2;
+      pCtx.setLineDash([5, 4]);
+      pCtx.beginPath();
+      pCtx.moveTo(projected[3].x, projected[3].y);
+      pCtx.lineTo(projected[5].x, projected[5].y);
+      pCtx.stroke();
+      pCtx.setLineDash([]);
+
+      // Glow nodes on space diagonal ends
+      pCtx.fillStyle = '#fbbf24';
+      [projected[3], projected[5]].forEach(pt => {
+        pCtx.beginPath();
+        pCtx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
         pCtx.fill();
-        pCtx.strokeStyle = f.stroke;
-        pCtx.lineWidth = 1.5;
-        pCtx.stroke();
       });
-
-      // Draw Wireframe unit grid lines if enabled
-      if (showWireframe) {
-        pCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        pCtx.lineWidth = 1;
-        pCtx.setLineDash([2, 3]);
-
-        // Draw internal space diagonal line
-        pCtx.strokeStyle = '#f59e0b';
-        pCtx.lineWidth = 2;
-        pCtx.beginPath();
-        pCtx.moveTo(proj[0].x, proj[0].y);
-        pCtx.lineTo(proj[6].x, proj[6].y);
-        pCtx.stroke();
-        pCtx.setLineDash([]);
-      }
     }
 
-    // Tab 2: Partial Products & Cryptarithm Handler
+    // Tab 2: Partial Products & Cryptarithm Engine
     document.getElementById('btnCalculateProduct')?.addEventListener('click', () => {
-      const a = parseInt(document.getElementById('inputFactorA').value) || 487;
-      const b = parseInt(document.getElementById('inputFactorB').value) || 63;
-      const onesB = b % 10;
-      const tensB = Math.floor(b / 10) * 10;
-      const p1 = a * onesB;
-      const p2 = a * tensB;
+      const a = parseInt(document.getElementById('inputFactorA').value) || 0;
+      const b = parseInt(document.getElementById('inputFactorB').value) || 0;
+      const ones = b % 10;
+      const tens = Math.floor(b / 10) * 10;
+      const p1 = a * ones;
+      const p2 = a * tens;
       const total = a * b;
 
       document.getElementById('partialProductsDisplay').innerHTML = `
-        Row 1: ${a} × ${onesB} = ${p1.toLocaleString()}<br />
-        Row 2: ${a} × ${tensB} = ${p2.toLocaleString()} (with 10¹ placeholder shift)<br />
+        Row 1: ${a} × ${ones} = ${p1.toLocaleString()}<br />
+        Row 2: ${a} × ${tens} = ${p2.toLocaleString()} (with 10¹ placeholder shift)<br />
         <strong style="color: #34d399;">Total Product: ${total.toLocaleString()}</strong>
       `;
+      playTone(587.33, 'sine', 0.1);
     });
 
     function updateCryptarithm() {
-      const a = document.getElementById('selectDigitA').value;
-      const b = document.getElementById('selectDigitB').value;
-      const factor1 = parseInt(`3${a}5`);
-      const factor2 = parseInt(`${b}4`);
+      const a = parseInt(document.getElementById('selectDigitA').value);
+      const b = parseInt(document.getElementById('selectDigitB').value);
+      const factor1 = 300 + a * 10 + 5;
+      const factor2 = b * 10 + 4;
       const row1 = factor1 * 4;
-      const row2 = factor1 * parseInt(`${b}0`);
+      const row2 = factor1 * (b * 10);
       const sum = factor1 * factor2;
 
-      const isMatch = (a === '6' && b === '3');
-      const box = document.getElementById('cryptarithmResult');
-      if (isMatch) {
+      const box = document.getElementById('cryptarithmResultBox');
+      if (sum === 11810) {
+        playSuccessSound();
         box.style.background = 'rgba(16, 185, 129, 0.15)';
         box.style.borderColor = 'rgba(16, 185, 129, 0.4)';
         box.style.color = '#34d399';
-        box.innerHTML = `✓ 365 × 4 = 1,460 | 365 × 30 = 10,350 | Sum = 11,810 (Exact Match!)`;
+        box.innerHTML = `✓ 345 × 4 = 1,380 | 345 × 30 = 10,350 | Sum = 11,810 (Exact Match!)`;
       } else {
         box.style.background = 'rgba(244, 63, 94, 0.15)';
         box.style.borderColor = 'rgba(244, 63, 94, 0.4)';
@@ -2993,15 +3567,30 @@
       document.getElementById('questProgressChip').textContent = `Question ${currentIndex + 1} of ${currentQuestions.length}`;
       document.getElementById('questTierChip').textContent = q.tier.split(':')[0];
       document.getElementById('standardBadge').textContent = q.standard;
+      document.getElementById('topicBadge').textContent = q.topic.split(':')[0];
       document.getElementById('topicLabel').textContent = q.topic;
       document.getElementById('questionText').innerHTML = q.question;
+
+      // Synchronize active topic navigator bar
+      const matchedMeta = TOPICS_META.find(t => q.topic.startsWith(t.name.split(':')[0] + ':'));
+      if (matchedMeta) {
+        currentTopicId = matchedMeta.id;
+        const sel = document.getElementById('globalTopicSelect');
+        if (sel) sel.value = String(matchedMeta.id);
+        const chip = document.getElementById('topicCounterChip');
+        if (chip) chip.textContent = `Topic ${matchedMeta.id} / 10`;
+        const qChip = document.getElementById('topicQCountChip');
+        if (qChip) qChip.textContent = `${matchedMeta.qCount} Qs`;
+        document.querySelectorAll('.topic-pill').forEach(pill => {
+          pill.classList.toggle('active', parseInt(pill.dataset.topic) === matchedMeta.id);
+        });
+      }
 
       // Reset Drawers & Buttons
       document.getElementById('diagnosticPanel').style.display = 'none';
       document.getElementById('hintDrawer').classList.remove('open');
       document.getElementById('submitBtn').disabled = true;
       document.getElementById('submitBtn').style.display = 'inline-flex';
-      document.getElementById('nextBtn').style.display = 'none';
 
       // Fisher-Yates runtime shuffle of options
       const shuffledOptions = [...q.options];
@@ -3027,6 +3616,7 @@
       });
 
       currentHintIndex = 0;
+      updateMatrixCurrentHighlight();
     }
 
     function selectOption(btn, text) {
@@ -3041,6 +3631,8 @@
       if (!selectedOptionText) return;
       const q = currentQuestions[currentIndex];
       const isCorrect = (selectedOptionText.trim() === q.formattedAnswer.trim());
+
+      userAnswers[q.id] = isCorrect;
 
       document.querySelectorAll('.option-btn').forEach(b => {
         b.disabled = true;
@@ -3082,11 +3674,19 @@
 
       diagPanel.style.display = 'block';
       document.getElementById('submitBtn').style.display = 'none';
-      document.getElementById('nextBtn').style.display = 'inline-flex';
+
+      renderQuestionMatrix();
     });
 
+    // Next & Previous Question Steppers
     document.getElementById('nextBtn')?.addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % currentQuestions.length;
+      renderQuestion();
+      document.querySelector('.question-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('prevBtn')?.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + currentQuestions.length) % currentQuestions.length;
       renderQuestion();
       document.querySelector('.question-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -3104,7 +3704,7 @@
       playTone(330, 'sine', 0.08);
     });
 
-    // Module Filter Buttons
+    // Module Filter Buttons in Quest HUD
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -3117,8 +3717,55 @@
         }
         currentIndex = 0;
         renderQuestion();
+        renderQuestionMatrix();
       });
     });
+
+    // Question Jump Matrix (1-60)
+    const toggleMatrixBtn = document.getElementById('toggleMatrixBtn');
+    const matrixPanel = document.getElementById('questionMatrixPanel');
+    toggleMatrixBtn?.addEventListener('click', () => {
+      const isVisible = matrixPanel.style.display !== 'none';
+      matrixPanel.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) renderQuestionMatrix();
+    });
+
+    function renderQuestionMatrix() {
+      const container = document.getElementById('matrixGridContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      currentQuestions.forEach((q, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'matrix-chip';
+        chip.textContent = idx + 1;
+
+        if (idx === currentIndex) {
+          chip.classList.add('current');
+        }
+
+        if (userAnswers[q.id] === true) {
+          chip.classList.add('correct');
+        } else if (userAnswers[q.id] === false) {
+          chip.classList.add('incorrect');
+        }
+
+        chip.addEventListener('click', () => {
+          currentIndex = idx;
+          renderQuestion();
+          document.querySelector('.question-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        container.appendChild(chip);
+      });
+    }
+
+    function updateMatrixCurrentHighlight() {
+      const chips = document.querySelectorAll('.matrix-chip');
+      chips.forEach((c, idx) => {
+        c.classList.toggle('current', idx === currentIndex);
+      });
+    }
 
     // Whiteboard Scratchpad Handlers
     const scratchpad = document.getElementById('scratchpadOverlay');
@@ -3243,7 +3890,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       resizePrismCanvas();
       updatePrismMetrics();
+      activateTopic(1);
       renderQuestion();
+      renderQuestionMatrix();
     });
   </script>
 </body>

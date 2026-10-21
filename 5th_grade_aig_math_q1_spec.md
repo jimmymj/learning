@@ -113,3 +113,27 @@ Every question renders an explicit 4-part resolution upon submission:
 - **Interactive Whiteboard Scratchpad:** Canvas overlay with pen, highlighter, eraser, color palette, and clear tools.
 - **Web Audio Sound Effects:** Browser-native audio oscillator chimes for correct streaks, hints, and error tones (no external audio files).
 - **Offline Self-Contained Delivery:** Zero CDN runtimes, zero raw LaTeX (100% native Unicode & semantic HTML math formatting).
+
+---
+
+## 6. Effortless Topic Navigation Architecture
+
+To ensure scholars and educators can easily explore and target specific standards across the 9-week curriculum, the application provides an integrated, 4-tier topic navigation system:
+
+1. **Global Topic Jump Bar (Sticky Top):**
+   - **Grouped Topic Dropdown (`<select>`):** Direct access to all 10 topics grouped under Module 1 (Volume), Module 2 (Algorithms), and Module 3 (Decimals).
+   - **Topic Steppers (`◀ Prev` / `Next ▶`):** Instant sequential topic cycling with live `Topic X / 10` counter.
+   - **Direct 1-Click Action Buttons:**
+     - `🔬 Open Lab`: Instantly navigates to the corresponding interactive sandbox manipulative.
+     - `🎯 Practice Quest`: Filters the 60-question quest specifically to the selected topic's question pool.
+     - `🗺️ All Topics`: Opens the modal topic directory.
+2. **Horizontal Topic Pills Strip:**
+   - 10 responsive topic pills with glowing module color dots (Cyan for Volume, Indigo for Algorithms, Emerald for Decimals).
+   - Single-click selection with auto-scrolling active indicator.
+3. **60-Question Jump Matrix in Quest:**
+   - Collapsible number matrix (1 to 60) organized by topic blocks.
+   - Real-time diagnostic state highlighting: 🟢 Correct, 🔴 Misconception diagnosed, 🔵 Active question.
+   - Steppers (`← Previous` and `Next →`) for fluid question-by-question traversal.
+4. **All 10 Topics Curriculum Directory Modal:**
+   - Full-screen modal presenting cards for all 10 topics with standard codes, concise concept summaries, graded item counts, and direct `🔬 Open Lab` / `🎯 Practice` buttons.
+
