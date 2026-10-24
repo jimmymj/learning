@@ -1,0 +1,3228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science Olympiad Coach: Division A & Foundations Lab | STEM Tournament Preparation</title>
+  <meta name="description" content="Official Science Olympiad Division A & Elementary/Junior STEM interactive learning app (Grades 3-6+). Master relative density, wetland trophic cascades, electrical fair-test circuits, and space geometry through synchronized simulations and the 4-Step Olympiad Solving Routine." />
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --color-gold: #fbbf24;
+      --color-gold-glow: rgba(251, 191, 36, 0.35);
+      --color-cyan: #06b6d4;
+      --color-blue: #3b82f6;
+      --color-emerald: #10b981;
+      --color-rose: #f43f5e;
+      --color-purple: #8b5cf6;
+    }
+
+    body {
+      font-family: var(--font-main);
+      touch-action: manipulation;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: var(--font-heading);
+    }
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    /* Dyslexia Mode */
+    body.dyslexia-mode {
+      font-family: 'Comic Sans MS', 'Trebuchet MS', 'Noto Sans', sans-serif !important;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+      line-height: 1.8 !important;
+    }
+
+    /* Light Theme Overrides */
+    body.theme-light {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .bg-slate-900 {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .bg-slate-950 {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .bg-slate-800 {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .border-slate-800, body.theme-light .border-slate-700 {
+      border-color: #cbd5e1 !important;
+    }
+    body.theme-light .text-slate-200, body.theme-light .text-slate-300 {
+      color: #1e293b !important;
+    }
+    body.theme-light .text-slate-400 {
+      color: #475569 !important;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.7);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(51, 65, 85, 0.75);
+    }
+    .glass-card-subtle {
+      background: rgba(30, 41, 59, 0.55);
+      border: 1px solid rgba(51, 65, 85, 0.45);
+    }
+
+    /* Active Tab */
+    .sim-tab-active {
+      background: linear-gradient(135deg, #0284c7, #2563eb) !important;
+      color: #ffffff !important;
+      border-color: rgba(56, 189, 248, 0.6) !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+    }
+
+    .scaffold-tab-active {
+      background: linear-gradient(135deg, #d97706, #f59e0b) !important;
+      color: #0f172a !important;
+      font-weight: 700 !important;
+      border-color: rgba(251, 191, 36, 0.8) !important;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+    }
+
+    /* Scratchpad Canvas Overlay */
+    #scratchpadCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9998;
+      pointer-events: none;
+      cursor: crosshair;
+    }
+    #scratchpadCanvas.active {
+      pointer-events: auto;
+    }
+
+    #scratchpadToolbar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(251, 191, 36, 0.25);
+      backdrop-filter: blur(16px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none;
+    }
+    #scratchpadToolbar.visible {
+      display: flex;
+    }
+
+    /* Coach Pit Stop Modal Animation */
+    .pit-stop-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 9990;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .pit-stop-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .pit-stop-box {
+      max-width: 680px;
+      width: 100%;
+      background: #0f172a;
+      border: 2px solid #f59e0b;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.3);
+      transform: scale(0.92);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .pit-stop-overlay.active .pit-stop-box {
+      transform: scale(1);
+    }
+
+    /* Option Card Hover */
+    .option-card {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .option-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(6, 182, 212, 0.6);
+      background-color: rgba(30, 41, 59, 0.8);
+    }
+
+    /* Pulse Glow */
+    @keyframes pulseGold {
+      0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.6); }
+    }
+    .pulse-gold {
+      animation: pulseGold 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Transparent Scratchpad Canvas -->
+  <canvas id="scratchpadCanvas"></canvas>
+
+  <!-- Scratchpad Floating Toolbar -->
+  <div id="scratchpadToolbar" class="rounded-2xl p-3 flex-wrap items-center gap-3">
+    <div class="flex items-center gap-2 border-r border-slate-700 pr-3">
+      <span class="text-xs font-bold text-amber-400">✏️ Scratchpad</span>
+      <span class="text-xs text-slate-400">Draw / Annotate</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button id="spPenBtn" class="p-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-500 text-xs font-semibold" title="Pen Tool">Pen</button>
+      <button id="spHighlighterBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold" title="Highlighter">Highlighter</button>
+      <button id="spEraserBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold" title="Eraser">Eraser</button>
+      <input type="color" id="spColorPicker" value="#fbbf24" class="w-8 h-8 rounded border border-slate-600 bg-transparent cursor-pointer" title="Ink Color" />
+      <button id="spClearBtn" class="p-2 rounded-lg bg-rose-900/60 text-rose-300 hover:bg-rose-800 text-xs font-semibold" title="Clear Canvas">Clear</button>
+      <button id="spCloseBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold" title="Close Scratchpad">✕ Exit</button>
+    </div>
+  </div>
+
+  <!-- Custom In-App Toast Notification (Zero Browser Alert Popups) -->
+  <div id="customToast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100000] max-w-lg w-[92%] transition-all duration-300 pointer-events-none opacity-0 -translate-y-6">
+    <div class="glass-card rounded-2xl p-4 border border-amber-400/60 shadow-2xl flex items-start gap-3 pointer-events-auto bg-slate-900/95 backdrop-blur-xl">
+      <div id="toastIcon" class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-lg shrink-0 text-amber-300">
+        💡
+      </div>
+      <div class="flex-1 min-w-0 pr-1">
+        <h4 id="toastTitle" class="font-heading font-bold text-sm text-white">Hypothesis Triggered</h4>
+        <p id="toastMessage" class="text-xs text-slate-300 mt-0.5 leading-relaxed"></p>
+      </div>
+      <button id="toastCloseBtn" class="text-slate-400 hover:text-white p-1 text-sm rounded-lg hover:bg-slate-800 transition-colors" title="Dismiss message">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-3">
+      
+      <!-- Brand & Hub Links -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5 group" title="Return to Science Olympiad Hub">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            🏆
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-heading font-extrabold text-base tracking-tight text-white group-hover:text-amber-400 transition-colors">Science Olympiad Coach</span>
+              <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-400 border border-amber-400/30">Division A • Grades 3-6+</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Tournament Mastery • Division A &amp; Junior Inquiry Suite</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Live Assessment HUD & Controls -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        
+        <!-- Score HUD -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs">
+          <span class="text-amber-400 font-bold">PTS:</span>
+          <span id="hudScore" class="mono font-bold text-white text-sm">0</span>
+        </div>
+
+        <!-- Streak Counter -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs">
+          <span class="text-orange-400">🔥</span>
+          <span id="hudStreak" class="mono font-bold text-orange-400 text-sm">0</span>
+          <span class="text-[10px] text-slate-400">Streak</span>
+        </div>
+
+        <!-- Retry Tokens -->
+        <div class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs" title="Second-chance tokens for missteps">
+          <span class="text-cyan-400">🛡️</span>
+          <span id="hudTokens" class="mono font-bold text-cyan-400">3/3</span>
+          <span class="text-[10px] text-slate-400">Tokens</span>
+        </div>
+
+        <!-- Timer / Zen Mode -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs">
+          <button id="toggleTimerBtn" class="text-slate-400 hover:text-white" title="Toggle Zen Mode / Pause Timer">⏱️</button>
+          <span id="hudTimer" class="mono font-bold text-amber-400 text-sm">60s</span>
+        </div>
+
+        <!-- Utilities & Toggles -->
+        <div class="flex items-center gap-1 border-l border-slate-700 pl-2">
+          <!-- Scratchpad Toggle -->
+          <button id="toggleScratchpadBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-400 text-xs font-semibold" title="Open Drawing Scratchpad">
+            ✏️
+          </button>
+          
+          <!-- Sound Toggle -->
+          <button id="toggleSoundBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-400 text-xs font-semibold" title="Mute/Unmute Audio Feedback">
+            🔊
+          </button>
+
+          <!-- Voice Read-Aloud Toggle -->
+          <button id="toggleTtsBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-400 text-xs font-semibold" title="Text-to-Speech Coach Voice">
+            🗣️
+          </button>
+
+          <!-- Dyslexia Mode Toggle -->
+          <button id="toggleDyslexiaBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold" title="Toggle Dyslexia-friendly Font">
+            Aa
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="toggleThemeBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold" title="Dark / Light Mode">
+            🌓
+          </button>
+
+          <!-- Download Offline App -->
+          <button id="downloadAppBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 text-xs font-semibold" title="Download Offline HTML Single File">
+            💾
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Coach Nova Persona Guide Banner -->
+  <section class="bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border-b border-amber-500/20 py-2.5 px-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2 text-xs">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-sm">
+          🦉
+        </div>
+        <div>
+          <span class="font-bold text-amber-400">Coach Nova's Olympiad Dispatch:</span>
+          <span id="coachAdviceText" class="text-slate-300 ml-1">
+            "Remember Olympians: Never guess based on size alone! Relative density dictates who floats or sinks."
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-400 text-[11px]">4-Step Method:</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 border border-cyan-800 text-[10px] font-mono">1. Principle</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-rose-300 border border-rose-800 text-[10px] font-mono">2. Eliminate</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 border border-amber-800 text-[10px] font-mono">3. Test Logic</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-emerald-300 border border-emerald-800 text-[10px] font-mono">4. Verify</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Multi-Tier Interface -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-8">
+
+    <!-- Section 1: Synchronized 2D/3D Interactive Simulation Suite -->
+    <section class="glass-card rounded-2xl p-5 border border-slate-700/80 shadow-2xl relative overflow-hidden" id="simulationSection">
+      
+      <!-- Simulation Tabs Header -->
+      <div class="flex items-center justify-between flex-wrap gap-3 pb-4 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase tracking-wider font-bold text-amber-400">Laboratory Sandbox</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-400/10 text-cyan-400 border border-cyan-400/30">Live Variable Telemetry</span>
+          </div>
+          <h2 class="text-xl font-heading font-bold text-white mt-0.5" id="simTitle">
+            Density Column & Buoyancy Stratification Lab
+          </h2>
+        </div>
+
+        <!-- Simulation Selector Tabs -->
+        <div class="flex items-center gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs flex-wrap">
+          <button class="sim-tab sim-tab-active px-3 py-1.5 rounded-lg font-medium text-slate-300 transition-all" data-sim="density">
+            🧪 Density Column (Q1)
+          </button>
+          <button class="sim-tab px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition-all" data-sim="trophic">
+            🌿 Trophic Cascade (Q2)
+          </button>
+          <button class="sim-tab px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition-all" data-sim="circuit">
+            ⚡ Circuit Fair-Test (Q3)
+          </button>
+          <button class="sim-tab px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition-all" data-sim="orbit">
+            🌍 Moon Orbit & Tilt
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulation Display Area -->
+      <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Interactive Canvas / Graphic Area (8 Cols) -->
+        <div class="lg:col-span-8 bg-slate-900/90 rounded-xl p-4 border border-slate-800 relative min-h-[380px] flex flex-col justify-between">
+          <canvas id="simCanvas" class="w-full h-[340px] rounded-lg bg-slate-950 block border border-slate-800/80"></canvas>
+          
+          <!-- Live Telemetry Bar -->
+          <div id="simTelemetry" class="mt-3 py-2 px-3 rounded-lg bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs flex-wrap gap-2">
+            <!-- Dynamically populated per sim -->
+          </div>
+        </div>
+
+        <!-- Dynamic Controls & "What If?" Exploration (4 Cols) -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+            <h3 class="font-heading font-bold text-sm text-amber-400 flex items-center gap-1.5">
+              <span>🎛️</span>
+              <span id="simControlsTitle">Variable Controls</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1" id="simControlsDesc">
+              Adjust liquid densities, heat the middle layer, or drop objects to test buoyant equilibrium.
+            </p>
+
+            <!-- Dynamic Control Sliders / Buttons Container -->
+            <div id="simControlsContainer" class="mt-4 space-y-3.5 text-xs">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Coach's "Keep Wondering" Inquiry Card -->
+          <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div class="flex items-center gap-2 text-amber-400 font-bold text-xs">
+              <span>💡</span>
+              <span>Olympiad "Keep Wondering" Challenge</span>
+            </div>
+            <p id="simKeepWonderingText" class="text-xs text-slate-200 mt-1.5 leading-relaxed">
+              Suppose Maya heats Liquid Y so that it expands (volume increases while mass stays constant). What happens to its density, and how will Object 1 respond?
+            </p>
+            <button id="simKeepWonderingBtn" class="mt-2.5 px-3 py-1 rounded bg-amber-400 text-slate-950 text-[11px] font-bold hover:bg-amber-300 transition-colors">
+              Test This Hypothesis in Simulation
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Section 2: 3-Tier Scaffolding & Concept Hub -->
+    <section class="glass-card rounded-2xl p-5 border border-slate-700/80 shadow-xl" id="conceptHubSection">
+      
+      <!-- Scaffolding Tier Selector -->
+      <div class="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Concept Hub</span>
+          <h2 class="text-lg font-heading font-bold text-white mt-0.5">3-Tier Scaffolding & Scientific Framing</h2>
+        </div>
+
+        <div class="flex items-center gap-1.5 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs">
+          <button class="scaffold-tab scaffold-tab-active px-3 py-1.5 rounded-lg transition-all" data-tier="1">
+            Level 1: Intuitive & Analogy
+          </button>
+          <button class="scaffold-tab px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-tier="2">
+            Level 2: Operational & Formulas
+          </button>
+          <button class="scaffold-tab px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition-all" data-tier="3">
+            Level 3: Applied Olympiad Mastery
+          </button>
+        </div>
+      </div>
+
+      <!-- Scaffolding Tier Content Cards -->
+      <div id="scaffoldContent" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Rendered via JS -->
+      </div>
+
+    </section>
+
+    <!-- Section 3: Gamified Olympiad Assessment & Trap-Awareness Engine -->
+    <section class="glass-card rounded-2xl p-6 border border-slate-700/80 shadow-2xl relative" id="assessmentSection">
+      
+      <!-- Progress Bar & Quest Status -->
+      <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xs uppercase tracking-wider font-extrabold text-amber-400">Olympiad Assessment Quest</span>
+          <span id="questionDomainBadge" class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40">Physical Science</span>
+          <span id="questionStepBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Step 1: Identify Principle</span>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs text-slate-400">
+          <span>Question <strong id="currentQuestionNum" class="text-white">1</strong> of <span id="totalQuestionsNum">12</span></span>
+          <div class="w-32 h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div id="quizProgressBar" class="h-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-300" style="width: 8%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Prompt Box -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
+        <div class="flex items-start justify-between gap-4">
+          <div class="space-y-3 flex-1">
+            <h3 id="questionTitle" class="text-lg font-heading font-bold text-white leading-snug">
+              Question Title
+            </h3>
+            <div id="questionBody" class="text-sm text-slate-300 leading-relaxed space-y-2">
+              <!-- Question text -->
+            </div>
+          </div>
+
+          <!-- Socratic Hint & Read-Aloud Buttons -->
+          <div class="flex flex-col gap-2 shrink-0">
+            <button id="readQuestionBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-400 text-xs flex items-center gap-1.5" title="Read Aloud with Coach Voice">
+              <span>🗣️</span>
+              <span class="hidden sm:inline">Listen</span>
+            </button>
+            <button id="socraticHintBtn" class="p-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs flex items-center gap-1.5" title="Ask Coach Nova for a Socratic Hint">
+              <span>💡</span>
+              <span class="hidden sm:inline">Coach Hint (<span id="hintsLeftCount">3</span>)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Socratic Hint Slide-Out Banner -->
+        <div id="socraticHintDrawer" class="hidden mt-4 p-3.5 rounded-lg bg-amber-950/40 border border-amber-500/40 text-xs text-amber-200">
+          <div class="flex items-center justify-between mb-1">
+            <strong id="hintStageTitle" class="font-bold flex items-center gap-1.5 text-amber-400">
+              <span>🦉 Coach Nova's Socratic Nudge (Stage 1):</span>
+            </strong>
+            <button id="closeHintBtn" class="text-slate-400 hover:text-white">✕</button>
+          </div>
+          <p id="hintTextContent" class="leading-relaxed">
+            Hint text goes here.
+          </p>
+        </div>
+      </div>
+
+      <!-- Options Grid (Multiple Choice) -->
+      <div id="optionsContainer" class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Action Navigation Bar -->
+      <div class="mt-6 flex items-center justify-between flex-wrap gap-3 pt-4 border-t border-slate-800">
+        <button id="prevQuestionBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
+          ← Previous
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button id="solveRoutineGuideBtn" class="px-3.5 py-2 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-800/80 text-xs font-semibold flex items-center gap-1.5">
+            <span>📋</span>
+            <span>4-Step Olympiad Breakdown</span>
+          </button>
+          
+          <button id="nextQuestionBtn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-bold hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg shadow-amber-500/20">
+            Next Challenge →
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Section 4: Comprehensive Olympiad Solving Routine Drawer (Toggleable) -->
+    <div id="routineGuideModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="max-w-2xl w-full bg-slate-900 border border-cyan-500/50 rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-cyan-400 text-lg">📋</span>
+            <h3 class="font-heading font-bold text-white text-base">4-Step Olympiad Solving Routine Breakdown</h3>
+          </div>
+          <button id="closeRoutineGuideBtn" class="p-1 rounded text-slate-400 hover:text-white">✕</button>
+        </div>
+
+        <div id="routineWalkthroughContent" class="space-y-3.5 text-xs">
+          <!-- Dynamically filled with active question's 4 steps -->
+        </div>
+
+        <div class="pt-2 text-right">
+          <button id="dismissRoutineGuideBtn" class="px-4 py-1.5 rounded-lg bg-cyan-600 text-white font-semibold text-xs hover:bg-cyan-500">
+            Got it, Return to Challenge
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Coach's Pit Stop Misconception Modal -->
+    <div id="pitStopModal" class="pit-stop-overlay">
+      <div class="pit-stop-box p-6 space-y-4">
+        
+        <div class="flex items-center justify-between border-b border-amber-500/30 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-xl">
+              🛑
+            </div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Coach's Pit Stop • Misconception Analysis</span>
+              <h3 class="text-lg font-heading font-extrabold text-white" id="pitStopTrapTitle">
+                Deceptive Trap Detected!
+              </h3>
+            </div>
+          </div>
+          <button id="closePitStopBtn" class="text-slate-400 hover:text-white text-lg p-1">✕</button>
+        </div>
+
+        <!-- Trap Deep-Dive Content -->
+        <div class="space-y-3 text-xs leading-relaxed">
+          <div class="p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-200">
+            <strong class="font-bold text-rose-300">Why your selected option triggered a trap:</strong>
+            <p id="pitStopTrapExplanation" class="mt-1">
+              Analysis text here.
+            </p>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 space-y-1.5">
+            <strong class="font-bold text-amber-400">Coach Nova's Rule of Thumb:</strong>
+            <p id="pitStopCoachRule">
+              Core mental model rule.
+            </p>
+          </div>
+
+          <!-- Second-Chance Token Option -->
+          <div id="retryTokenPrompt" class="p-3 rounded-lg bg-cyan-950/40 border border-cyan-500/40 flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="font-bold text-cyan-300">Use a Retry Token (🛡️ Second Chance)?</span>
+              <p class="text-[11px] text-slate-400">Retry this question immediately without losing your Olympiad streak.</p>
+            </div>
+            <button id="useTokenBtn" class="px-3.5 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-colors">
+              Use 1 Token & Retry
+            </button>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+          <button id="viewFullExplanationBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+            View Complete Solution
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 6: End of Quest Mastery Dashboard (Hidden until complete) -->
+    <section id="resultsDashboard" class="hidden glass-card rounded-2xl p-6 border border-amber-500/40 shadow-2xl space-y-6">
+      
+      <div class="text-center space-y-2">
+        <div class="inline-block p-3 rounded-full bg-amber-500/20 text-3xl mb-1">
+          🏆
+        </div>
+        <h2 class="text-2xl font-heading font-extrabold text-white">
+          Science Olympiad Division A Quest Complete!
+        </h2>
+        <p class="text-xs text-slate-300 max-w-lg mx-auto">
+          Tournament performance calibrated across all four core domains for elementary &amp; junior competitors (Grades 3–6+). Your results have been recorded in your local Science Olympiad Training Log.
+        </p>
+      </div>
+
+      <!-- Final Score Badges -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <span class="text-xs text-slate-400">Total Score</span>
+          <div id="finalScoreDisplay" class="text-2xl font-bold mono text-amber-400 mt-1">0</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <span class="text-xs text-slate-400">Accuracy</span>
+          <div id="finalAccuracyDisplay" class="text-2xl font-bold mono text-cyan-400 mt-1">0%</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <span class="text-xs text-slate-400">Best Streak</span>
+          <div id="finalStreakDisplay" class="text-2xl font-bold mono text-orange-400 mt-1">0</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <span class="text-xs text-slate-400">Olympiad Medal</span>
+          <div id="finalMedalDisplay" class="text-xl font-bold text-emerald-400 mt-1">Gold 🥇</div>
+        </div>
+      </div>
+
+      <!-- Domain Breakdown Radar / Bars -->
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+        <h3 class="font-heading font-bold text-sm text-white">Domain Mastery Telemetry:</h3>
+        
+        <div class="space-y-2.5 text-xs">
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>Physical Science (Density, Forces, Circuits)</span>
+              <span id="domainScorePhysical" class="font-bold text-cyan-400">100%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="domainBarPhysical" class="h-full bg-cyan-400" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>Life Science (Trophic Cascades, Adaptations)</span>
+              <span id="domainScoreLife" class="font-bold text-emerald-400">100%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="domainBarLife" class="h-full bg-emerald-400" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>Earth & Space Science (Water Cycle, Lunar Geometry)</span>
+              <span id="domainScoreEarth" class="font-bold text-purple-400">100%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="domainBarEarth" class="h-full bg-purple-400" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>Scientific Inquiry (Fair Tests, Variable Isolation)</span>
+              <span id="domainScoreInquiry" class="font-bold text-amber-400">100%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="domainBarInquiry" class="h-full bg-amber-400" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-center gap-3 flex-wrap">
+        <button id="retryMissedBtn" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20">
+          🔄 Retry Missed Questions
+        </button>
+        <button id="restartFullQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs">
+          Restart Full Challenge
+        </button>
+        <a href="index.html" class="px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs">
+          Return to Science Olympiad Portal
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
+      <div>
+        <span>Science Olympiad Coach: Division A &amp; Foundations Suite • </span>
+        <a href="index.html" class="text-amber-400 hover:underline">Science Olympiad Portal</a> • 
+        <a href="../../index.html" class="text-cyan-400 hover:underline">Central LearningHub</a>
+      </div>
+      <div>
+        <span>100% Native Browser Engine • Zero CDNs Required</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Complete Standalone JavaScript Engine -->
+  <script>
+    /**
+     * SCIENCE OLYMPIAD DIVISION A & FOUNDATIONS QUESTION DATABASE (Grades 3-6+)
+     * Rigorously adheres to Zero Raw LaTeX.
+     * Includes 100% of Questions 1, 2, and 3 from the specification,
+     * plus 9 grade-calibrated Olympiad expansion questions covering all 4 domains.
+     */
+    const OLYMPIAD_QUESTIONS = [
+      {
+        id: 1,
+        domain: 'Physical Science',
+        domainKey: 'physical',
+        topic: 'Matter, Mass, Volume & Density Dynamics',
+        title: 'Density Column Stratification & Buoyancy Ordering',
+        question: 'Maya creates a liquid density column in a tall glass cylinder by carefully layering three liquids that do not mix: <strong>Liquid X</strong>, <strong>Liquid Y</strong>, and <strong>Liquid Z</strong>.<br><br>• <strong>Liquid X</strong> sits at the very bottom.<br>• <strong>Liquid Y</strong> floats in the middle.<br>• <strong>Liquid Z</strong> forms the top layer.<br><br>She then gently drops two small, solid objects into the cylinder:<br>• <strong>Object 1</strong> (a solid wooden bead) sinks through Liquid Z, but floats at the boundary between Liquid Y and Liquid X.<br>• <strong>Object 2</strong> (a plastic cube) sinks through Liquid Z and Liquid Y, and comes to rest at the bottom of Liquid X.<br><br>Which of the following statements <strong>MUST</strong> be scientifically true?',
+        options: [
+          {
+            id: 'A',
+            text: 'Object 1 is less dense than Liquid Z but denser than Liquid Y.',
+            isCorrect: false,
+            trapName: 'The Boundary Confusion Trap',
+            trapExplanation: 'Option A claims Object 1 is less dense than Liquid Z. But Maya observed Object 1 sinking through Liquid Z! If an object sinks through a fluid, it MUST be denser than that fluid. To float above Liquid Z, it would have to remain on top.'
+          },
+          {
+            id: 'B',
+            text: 'Object 2 has a greater density than Liquid X, Liquid Y, and Liquid Z.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'Liquid Z has a higher density than Object 1, Object 2, and Liquid X.',
+            isCorrect: false,
+            trapName: 'The Inverted Density Trap',
+            trapExplanation: 'Option C inverts fluid stratification physics. Denser fluids sink to the bottom. Because Liquid Z rests at the very top of the column, it has the LOWEST density of all three liquids, not the highest!'
+          },
+          {
+            id: 'D',
+            text: 'Object 1 and Object 2 must have the exact same volume because they both sink through Liquid Z.',
+            isCorrect: false,
+            trapName: 'The Size vs. Density Fallacy',
+            trapExplanation: 'Option D confuses volume (size/space taken up) with density (mass per unit volume). Sinking and floating depend strictly on relative density, never on volume alone! A massive steel cruise ship floats while a tiny pebble sinks.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: In fluid stratification, denser materials sink below less dense materials. An object sinks through any liquid with lower density, and floats atop any liquid with higher density.',
+          step2: 'Eliminate Impossible Edge Cases: Eliminate Option C immediately (Liquid Z is at the top, so it cannot be highest density). Eliminate Option D (sinking behavior depends on density, not equal volume).',
+          step3: 'Test Remaining Logic: Establish the master density chain: Liquid Z < Liquid Y < Object 1 < Liquid X < Object 2. Since Object 2 sinks to the bottom of Liquid X, Object 2 > Liquid X > Liquid Y > Liquid Z.',
+          step4: 'Verify with Scientific Principles: Object 2 is denser than all three liquids. Option B is 100% logically and scientifically verified!'
+        },
+        coachExplanation: {
+          bigPicture: 'This Olympiad question tests your ability to convert physical observations into a strict mathematical chain of inequalities without needing numerical density values.',
+          solvingJourney: [
+            '1. Fluid hierarchy from bottom to top: Density(X) > Density(Y) > Density(Z).',
+            '2. Object 1 behavior: Sinks through Z → Density(Obj 1) > Density(Z). Floats at Y/X boundary → Density(Obj 1) > Density(Y) and Density(Obj 1) < Density(X).',
+            '3. Object 2 behavior: Sinks through Z, Y, and all the way to bottom of X → Density(Obj 2) > Density(X).',
+            '4. Master Density Chain: Liquid Z < Liquid Y < Object 1 < Liquid X < Object 2.'
+          ],
+          whyCorrect: 'Because Object 2 rests at the bottom of Liquid X, it is denser than Liquid X. And since Liquid X is denser than Y and Z, Object 2 is denser than all three liquids (Option B).',
+          keepWondering: 'Suppose Maya heats Liquid Y so that it expands in volume while mass is conserved. Since Density = Mass / Volume, Liquid Y becomes less dense. Object 1 will sink even deeper through Liquid Y towards Liquid X!'
+        },
+        hints: [
+          'Stage 1 (Concept): Remember that things that are heavier for their size sink to the bottom, while lighter things float to the top. Where did Liquid Z end up?',
+          'Stage 2 (Strategy): Write out an inequality line: Bottom is heaviest (Liquid X), top is lightest (Liquid Z). Where did Object 2 stop moving?',
+          'Stage 3 (Walkthrough): Object 2 sank past Z, past Y, and even sank to the floor of Liquid X! That means nothing in the jar was dense enough to float it.'
+        ]
+      },
+      {
+        id: 2,
+        domain: 'Life Science',
+        domainKey: 'life',
+        topic: 'Ecosystem Interdependence & Trophic Cascades',
+        title: 'Wetland Food Web Disruption & Trophic Cascade',
+        question: 'In a coastal wetland ecosystem, the feeding relationships are as follows:<br><br>• <strong>Marsh Grass</strong> is the primary producer, converting sunlight into chemical energy.<br>• <strong>Grasshoppers</strong> eat Marsh Grass.<br>• <strong>Spiders</strong> and <strong>Frogs</strong> both eat Grasshoppers.<br>• <strong>Herons</strong> (large wading birds) eat Frogs and Fish.<br>• <strong>Dragonflies</strong> eat Mosquitoes, and their larvae are eaten by <strong>Fish</strong>.<br><br>A pesticide accidentally enters the wetland, dramatically reducing the <strong>Frog</strong> population by 90% over a single season. Assuming no other human interventions occur, which of the following is the most logically supported <strong>secondary effect</strong> in this ecosystem?',
+        options: [
+          {
+            id: 'A',
+            text: 'The Heron population will immediately double because they no longer have to compete with Frogs for Marsh Grass.',
+            isCorrect: false,
+            trapName: 'Role Confusion & Competition Misconception',
+            trapExplanation: 'Option A confuses herbivore and carnivore roles. Herons do not eat Marsh Grass (they are carnivores eating frogs and fish!). Herons were never competing with Frogs for grass. Losing 90% of their prey (frogs) stresses Herons, rather than doubling their numbers!'
+          },
+          {
+            id: 'B',
+            text: 'The Grasshopper population may increase, which could lead to increased consumption and pressure on Marsh Grass.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'The Spider population will instantly go extinct because Frogs are the primary source of energy for all wetland plants.',
+            isCorrect: false,
+            trapName: 'Impossible Energy Flow Trap',
+            trapExplanation: 'Option C claims plants get energy from frogs! In biology, energy flows from the Sun to autotrophic plants, never backward from carnivores to plants. Furthermore, spiders eat grasshoppers, so frog loss would not cause spider extinction.'
+          },
+          {
+            id: 'D',
+            text: 'The Dragonflies will stop laying eggs because Marsh Grass stops photosynthesizing when Frogs are absent.',
+            isCorrect: false,
+            trapName: 'Unlinked Causation Trap',
+            trapExplanation: 'Option D invents an impossible physiological dependency. Marsh Grass photosynthesis depends on sunlight, water, and carbon dioxide, completely independent of frog presence. Olympiad distractors often link unrelated organisms to test your causal tracking.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Trophic Cascades. Removing a predator relieves predation pressure on its prey, causing prey populations to multiply and overgraze their food source.',
+          step2: 'Eliminate Impossible Edge Cases: Eliminate Option C (plants get energy from sunlight, not animals). Eliminate Option A (Herons are predators that eat frogs, not grass competitors). Eliminate Option D (fake dependency between grass photosynthesis and frogs).',
+          step3: 'Test Remaining Logic: Trace causal chain: Frog population drops 90% → fewer predators hunting Grasshoppers → Grasshopper survival increases → larger Grasshopper population eats more Marsh Grass.',
+          step4: 'Verify with Scientific Principles: Option B accurately describes top-down trophic cascade dynamics standard in ecological science.'
+        },
+        coachExplanation: {
+          bigPicture: 'Ecosystems are webs of causal chains. When one node in the web changes, follow the arrows: who loses a predator, and who loses a food source?',
+          solvingJourney: [
+            '1. Frogs are predators of Grasshoppers, and prey for Herons.',
+            '2. First-order impact: 90% fewer frogs means almost zero hunting pressure on Grasshoppers.',
+            '3. Second-order impact: Grasshoppers flourish, multiply, and eat much more Marsh Grass.',
+            '4. Option B matches this exact sequence.'
+          ],
+          whyCorrect: 'With 90% of frogs eliminated, grasshoppers experience competitive release, increasing their grazing pressure on primary producer Marsh Grass.',
+          keepWondering: 'If Herons switch to eating mostly Fish because Frogs are gone, what will happen to Dragonfly larvae? Fewer Fish means more Dragonfly larvae survive, causing a boom in adult Dragonflies!'
+        },
+        hints: [
+          'Stage 1 (Concept): Who eats grasshoppers? If their main predator disappears, what happens to the number of grasshoppers?',
+          'Stage 2 (Strategy): Trace the domino effect: Fewer frogs → More grasshoppers → What happens to the plants that grasshoppers eat?',
+          'Stage 3 (Walkthrough): Option B states that grasshoppers increase and eat more marsh grass. That is a direct two-step causal chain.'
+        ]
+      },
+      {
+        id: 3,
+        domain: 'Scientific Inquiry',
+        domainKey: 'inquiry',
+        topic: 'Experimental Design & Variable Control',
+        title: 'Circuit Conductor Fair Test & Controlled Variables',
+        question: 'An elementary science team is investigating how different materials affect electrical current in a simple circuit. They set up a circuit with a <strong>6-Volt battery</strong>, a <strong>light bulb</strong>, a <strong>switch</strong>, and a <strong>gap between two test clips</strong> where different test items can be inserted.<br><br><code>[Battery (+)] ---- (Switch) ---- (Light Bulb) ---- [Clip A]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|------------------------------------------- [Clip B]</code><br><br>The students test four materials in the gap: an <strong>Iron Nail</strong>, a <strong>Wooden Popsicle Stick</strong>, a <strong>Copper Paperclip</strong>, and a <strong>Plastic Straw</strong>.<br><br>Their goal is to determine which materials are <strong>conductors</strong> and which are <strong>insulators</strong> by observing whether the light bulb glows.<br><br>Which of the following describes a <strong>critical control procedure</strong> required to ensure this experiment yields valid scientific conclusions?',
+        options: [
+          {
+            id: 'A',
+            text: 'They must change the battery voltage from 6V to 12V for every different material tested.',
+            isCorrect: false,
+            trapName: 'Confounding Variable Trap',
+            trapExplanation: 'Option A introduces a second independent variable! If you change battery voltage and material at the same time, you cannot know if the bulb glowed because copper is a conductor or because the battery was twice as powerful.'
+          },
+          {
+            id: 'B',
+            text: 'They must keep the switch OPEN during testing so electricity flows continuously through the air.',
+            isCorrect: false,
+            trapName: 'Fundamental Open-Circuit Misconception',
+            trapExplanation: 'Option B confuses open vs closed circuits. Air is an electrical insulator! An open switch creates an incomplete circuit, preventing current flow regardless of what material is between the clips. The switch must be closed!'
+          },
+          {
+            id: 'C',
+            text: 'They must keep the battery, wire connections, switch state, and bulb identical for every test, changing only the material inserted between Clip A and Clip B.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'D',
+            text: 'They must use a longer wire for the Iron Nail and a shorter wire for the Plastic Straw to balance out their physical sizes.',
+            isCorrect: false,
+            trapName: 'Uncontrolled Resistance Trap',
+            trapExplanation: 'Option D alters wire lengths between trials. Wire length changes total circuit resistance. Introducing different wire lengths ruins variable control and invalidates experimental conclusions.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: The Golden Rule of Fair Testing: In any scientific inquiry, change ONLY ONE independent variable at a time while holding all other variables strictly constant.',
+          step2: 'Eliminate Impossible Edge Cases: Eliminate Option B (electricity does not flow through air in low-voltage circuits). Eliminate Option A and D (both deliberately alter additional variables like voltage and wire length).',
+          step3: 'Test Remaining Logic: Identify the Independent Variable = Material between clips. Dependent Variable = Bulb glowing (circuit continuity). Controlled Variables = Battery, wires, switch, bulb.',
+          step4: 'Verify with Scientific Principles: Option C explicitly enforces the isolation of the single independent variable, satisfying the scientific definition of a fair test.'
+        },
+        coachExplanation: {
+          bigPicture: 'In Science Olympiad Experimental Design and Circuit Lab events, zero score is given for tests with confounding variables. A valid test isolates the exact cause.',
+          solvingJourney: [
+            '1. Independent Variable = Type of material (Iron, Wood, Copper, Plastic).',
+            '2. Dependent Variable = Whether bulb lights up (conduction).',
+            '3. Controlled Variables = All other electrical parts (6V battery, wires, closed switch, bulb).',
+            '4. Option C enforces strict control.'
+          ],
+          whyCorrect: 'Keeping all components identical while changing only the test material guarantees that any change in the bulb is caused solely by the conductivity of that material.',
+          keepWondering: 'If the Iron Nail makes the bulb glow dimly while the Copper Paperclip makes it glow brightly, what does that prove? Copper has lower electrical resistance than iron!'
+        },
+        hints: [
+          'Stage 1 (Concept): What is a "Fair Test"? If you change two things at once, can you tell which one caused the result?',
+          'Stage 2 (Strategy): What is the ONE thing we want to compare? The material between the clips! Everything else must stay exactly the same.',
+          'Stage 3 (Walkthrough): Option C says to keep battery, wires, switch, and bulb identical, changing ONLY the material between the clips.'
+        ]
+      },
+      {
+        id: 4,
+        domain: 'Physical Science',
+        domainKey: 'physical',
+        topic: 'Forces, Motion & Simple Machines',
+        title: 'Class 1 Lever Mechanics & Effort Tradeoff',
+        question: 'An Olympiad student uses a stiff wooden board and a triangular block as a lever to lift a heavy 40-kilogram rock. She places the triangular fulcrum close to the rock, creating a short load arm and a long effort arm.<br><br>When she pushes down on the far end of the board, she notices the rock lifts off the ground with very little effort force.<br><br>Which statement correctly explains the <strong>mechanical advantage tradeoff</strong> occurring in this simple machine?',
+        options: [
+          {
+            id: 'A',
+            text: 'The lever destroys gravity, so the rock temporarily loses all of its mass.',
+            isCorrect: false,
+            trapName: 'Magic Machine Fallacy',
+            trapExplanation: 'Simple machines never destroy gravity or change an object\'s mass! Mass is conserved. The machine only redirects and trades force for distance.'
+          },
+          {
+            id: 'B',
+            text: 'She applies less effort force, but her hands must push through a greater downward distance than the rock rises.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'She applies less effort force AND moves through less distance, getting free energy from the lever.',
+            isCorrect: false,
+            trapName: 'Perpetual Motion / Free Energy Trap',
+            trapExplanation: 'This violates the Law of Conservation of Energy! Work In = Work Out (Force × Distance). You cannot decrease force and distance simultaneously.'
+          },
+          {
+            id: 'D',
+            text: 'The fulcrum generates an upward magnetic force that pulls the rock into the air.',
+            isCorrect: false,
+            trapName: 'Invented Mechanism Trap',
+            trapExplanation: 'The fulcrum is a mechanical pivot point, not a magnet. Simple machines operate on mechanical torque equilibrium, not magnetism.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Mechanical Advantage and Conservation of Work: Work = Force × Distance. A simple machine trades distance for effort force.',
+          step2: 'Eliminate Edge Cases: Eliminate Option A (gravity is not destroyed) and Option C (free energy is physically impossible).',
+          step3: 'Test Remaining Logic: Long effort arm means larger arc of movement. Less force required, but hands travel farther.',
+          step4: 'Verify with Principles: Force(effort) × Distance(effort) = Force(load) × Distance(load). Option B is verified.'
+        },
+        coachExplanation: {
+          bigPicture: 'Simple machines make work feel easier by trading force for distance. You never get something for nothing in physics!',
+          solvingJourney: [
+            '1. Work = Force × Distance.',
+            '2. If effort force is halved, effort distance must double.',
+            '3. Because the effort arm is long, pushing it down sweeps a large distance while the short load arm lifts a small height.'
+          ],
+          whyCorrect: 'Option B accurately captures the fundamental trade-off of mechanical advantage: less force exerted over a greater distance.',
+          keepWondering: 'What happens if you move the fulcrum right next to your hands instead of next to the rock? You will need huge effort force, but the rock will fling upward with high speed!'
+        },
+        hints: [
+          'Stage 1 (Concept): Remember the playground seesaw! If you sit far from the middle, do you move up and down through a bigger distance than someone sitting close?',
+          'Stage 2 (Strategy): In physics, you cannot get "free work." If you use less force, what must you do more of?',
+          'Stage 3 (Walkthrough): You push with less muscle force, but your hands have to travel down a longer path. Option B is correct.'
+        ]
+      },
+      {
+        id: 5,
+        domain: 'Physical Science',
+        domainKey: 'physical',
+        topic: 'Matter, Mass, Volume & Density Dynamics',
+        title: 'Conservation of Mass Across Phase Changes',
+        question: 'Lucas places 250 grams of solid ice cubes inside a rigid glass flask and seals the airtight rubber stopper tightly so nothing can enter or escape. The total mass of the sealed flask and ice on a digital balance is exactly <strong>680.0 grams</strong>.<br><br>He leaves the flask in a warm classroom until all the ice melts completely into liquid water. No condensation forms on the outside of the flask.<br><br>What will the digital balance read after all the ice has melted?',
+        options: [
+          {
+            id: 'A',
+            text: 'Exactly 680.0 grams, because total mass is conserved during physical phase changes in a closed system.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'B',
+            text: '650.0 grams, because liquid water takes up less space than ice, so some mass disappeared.',
+            isCorrect: false,
+            trapName: 'Volume Equals Mass Fallacy',
+            trapExplanation: 'Ice does contract and take up less volume when melting, but volume is not mass! All the water molecules are still trapped inside the closed flask.'
+          },
+          {
+            id: 'C',
+            text: '710.0 grams, because liquid water is heavier than ice and exerts more downward gravitational pull.',
+            isCorrect: false,
+            trapName: 'Phase Weight Confusion',
+            trapExplanation: 'Liquid water is denser than ice, but the number of H₂O molecules did not change. Density increased because volume decreased, keeping total mass identical.'
+          },
+          {
+            id: 'D',
+            text: '0.0 grams, because melting turns ice into invisible heat energy that has no weight.',
+            isCorrect: false,
+            trapName: 'Matter-to-Energy Confusion',
+            trapExplanation: 'Melting is a physical phase change, not a nuclear reaction! Ice does not vanish into energy; it simply transitions from solid crystal to liquid.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: The Law of Conservation of Mass. In any physical phase change inside a closed system, matter is neither created nor destroyed.',
+          step2: 'Eliminate Edge Cases: Eliminate Option D (matter does not vanish) and Option B/C (mass cannot randomly decrease or increase).',
+          step3: 'Test Remaining Logic: Count molecules: Every H₂O molecule in the ice is now an H₂O molecule in the liquid puddle. The seal prevented any atoms from escaping.',
+          step4: 'Verify with Principles: Initial Mass = Final Mass = 680.0 g. Option A is verified.'
+        },
+        coachExplanation: {
+          bigPicture: 'Mass is the amount of stuff (atoms) inside an object. Phase changes rearrange atoms without adding or losing any.',
+          solvingJourney: [
+            '1. The system is sealed (closed system).',
+            '2. Ice melting to water is a physical change.',
+            '3. Volume decreases by about 9%, but mass stays 100% constant.',
+            '4. Balance reading remains exactly 680.0 grams.'
+          ],
+          whyCorrect: 'Matter cannot cross the sealed boundary. Total mass is strictly conserved.',
+          keepWondering: 'Why does ice float on water if they are made of the exact same molecules? Water molecules form open hexagonal rings when freezing, creating empty pockets that make ice less dense than liquid water!'
+        },
+        hints: [
+          'Stage 1 (Concept): Did any water leak out of the sealed bottle? Did any air get in?',
+          'Stage 2 (Strategy): If no atoms escaped, does the total amount of matter change just because solid ice turned to liquid?',
+          'Stage 3 (Walkthrough): The Law of Conservation of Mass says mass stays exactly the same during melting in a closed container.'
+        ]
+      },
+      {
+        id: 6,
+        domain: 'Earth & Space Science',
+        domainKey: 'earth',
+        topic: 'The Water Cycle, Weather & Climate Patterns',
+        title: 'Energy Drivers of the Hydrologic Cycle',
+        question: 'The water cycle continuously moves water through Earth\'s atmosphere, oceans, and land surfaces. Two fundamental forces drive this entire global cycle:<br><br>1. <strong>Energy Source 1:</strong> Powers liquid water to absorb thermal energy and turn into water vapor (evaporation) and drives plant transpiration.<br>2. <strong>Force 2:</strong> Pulls condensed precipitation (rain/snow) back toward Earth\'s surface and causes runoff to flow downhill into lakes and oceans.<br><br>Which pair correctly identifies these two primary planetary drivers?',
+        options: [
+          {
+            id: 'A',
+            text: 'Energy Source: Geothermal volcanoes; Force: Earth\'s magnetic field.',
+            isCorrect: false,
+            trapName: 'Exotic Force Distractor',
+            trapExplanation: 'Volcanoes provide negligible energy to global evaporation compared to the Sun. Earth\'s magnetic field affects charged particles in space, not neutral water droplets falling to the ground!'
+          },
+          {
+            id: 'B',
+            text: 'Energy Source: Solar radiation from the Sun; Force: Gravity.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'Energy Source: Ocean currents; Force: Moon\'s tidal pull.',
+            isCorrect: false,
+            trapName: 'Secondary Effect Misclassification',
+            trapExplanation: 'Ocean currents distribute heat, but do not create the primary thermal energy. The Moon causes ocean tides, but gravity pulling water downhill is Earth\'s own gravitational field.'
+          },
+          {
+            id: 'D',
+            text: 'Energy Source: Wind friction; Force: Centrifugal spin of Earth.',
+            isCorrect: false,
+            trapName: 'Atmospheric Effect Confusion',
+            trapExplanation: 'Wind is an effect of uneven solar heating, not the primary energy source. Earth\'s spin slightly deflects wind (Coriolis effect), but does not pull raindrops down.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Thermodynamics and Mechanics of Earth Systems. Solar radiation supplies heat for phase changes; gravity provides the vector force pulling mass toward Earth\'s center.',
+          step2: 'Eliminate Edge Cases: Eliminate Option A (magnetism does not pull rain down) and Option D (wind is caused by solar heating, not vice versa).',
+          step3: 'Test Remaining Logic: Sunlight heats water surface → evaporation. Droplets condense in cold air → gravity pulls them down as rain and drives downhill rivers.',
+          step4: 'Verify with Principles: Sun + Gravity are the textbook fundamental drivers of the hydrologic cycle (Option B).'
+        },
+        coachExplanation: {
+          bigPicture: 'Without the Sun, water would freeze into solid ice. Without gravity, water vapor would drift into outer space. Sun lifts water up; gravity pulls it down!',
+          solvingJourney: [
+            '1. Upward journey: Solar energy heats water, breaking hydrogen bonds to cause evaporation.',
+            '2. Downward journey: Gravity pulls raindrops from clouds, drives stream runoff, and pushes groundwater down aquifers.'
+          ],
+          whyCorrect: 'Solar radiation provides thermal energy for phase transitions, while Earth\'s gravity pulls precipitation and runoff downward.',
+          keepWondering: 'If the Sun\'s energy drives evaporation, where does the thermal energy go when water vapor condenses into cloud droplets? It releases latent heat back into the surrounding air, fueling thunderstorms!'
+        },
+        hints: [
+          'Stage 1 (Concept): What shining object in the sky provides all the heat to warm oceans and puddles?',
+          'Stage 2 (Strategy): What invisible force pulls falling raindrops and sleds down a hill?',
+          'Stage 3 (Walkthrough): The Sun powers evaporation, and Gravity pulls water down. Option B is correct.'
+        ]
+      },
+      {
+        id: 7,
+        domain: 'Earth & Space Science',
+        domainKey: 'earth',
+        topic: 'Earth-Moon-Sun Geometry & Space Systems',
+        title: 'Seasons & Axial Tilt vs Orbital Distance',
+        question: 'During the month of <strong>July</strong>, Earth is actually at its <strong>farthest orbital point from the Sun</strong> (aphelion, approximately 152 million kilometers away). Yet, cities in the Northern Hemisphere (like Charlotte, New York, and London) experience their warmest summer temperatures during this time.<br><br>Which of the following scientifically explains why the Northern Hemisphere experiences summer in July?',
+        options: [
+          {
+            id: 'A',
+            text: 'The Northern Hemisphere is tilted toward the Sun in July, causing sunlight to strike at a steep direct angle with longer daylight hours.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'B',
+            text: 'The ozone layer thins out completely every July, letting raw solar heat beam through.',
+            isCorrect: false,
+            trapName: 'Environmental Myth Distractor',
+            trapExplanation: 'The ozone layer does not disappear every July! Ozone filters ultraviolet rays, not seasonal thermal temperature.'
+          },
+          {
+            id: 'C',
+            text: 'Earth\'s core becomes radioactive and heats the ground from beneath during summer months.',
+            isCorrect: false,
+            trapName: 'Impossible Geologic Mechanism',
+            trapExplanation: 'Earth\'s core temperature remains stable over billions of years and has nothing to do with seasonal weather patterns.'
+          },
+          {
+            id: 'D',
+            text: 'The Sun burns twice as much hydrogen fuel in July than in January, making the entire solar system hotter.',
+            isCorrect: false,
+            trapName: 'Variable Sun Fallacy',
+            trapExplanation: 'The Sun produces steady energy year-round. If the Sun got hotter, the Southern Hemisphere would also have summer in July (instead of their cold winter!).'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Earth\'s 23.5° axial tilt. Seasons are caused by tilt angle affecting sunlight concentration (angle of insolation) and day length, NOT orbital distance.',
+          step2: 'Eliminate Edge Cases: Eliminate Option D (the Southern Hemisphere has winter in July, disproving that the whole Sun gets hotter). Eliminate B and C (scientifically fabricated claims).',
+          step3: 'Test Remaining Logic: In July, Earth\'s North Pole tilts toward the Sun. Direct sunlight concentrates photons over a smaller surface area, warming the ground efficiently.',
+          step4: 'Verify with Principles: Option A aligns with standard astronomical orbital mechanics.'
+        },
+        coachExplanation: {
+          bigPicture: 'The biggest trap in elementary astronomy is believing summer happens because Earth is closer to the Sun. We are actually farthest from the Sun in July!',
+          solvingJourney: [
+            '1. Earth has a 23.5° axial tilt that stays pointed toward Polaris.',
+            '2. In July, the Northern Hemisphere tilts toward the Sun.',
+            '3. Direct sun rays (90° overhead angle) deliver concentrated energy.',
+            '4. At the same time, the Southern Hemisphere tilts away, experiencing winter.'
+          ],
+          whyCorrect: 'Axial tilt toward the Sun provides concentrated direct solar rays and longer daylight heating cycles (Option A).',
+          keepWondering: 'If Earth had 0° of axial tilt (standing completely straight up), what would happen to seasons? We would have NO seasons at all—every day at every latitude would have identical weather all year round!'
+        },
+        hints: [
+          'Stage 1 (Concept): Think about shining a flashlight on a table. When you hold it straight above, the beam is tight and bright. What tilts Earth toward the Sun?',
+          'Stage 2 (Strategy): When the Northern Hemisphere has summer, Australia has winter. Can the whole planet be closer to the Sun?',
+          'Stage 3 (Walkthrough): Earth\'s 23.5° tilt causes direct rays in the north in July. Option A is correct.'
+        ]
+      },
+      {
+        id: 8,
+        domain: 'Life Science',
+        domainKey: 'life',
+        topic: 'Ecosystem Interdependence & Adaptations',
+        title: 'Structural vs Behavioral Adaptations in Desert Organisms',
+        question: 'The <strong>Fennec Fox</strong> lives in the scorching Sahara Desert. Biologists study two key survival characteristics of this animal:<br><br>1. <strong>Feature 1:</strong> Extraordinarily large ears (up to 15 cm long) packed with dense surface blood vessels that radiate internal body heat into the cooler desert breeze.<br>2. <strong>Feature 2:</strong> Sleeping deep underground in subterranean sand burrows during the hottest midday hours and hunting only after sunset.<br><br>How should these two traits be scientifically categorized?',
+        options: [
+          {
+            id: 'A',
+            text: 'Feature 1 is a Behavioral adaptation; Feature 2 is a Structural adaptation.',
+            isCorrect: false,
+            trapName: 'Classification Reversal Trap',
+            trapExplanation: 'Option A flips the definitions. Ears are physical body parts (structural), while sleeping underground at noon is an action/choice (behavioral).'
+          },
+          {
+            id: 'B',
+            text: 'Feature 1 is a Structural adaptation; Feature 2 is a Behavioral adaptation.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'Both features are Structural adaptations because the fox was born with them.',
+            isCorrect: false,
+            trapName: 'Innate Behavior Confusion',
+            trapExplanation: 'Even though instincts are innate, an action like burrowing or hunting at night is classified as behavior, not a physical body structure.'
+          },
+          {
+            id: 'D',
+            text: 'Both features are Learned adaptations taught by parent foxes.',
+            isCorrect: false,
+            trapName: 'Learned vs Evolutionary Confusion',
+            trapExplanation: 'Large blood-rich ears cannot be taught by parents! They are physical evolutionary structures encoded in DNA.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Adaptation Classification. Structural = physical body part or morphology. Behavioral = action, routine, or movement strategy.',
+          step2: 'Eliminate Edge Cases: Eliminate Option D (ears cannot be learned). Eliminate Option C (burrowing is an action, not an organ).',
+          step3: 'Test Remaining Logic: Ears with blood vessels = anatomy = Structural. Sleeping underground at noon = action = Behavioral.',
+          step4: 'Verify with Principles: Option B accurately matches the standard biological definitions.'
+        },
+        coachExplanation: {
+          bigPicture: 'Ask yourself: Is it an anatomical part you can touch on a preserved specimen (Structural)? Or is it a video of what the animal DOES (Behavioral)?',
+          solvingJourney: [
+            '1. Large ears with capillary beds = physical anatomy = Structural adaptation.',
+            '2. Midday burrowing and nocturnal foraging = schedule/activity = Behavioral adaptation.',
+            '3. Option B correctly pairs both.'
+          ],
+          whyCorrect: 'Physical anatomy (ears) is structural; habitual action (nocturnal burrowing) is behavioral.',
+          keepWondering: 'Why wouldn\'t an Arctic fox have large ears like the Fennec fox? In the Arctic, large ears would radiate too much body heat, causing hypothermia! Arctic foxes have tiny, rounded ears to conserve warmth.'
+        },
+        hints: [
+          'Stage 1 (Concept): Is an ear a physical body part, or an action? Is burrowing a body part, or something you do?',
+          'Stage 2 (Strategy): "Structural" means built into the body. "Behavioral" means how the animal behaves.',
+          'Stage 3 (Walkthrough): Ears = Structural. Sleeping in burrows = Behavioral. Option B is correct.'
+        ]
+      },
+      {
+        id: 9,
+        domain: 'Life Science',
+        domainKey: 'life',
+        topic: 'Human Body Systems & Functional Anatomy',
+        title: 'Interconnected Human Body Systems During Sprinting',
+        question: 'When an athlete begins an intense 100-meter dash in physical education or track competition, her muscles require a dramatic surge in cellular energy (ATP).<br><br>Which sequence correctly describes how her <strong>Respiratory</strong>, <strong>Circulatory</strong>, and <strong>Muscular</strong> systems immediately collaborate to meet this metabolic demand?',
+        options: [
+          {
+            id: 'A',
+            text: 'The Muscular system produces oxygen, the Circulatory system pumps it to the lungs, and the Respiratory system stores it as sugar.',
+            isCorrect: false,
+            trapName: 'Reverse Physiology Trap',
+            trapExplanation: 'Muscles do not produce oxygen; they consume oxygen! Lungs take in oxygen from the air, and sugar is obtained from the digestive system, not the lungs.'
+          },
+          {
+            id: 'B',
+            text: 'The Respiratory system increases breathing rate to inhale O₂, the Circulatory system accelerates heart rate to pump oxygenated blood to leg muscles, and muscles burn glucose to contract while releasing CO₂ waste back to blood.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'The Circulatory system stops pumping blood to conserve energy, forcing muscles to breathe atmospheric air directly through the skin.',
+            isCorrect: false,
+            trapName: 'Amphibian Respiration Confusion',
+            trapExplanation: 'Humans cannot breathe through their skin like frogs! Stopping blood circulation would cause muscle failure and fainting within seconds.'
+          },
+          {
+            id: 'D',
+            text: 'The bones in the Skeletal system dissolve to release electricity directly into the running shoes.',
+            isCorrect: false,
+            trapName: 'Absurd Distractor',
+            trapExplanation: 'Bones provide mechanical structure and lever points for muscle contraction; they do not dissolve to make electricity!'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Systems Integration and Cellular Respiration: Glucose + Oxygen → Energy + Carbon Dioxide + Water.',
+          step2: 'Eliminate Edge Cases: Eliminate Option C (humans do not breathe through skin) and Option D (absurd claim). Eliminate Option A (muscles do not create oxygen).',
+          step3: 'Test Remaining Logic: Lungs inhale O₂ → red blood cells in heart-pumped vessels deliver O₂ to muscles → muscles convert fuel to movement → blood carries CO₂ back to lungs to exhale.',
+          step4: 'Verify with Principles: Option B is the anatomically and physiologically verified response.'
+        },
+        coachExplanation: {
+          bigPicture: 'Your body is an integrated factory. Lungs are the intake valve, the heart is the distribution pump, and muscles are the mechanical engine engines burning fuel.',
+          solvingJourney: [
+            '1. Inhale: Lungs absorb O₂ from ambient air.',
+            '2. Transport: Heart beats faster to circulate oxygenated blood.',
+            '3. Work: Muscle cells undergo aerobic respiration to contract.',
+            '4. Exhaust: Venous blood carries CO₂ waste back to the lungs for exhalation.'
+          ],
+          whyCorrect: 'Option B accurately outlines the complete pathway of gas exchange, circulation, and muscular work.',
+          keepWondering: 'Why do you continue breathing hard for several minutes AFTER you cross the finish line? Your muscles built up an "oxygen debt" and lactic acid that your liver and circulatory system must clear using extra oxygen!'
+        },
+        hints: [
+          'Stage 1 (Concept): What takes in air? What pumps blood? What actually moves your legs?',
+          'Stage 2 (Strategy): Trace the oxygen: Air → Lungs → Blood (Heart) → Muscles. Then CO₂ goes backward.',
+          'Stage 3 (Walkthrough): Option B describes breathing faster, heart pumping faster, and muscles using the fuel.'
+        ]
+      },
+      {
+        id: 10,
+        domain: 'Scientific Inquiry',
+        domainKey: 'inquiry',
+        topic: 'Experimental Design & Variable Control',
+        title: 'Detecting Flaws in Fertilizer Experiment Design',
+        question: 'Emma investigates whether a new organic liquid fertilizer makes tomato plants grow taller. She sets up two identical pots with identical soil and identical seeds:<br><br>• <strong>Plant A:</strong> Receives 100 mL of water mixed with 10 mL of organic fertilizer, placed on a sunny south-facing windowsill.<br>• <strong>Plant B:</strong> Receives 100 mL of plain water with NO fertilizer, placed inside a dark storage closet.<br><br>After three weeks, Plant A has grown 24 cm, while Plant B has grown only 2 cm.<br><br>Why is Emma\'s conclusion that <em>"organic fertilizer causes tomato plants to grow 12 times taller"</em> <strong>scientifically invalid</strong>?',
+        options: [
+          {
+            id: 'A',
+            text: 'Because she tested two independent variables at the same time: fertilizer presence AND sunlight exposure.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'B',
+            text: 'Because tomato plants can only grow in metal pots, never in plastic pots.',
+            isCorrect: false,
+            trapName: 'Irrelevant Material Distractor',
+            trapExplanation: 'Pot material has nothing to do with the experimental logic flaw. Plants grow well in many container materials.'
+          },
+          {
+            id: 'C',
+            text: 'Because organic fertilizer is illegal to use in science fair projects.',
+            isCorrect: false,
+            trapName: 'Fabricated Rule Distractor',
+            trapExplanation: 'Organic plant fertilizers are completely safe and widely used in school science experiments.'
+          },
+          {
+            id: 'D',
+            text: 'Because 24 is an even number, and plant height must always be an odd number.',
+            isCorrect: false,
+            trapName: 'Nonsense Numerical Trap',
+            trapExplanation: 'Nature does not follow odd/even number rules for physical height measurements.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Controlled Experimentation. To claim that Variable X caused Outcome Y, Variable X must be the ONLY variable that differed between treatment groups.',
+          step2: 'Eliminate Edge Cases: Eliminate B, C, and D (all fabricated or scientifically absurd statements).',
+          step3: 'Test Remaining Logic: Plant A had Fertilizer + Sun. Plant B had No Fertilizer + Dark Closet. Was the growth difference caused by the fertilizer or the lack of sunlight needed for photosynthesis?',
+          step4: 'Verify with Principles: You cannot isolate the cause because sunlight was not controlled. Option A is logically verified.'
+        },
+        coachExplanation: {
+          bigPicture: 'This is the most common experimental design trap in Science Olympiad. When an experiment has two uncontrolled variables, the conclusions are completely invalid!',
+          solvingJourney: [
+            '1. Independent Variable tested: Fertilizer.',
+            '2. Confounding Variable introduced: Sunlight (windowsill vs closet).',
+            '3. Plant B was starved of photons for photosynthesis.',
+            '4. Emma cannot know how much growth was from fertilizer vs sunlight.'
+          ],
+          whyCorrect: 'Failing to keep sunlight constant created a confounding variable, making valid causation impossible to prove.',
+          keepWondering: 'How could Emma fix her experiment? Keep BOTH plants on the same sunny windowsill, giving one water with fertilizer and the other plain water!'
+        },
+        hints: [
+          'Stage 1 (Concept): What do plants need to grow besides fertilizer? Sunlight!',
+          'Stage 2 (Strategy): Look where she put the two plants. Did both get the same light?',
+          'Stage 3 (Walkthrough): One was in the sun, one was in a dark closet. She changed TWO variables at once. Option A is correct.'
+        ]
+      },
+      {
+        id: 11,
+        domain: 'Scientific Inquiry',
+        domainKey: 'inquiry',
+        topic: 'Data Analysis, Classification & Logic',
+        title: 'Data Anomaly & Solidification Temperature Plateau',
+        question: 'A science team heats pure liquid stearic acid to 85°C and records its temperature every 60 seconds as it slowly cools in a room at 22°C.<br><br>Their data table shows:<br>• Time 0 min: 85°C<br>• Time 2 min: 78°C<br>• Time 4 min: 72°C<br>• Time 6 min: 69°C (Liquid begins turning cloudy)<br>• Time 8 min: 69°C<br>• Time 10 min: 69°C<br>• Time 12 min: 69°C (Fully solid crystal)<br>• Time 14 min: 61°C<br>• Time 16 min: 54°C<br><br>What is the scientific explanation for why the temperature stayed constant at <strong>69°C between 6 and 12 minutes</strong>?',
+        options: [
+          {
+            id: 'A',
+            text: 'The digital thermometer ran out of battery power for exactly 6 minutes.',
+            isCorrect: false,
+            trapName: 'Equipment Failure Assumption',
+            trapExplanation: 'Assuming equipment broke is a rookie mistake! The plateau happened exactly while the substance was changing phase from liquid to solid.'
+          },
+          {
+            id: 'B',
+            text: 'During a phase change (freezing), thermal energy released by bond formation keeps the temperature constant until the entire liquid has solidified.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'The stearic acid absorbed coldness from the room and destroyed all heat molecules.',
+            isCorrect: false,
+            trapName: 'Caloric / Coldness Myth',
+            trapExplanation: 'Cold is not a physical substance; cold is simply the absence of heat. Heat cannot be destroyed.'
+          },
+          {
+            id: 'D',
+            text: '69°C is the room temperature of the laboratory.',
+            isCorrect: false,
+            trapName: 'Data Disregard Trap',
+            trapExplanation: 'The problem explicitly states the room was at 22°C. 69°C is much warmer than room temperature.'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Latent Heat of Fusion and Phase Change Temperature Plateaus. When a pure substance changes phase, temperature does not change until the phase transition finishes.',
+          step2: 'Eliminate Edge Cases: Eliminate Option D (room was 22°C). Eliminate Option C (cold is not an entity). Eliminate Option A (scientific phenomena explain consistent plateaus).',
+          step3: 'Test Remaining Logic: Between 6 and 12 min, the acid turns from cloudy liquid to solid crystal. The latent heat of freezing holds the temperature fixed at the freezing point (69°C).',
+          step4: 'Verify with Principles: Cooling curves of pure substances show flat thermal plateaus at freezing points. Option B is verified.'
+        },
+        coachExplanation: {
+          bigPicture: 'Whenever you see a flat line on a heating or cooling graph of a pure substance, you are witnessing a phase change! Temperature never rises or falls during a pure phase change.',
+          solvingJourney: [
+            '1. Liquid cools from 85°C to 69°C.',
+            '2. At 69°C, molecules begin locking into solid crystal lattices.',
+            '3. Forming molecular bonds releases latent heat of crystallization, balancing heat loss to the room.',
+            '4. Once 100% solid, temperature resumes dropping toward 22°C.'
+          ],
+          whyCorrect: 'During crystallization, latent heat release keeps the temperature constant at the substance\'s freezing point.',
+          keepWondering: 'What does this tell us about the melting point of solid stearic acid? Melting point and freezing point are the exact same temperature: 69°C!'
+        },
+        hints: [
+          'Stage 1 (Concept): Notice what the notes say: "begins turning cloudy" to "fully solid crystal". What process is happening?',
+          'Stage 2 (Strategy): In science, does ice water stay at 0°C until all the ice melts? Yes! Phase changes happen at constant temperatures.',
+          'Stage 3 (Walkthrough): The flat plateau at 69°C represents the freezing point where latent heat is released. Option B is correct.'
+        ]
+      },
+      {
+        id: 12,
+        domain: 'Physical Science',
+        domainKey: 'physical',
+        topic: 'Energy Transformations & Electrical Circuits',
+        title: 'Roller Coaster Kinetic vs Gravitational Potential Energy',
+        question: 'A 500-kg roller coaster cart starts from rest at the top of <strong>Hill 1 (height: 40 meters)</strong>. It rolls down the track and climbs up to the peak of <strong>Hill 2 (height: 25 meters)</strong>.<br><br>Assuming there is friction between the wheels and track and air resistance along the journey, which of the following statements <strong>MUST</strong> be true about the cart\'s energy transformations?',
+        options: [
+          {
+            id: 'A',
+            text: 'The total energy of the universe increases because the roller coaster creates new kinetic energy as it accelerates down the hill.',
+            isCorrect: false,
+            trapName: 'Energy Creation Fallacy',
+            trapExplanation: 'Violates the First Law of Thermodynamics! Energy can never be created from nothing. Kinetic energy comes from converted gravitational potential energy.'
+          },
+          {
+            id: 'B',
+            text: 'At the bottom of Hill 1, gravitational potential energy has converted into kinetic energy, and some energy has transformed into thermal energy (heat) due to track friction.',
+            isCorrect: true,
+            trapName: null,
+            trapExplanation: null
+          },
+          {
+            id: 'C',
+            text: 'The cart could easily climb up a Hill 3 that is 60 meters tall without using any motor or pull chain.',
+            isCorrect: false,
+            trapName: 'Higher Hill Fallacy',
+            trapExplanation: 'The cart started at 40 meters. Without an external motor, it can never reach a height higher than its starting height (40 m), especially with friction losses!'
+          },
+          {
+            id: 'D',
+            text: 'Friction destroys energy forever, reducing the total amount of energy existing in the universe.',
+            isCorrect: false,
+            trapName: 'Energy Destruction Fallacy',
+            trapExplanation: 'Friction does not destroy energy; it converts kinetic energy into dissipated thermal energy (microscopic heat).'
+          }
+        ],
+        routine: {
+          step1: 'Identify Core Principle: Law of Conservation of Energy: Total Energy = Potential Energy + Kinetic Energy + Thermal Energy (Work done by friction).',
+          step2: 'Eliminate Edge Cases: Eliminate Option A (energy is not created) and Option D (energy is not destroyed). Eliminate Option C (cannot climb higher than starting height).',
+          step3: 'Test Remaining Logic: Rolling downhill: Potential energy converts to kinetic (motion) and thermal (friction heating wheels and track).',
+          step4: 'Verify with Principles: Conservation of Mechanical Energy with non-conservative friction losses verifies Option B.'
+        },
+        coachExplanation: {
+          bigPicture: 'Energy is nature\'s currency. It changes forms—from potential height energy, to speed kinetic energy, to friction heat energy—but the total sum is 100% conserved.',
+          solvingJourney: [
+            '1. At 40 m peak: Max gravitational potential energy, zero kinetic energy.',
+            '2. At bottom: Maximum kinetic energy, minimum potential energy.',
+            '3. Friction and air resistance convert a portion of mechanical energy into warm track/wheel thermal energy.',
+            '4. Option B perfectly states this transformation.'
+          ],
+          whyCorrect: 'Potential energy converts to kinetic energy as the cart descends, with friction dissipating part into thermal energy.',
+          keepWondering: 'Why is Hill 2 on a roller coaster always shorter than Hill 1? Because friction and air resistance bleed off some mechanical energy, so the cart doesn\'t have enough kinetic energy to reach the original height!'
+        },
+        hints: [
+          'Stage 1 (Concept): When a roller coaster zooms down a hill, what does height turn into? Speed!',
+          'Stage 2 (Strategy): What happens to wheels and tracks after lots of friction? They get warm (thermal energy)!',
+          'Stage 3 (Walkthrough): Option B explains that potential turns to kinetic, and friction turns some to thermal heat.'
+        ]
+      }
+    ];
+
+    /**
+     * APP STATE MANAGEMENT
+     */
+    const state = {
+      currentSim: 'density',
+      currentQuestionIndex: 0,
+      score: 0,
+      streak: 0,
+      bestStreak: 0,
+      tokens: 3,
+      timerSeconds: 60,
+      isTimerPaused: false,
+      timerInterval: null,
+      soundEnabled: true,
+      ttsEnabled: false,
+      activeScaffoldTier: 1,
+      answeredMap: {}, // index -> { answered: bool, selected: 'A', correct: bool }
+      hintStage: 0,
+      domainScores: { physical: { correct: 0, total: 0 }, life: { correct: 0, total: 0 }, earth: { correct: 0, total: 0 }, inquiry: { correct: 0, total: 0 } },
+      
+      // Simulation parameters
+      simParams: {
+        density: {
+          rhoZ: 0.80,
+          rhoY: 1.00,
+          rhoX: 1.30,
+          rhoObj1: 1.15,
+          rhoObj2: 1.45,
+          tempY: 20 // °C (heating Y decreases density)
+        },
+        trophic: {
+          frogPop: 100, // %
+          pesticideActive: false,
+          heronDietShift: false
+        },
+        circuit: {
+          selectedMaterial: 'iron', // 'iron', 'wood', 'copper', 'straw', 'graphite'
+          voltage: 6, // 6V vs 12V
+          switchClosed: true,
+          wireLength: 1.0
+        },
+        orbit: {
+          phaseIndex: 0, // 0 to 7
+          axialTilt: 23.5 // degrees
+        }
+      }
+    };
+
+    /**
+     * PROCEDURAL WEB AUDIO SYNTHESIZER
+     * Zero external audio files required!
+     */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'correct') {
+          // Pleasant high chime arpeggio
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+            gain.gain.setValueAtTime(0.12, now + idx * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.07);
+            osc.stop(now + idx * 0.07 + 0.25);
+          });
+        } else if (type === 'wrong') {
+          // Low gentle buzz
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'streak') {
+          // Fanfare
+          const chords = [587.33, 739.99, 880.00, 1174.66];
+          chords.forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now + i * 0.05);
+            gain.gain.setValueAtTime(0.1, now + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.05);
+            osc.stop(now + 0.55);
+          });
+        } else if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        }
+      } catch (e) {
+        console.warn('Audio feedback error:', e);
+      }
+    }
+
+    /**
+     * NATIVE SPEECH SYNTHESIS COACH VOICE
+     */
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      // Strip HTML tags for clean speech
+      const clean = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/&bull;/g, '');
+      const utterance = new SpeechSynthesisUtterance(clean);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /**
+     * CUSTOM IN-APP MESSAGE TOAST NOTIFICATION (NO BROWSER POPUPS)
+     */
+    let toastTimeout = null;
+    function showCustomMessage(title, message, icon = '💡', type = 'info', duration = 4800) {
+      const toast = document.getElementById('customToast');
+      if (!toast) return;
+
+      const titleEl = document.getElementById('toastTitle');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+
+      if (titleEl) titleEl.textContent = title;
+      if (msgEl) msgEl.innerHTML = message;
+      if (iconEl) iconEl.textContent = icon;
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+
+      toast.classList.remove('opacity-0', '-translate-y-6', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      playSound('click');
+
+      toastTimeout = setTimeout(() => {
+        hideCustomMessage();
+      }, duration);
+    }
+
+    function hideCustomMessage() {
+      const toast = document.getElementById('customToast');
+      if (!toast) return;
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', '-translate-y-6', 'pointer-events-none');
+    }
+
+    /**
+     * INITIALIZATION & DOM READY
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      const closeToastBtn = document.getElementById('toastCloseBtn');
+      if (closeToastBtn) closeToastBtn.onclick = hideCustomMessage;
+
+      initSimulationEngine();
+      initScaffoldingSection();
+      renderQuestion();
+      initQuizTimer();
+      initScratchpad();
+      bindHeaderUtilities();
+      bindNavigationButtons();
+      bindPitStopModal();
+    });
+
+    /**
+     * 1. SYNCHRONIZED SIMULATION ENGINE
+     */
+    function initSimulationEngine() {
+      const tabs = document.querySelectorAll('.sim-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('sim-tab-active'));
+          tab.classList.add('sim-tab-active');
+          state.currentSim = tab.dataset.sim;
+          updateSimMeta();
+          renderSimControls();
+        });
+      });
+
+      updateSimMeta();
+      renderSimControls();
+      startSimLoop();
+    }
+
+    function updateSimMeta() {
+      const titles = {
+        density: 'Density Column & Buoyancy Stratification Lab',
+        trophic: 'Wetland Food Web & Trophic Cascade Visualizer',
+        circuit: 'Circuit Conductor & Fair-Test Laboratory',
+        orbit: 'Earth-Moon-Sun Orbital Geometry & Lunar Phases'
+      };
+      const titleElem = document.getElementById('simTitle');
+      if (titleElem) titleElem.textContent = titles[state.currentSim] || 'Laboratory Simulation';
+
+      const keepWonderingTexts = {
+        density: 'Suppose Maya heats Liquid Y so that it expands (volume increases while mass stays constant). Since Density = Mass / Volume, Liquid Y becomes less dense. How will Object 1 respond?',
+        trophic: 'If Herons switch to eating mostly Fish because Frogs vanished, what unexpected second-order surge will happen to adult Dragonflies?',
+        circuit: 'If the Iron Nail makes the bulb glow dimly while the Copper Paperclip makes it glow brightly, what does that prove about electrical resistance?',
+        orbit: 'If Earth stood completely upright with 0° axial tilt, what would happen to four seasons in North Carolina? They would permanently vanish!'
+      };
+      const kwElem = document.getElementById('simKeepWonderingText');
+      if (kwElem) kwElem.textContent = keepWonderingTexts[state.currentSim] || '';
+
+      const kwBtn = document.getElementById('simKeepWonderingBtn');
+      if (kwBtn) {
+        kwBtn.onclick = () => {
+          if (state.currentSim === 'density') {
+            state.simParams.density.tempY = 85;
+            renderSimControls();
+            showCustomMessage(
+              'Thermal Expansion Hypothesis Verified! 🔥',
+              'Liquid Y was heated to 85°C! Thermal expansion increased its volume while mass is conserved, dropping its density from 1.00 g/cm³ down to 0.88 g/cm³. Watch Object 1 sink deeper toward Liquid X!',
+              '🧪',
+              'amber',
+              5200
+            );
+          } else if (state.currentSim === 'trophic') {
+            state.simParams.trophic.frogPop = 10;
+            state.simParams.trophic.heronDietShift = true;
+            renderSimControls();
+            showCustomMessage(
+              'Trophic Cascade Hypothesis Active! ☠️',
+              '90% Frog mortality crash simulated and Heron diet shifted to Fish! Notice Dragonfly larvae survival spikes, doubling adult Dragonflies in the wetland.',
+              '🌿',
+              'rose',
+              5200
+            );
+          } else if (state.currentSim === 'circuit') {
+            state.simParams.circuit.selectedMaterial = 'copper';
+            renderSimControls();
+            showCustomMessage(
+              'Electrical Conductivity Tested! ⚡',
+              'Inserted Copper Paperclip! Resistance dropped to 0.5 Ω, surging electric current to 2.40 A and illuminating the bulb at maximum brightness!',
+              '💡',
+              'emerald',
+              5200
+            );
+          } else if (state.currentSim === 'orbit') {
+            state.simParams.orbit.axialTilt = 0;
+            renderSimControls();
+            showCustomMessage(
+              'Orbital Geometry Hypothesis Tested! 🌍',
+              'Axial tilt flattened to 0.0°! Notice the sun ray angle is identical across the entire orbit. Seasons are eliminated!',
+              '🔭',
+              'cyan',
+              5200
+            );
+          }
+        };
+      }
+    }
+
+    function renderSimControls() {
+      const container = document.getElementById('simControlsContainer');
+      const desc = document.getElementById('simControlsDesc');
+      if (!container) return;
+
+      if (state.currentSim === 'density') {
+        const p = state.simParams.density;
+        // Compute effective density of Y based on temp
+        const effRhoY = (p.rhoY - (p.tempY - 20) * 0.002).toFixed(2);
+
+        desc.innerHTML = 'Manipulate fluid densities and observe where Object 1 and Object 2 come to buoyant equilibrium.';
+        container.innerHTML = `
+          <div>
+            <div class="flex justify-between text-slate-300">
+              <span>Liquid Z (Top) Density:</span>
+              <span class="mono font-bold text-cyan-400">${p.rhoZ.toFixed(2)} g/cm³</span>
+            </div>
+            <input type="range" min="0.70" max="0.88" step="0.02" value="${p.rhoZ}" class="w-full" id="ctrlRhoZ">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300">
+              <span>Liquid Y (Middle) Density:</span>
+              <span class="mono font-bold text-amber-400">${effRhoY} g/cm³</span>
+            </div>
+            <input type="range" min="0.90" max="1.15" step="0.02" value="${p.rhoY}" class="w-full" id="ctrlRhoY">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300">
+              <span>Liquid X (Bottom) Density:</span>
+              <span class="mono font-bold text-indigo-400">${p.rhoX.toFixed(2)} g/cm³</span>
+            </div>
+            <input type="range" min="1.20" max="1.50" step="0.02" value="${p.rhoX}" class="w-full" id="ctrlRhoX">
+          </div>
+
+          <div class="pt-2 border-t border-slate-800">
+            <div class="flex justify-between text-slate-300">
+              <span>🔥 Heat Liquid Y (Thermal Expansion):</span>
+              <span class="mono font-bold text-rose-400">${p.tempY}°C</span>
+            </div>
+            <input type="range" min="20" max="90" step="5" value="${p.tempY}" class="w-full" id="ctrlTempY">
+            <span class="text-[10px] text-slate-400">Heating expands volume, lowering density!</span>
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button class="flex-1 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold" id="resetDensitySimBtn">Reset Values</button>
+          </div>
+        `;
+
+        document.getElementById('ctrlRhoZ').oninput = (e) => { p.rhoZ = parseFloat(e.target.value); renderSimControls(); };
+        document.getElementById('ctrlRhoY').oninput = (e) => { p.rhoY = parseFloat(e.target.value); renderSimControls(); };
+        document.getElementById('ctrlRhoX').oninput = (e) => { p.rhoX = parseFloat(e.target.value); renderSimControls(); };
+        document.getElementById('ctrlTempY').oninput = (e) => { p.tempY = parseInt(e.target.value, 10); renderSimControls(); };
+        document.getElementById('resetDensitySimBtn').onclick = () => {
+          p.rhoZ = 0.80; p.rhoY = 1.00; p.rhoX = 1.30; p.tempY = 20;
+          renderSimControls();
+        };
+
+      } else if (state.currentSim === 'trophic') {
+        const p = state.simParams.trophic;
+        desc.innerHTML = 'Simulate the 90% Frog pesticide crash and trace the second-order ecological trophic cascade on grasshoppers and marsh grass.';
+        
+        container.innerHTML = `
+          <div>
+            <div class="flex justify-between text-slate-300">
+              <span>Frog Population Index:</span>
+              <span class="mono font-bold text-emerald-400">${p.frogPop}%</span>
+            </div>
+            <input type="range" min="10" max="100" step="5" value="${p.frogPop}" class="w-full" id="ctrlFrogPop">
+          </div>
+
+          <div class="pt-2 flex flex-col gap-2">
+            <button class="py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 ${p.frogPop <= 15 ? 'bg-rose-500 text-white' : 'bg-rose-950 text-rose-300 border border-rose-600'}" id="togglePesticideCrashBtn">
+              <span>☠️</span>
+              <span>${p.frogPop <= 15 ? 'Pesticide Disaster Active (90% Loss)' : 'Simulate 90% Frog Pesticide Crash'}</span>
+            </button>
+
+            <button class="py-2 px-3 rounded-lg font-semibold text-xs flex items-center justify-center gap-2 ${p.heronDietShift ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'}" id="toggleHeronShiftBtn">
+              <span>🐟</span>
+              <span>Heron Diet Shifts to Fish: ${p.heronDietShift ? 'ENABLED' : 'OFF'}</span>
+            </button>
+          </div>
+
+          <div class="p-2.5 rounded bg-slate-950 text-[11px] text-slate-300 space-y-1">
+            <div class="flex justify-between">
+              <span>Grasshopper Biomass:</span>
+              <span class="mono font-bold text-amber-400">${p.frogPop < 30 ? '310% (Explosion!)' : '100% (Normal)'}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Marsh Grass Stress:</span>
+              <span class="mono font-bold ${p.frogPop < 30 ? 'text-rose-400' : 'text-emerald-400'}">${p.frogPop < 30 ? 'Severe Overgrazing' : 'Balanced'}</span>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('ctrlFrogPop').oninput = (e) => {
+          p.frogPop = parseInt(e.target.value, 10);
+          renderSimControls();
+        };
+        document.getElementById('togglePesticideCrashBtn').onclick = () => {
+          p.frogPop = p.frogPop <= 15 ? 100 : 10;
+          renderSimControls();
+        };
+        document.getElementById('toggleHeronShiftBtn').onclick = () => {
+          p.heronDietShift = !p.heronDietShift;
+          renderSimControls();
+        };
+
+      } else if (state.currentSim === 'circuit') {
+        const p = state.simParams.circuit;
+        desc.innerHTML = 'Test materials in the Clip A - Clip B gap. Observe conduction, Ammeter current, and enforce the single-variable Fair Test rule!';
+
+        const materials = [
+          { id: 'iron', name: 'Iron Nail', type: 'Conductor', res: 4.2 },
+          { id: 'wood', name: 'Wooden Stick', type: 'Insulator', res: 999999 },
+          { id: 'copper', name: 'Copper Paperclip', type: 'Super Conductor', res: 0.5 },
+          { id: 'straw', name: 'Plastic Straw', type: 'Insulator', res: 999999 },
+          { id: 'graphite', name: 'Graphite Pencil', type: 'Resistive Conductor', res: 14.0 }
+        ];
+
+        const matButtons = materials.map(m => `
+          <button class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border ${p.selectedMaterial === m.id ? 'bg-amber-400 text-slate-950 border-amber-300' : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}" data-mat="${m.id}">
+            ${m.name} (${m.type === 'Conductor' || m.type === 'Super Conductor' || m.type === 'Resistive Conductor' ? '⚡' : '🚫'})
+          </button>
+        `).join('');
+
+        container.innerHTML = `
+          <div>
+            <label class="text-xs text-slate-300 font-bold block mb-1.5">Select Inserted Test Material:</label>
+            <div class="grid grid-cols-2 gap-1.5" id="matBtnGrid">
+              ${matButtons}
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span>Knife Switch State:</span>
+              <button class="px-3 py-1 rounded text-xs font-bold ${p.switchClosed ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}" id="toggleSwitchBtn">
+                ${p.switchClosed ? 'CLOSED (Conducting)' : 'OPEN (Circuit Broken)'}
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <span>Battery Voltage:</span>
+              <div class="flex gap-1.5">
+                <button class="px-2 py-0.5 rounded text-xs font-bold ${p.voltage === 6 ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300'}" id="volt6Btn">6V (Fair Control)</button>
+                <button class="px-2 py-0.5 rounded text-xs font-bold ${p.voltage === 12 ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'}" id="volt12Btn">12V</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-2 rounded bg-slate-950 text-[11px] text-slate-300">
+            ${p.voltage === 12 ? '<span class="text-amber-400 font-bold">⚠️ Fair Test Note:</span> You boosted voltage to 12V. Make sure to control voltage when comparing conduction!' : '<span class="text-emerald-400 font-bold">✓ Fair Test Controlled:</span> 6V Battery & wire length held strictly constant.'}
+          </div>
+        `;
+
+        document.querySelectorAll('#matBtnGrid button').forEach(b => {
+          b.onclick = () => {
+            p.selectedMaterial = b.dataset.mat;
+            renderSimControls();
+          };
+        });
+
+        document.getElementById('toggleSwitchBtn').onclick = () => {
+          p.switchClosed = !p.switchClosed;
+          renderSimControls();
+        };
+        document.getElementById('volt6Btn').onclick = () => { p.voltage = 6; renderSimControls(); };
+        document.getElementById('volt12Btn').onclick = () => { p.voltage = 12; renderSimControls(); };
+
+      } else if (state.currentSim === 'orbit') {
+        const p = state.simParams.orbit;
+        desc.innerHTML = 'Step through Moon phases and adjust Earth\'s axial tilt to see why seasons are caused by tilt, NOT orbital distance!';
+
+        const phases = [
+          'New Moon (0°)',
+          'Waxing Crescent (45°)',
+          'First Quarter (90°)',
+          'Waxing Gibbous (135°)',
+          'Full Moon (180°)',
+          'Waning Gibbous (225°)',
+          'Third Quarter (270°)',
+          'Waning Crescent (315°)'
+        ];
+
+        container.innerHTML = `
+          <div>
+            <div class="flex justify-between text-slate-300">
+              <span>Lunar Phase:</span>
+              <span class="mono font-bold text-cyan-400">${phases[p.phaseIndex]}</span>
+            </div>
+            <input type="range" min="0" max="7" step="1" value="${p.phaseIndex}" class="w-full" id="ctrlMoonPhase">
+          </div>
+
+          <div class="pt-2 border-t border-slate-800">
+            <div class="flex justify-between text-slate-300">
+              <span>Earth Axial Tilt:</span>
+              <span class="mono font-bold text-amber-400">${p.axialTilt.toFixed(1)}°</span>
+            </div>
+            <input type="range" min="0" max="35" step="0.5" value="${p.axialTilt}" class="w-full" id="ctrlAxialTilt">
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+              <button class="hover:underline" id="setTilt0Btn">0° (No Seasons)</button>
+              <button class="hover:underline text-amber-400" id="setTiltRealBtn">23.5° (Real Earth)</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('ctrlMoonPhase').oninput = (e) => {
+          p.phaseIndex = parseInt(e.target.value, 10);
+          renderSimControls();
+        };
+        document.getElementById('ctrlAxialTilt').oninput = (e) => {
+          p.axialTilt = parseFloat(e.target.value);
+          renderSimControls();
+        };
+        document.getElementById('setTilt0Btn').onclick = () => { p.axialTilt = 0; renderSimControls(); };
+        document.getElementById('setTiltRealBtn').onclick = () => { p.axialTilt = 23.5; renderSimControls(); };
+      }
+    }
+
+    /**
+     * SIMULATION CANVAS RENDER LOOP (HTML5 Canvas 2D)
+     */
+    let simFrame = 0;
+    function startSimLoop() {
+      const canvas = document.getElementById('simCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * (window.devicePixelRatio || 1);
+        canvas.height = rect.height * (window.devicePixelRatio || 1);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function loop() {
+        const rect = canvas.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        ctx.clearRect(0, 0, w, h);
+
+        if (state.currentSim === 'density') {
+          drawDensitySim(ctx, w, h);
+        } else if (state.currentSim === 'trophic') {
+          drawTrophicSim(ctx, w, h);
+        } else if (state.currentSim === 'circuit') {
+          drawCircuitSim(ctx, w, h);
+        } else if (state.currentSim === 'orbit') {
+          drawOrbitSim(ctx, w, h);
+        }
+
+        simFrame++;
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    // A. Draw Density Stratification Column
+    function drawDensitySim(ctx, w, h) {
+      const p = state.simParams.density;
+      const effRhoY = p.rhoY - (p.tempY - 20) * 0.002;
+
+      const colW = Math.min(160, w * 0.35);
+      const colH = h - 60;
+      const colX = (w - colW) / 2;
+      const colY = 30;
+
+      // Draw Glass Cylinder Container
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+      ctx.fillRect(colX, colY, colW, colH);
+
+      // Liquid Z (Top layer: cyan)
+      const layerH = colH / 3;
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.45)';
+      ctx.fillRect(colX, colY, colW, layerH);
+
+      // Liquid Y (Middle layer: amber, slightly reddish if heated)
+      const heatAlpha = 0.45 + (p.tempY - 20) * 0.003;
+      ctx.fillStyle = p.tempY > 40 ? `rgba(244, 63, 94, ${heatAlpha})` : `rgba(245, 158, 11, ${heatAlpha})`;
+      ctx.fillRect(colX, colY + layerH, colW, layerH);
+
+      // Liquid X (Bottom layer: deep indigo)
+      ctx.fillStyle = 'rgba(99, 102, 241, 0.55)';
+      ctx.fillRect(colX, colY + layerH * 2, colW, layerH);
+
+      // Glass Wall Outline & Volume Graduations
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(colX, colY, colW, colH);
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      for (let y = colY + 15; y < colY + colH; y += 15) {
+        ctx.beginPath();
+        ctx.moveTo(colX, y);
+        ctx.lineTo(colX + 10, y);
+        ctx.stroke();
+      }
+
+      // Physics Calculation for Object 1 (wooden bead)
+      // Sinks through Z because rhoObj1 (1.15) > rhoZ (0.80).
+      // Floats relative to Y and X.
+      let obj1TargetY;
+      if (p.rhoObj1 < effRhoY) {
+        obj1TargetY = colY + layerH * 0.5; // floats in Y
+      } else if (p.rhoObj1 < p.rhoX) {
+        // floats at Y/X interface; deeper if Y is less dense
+        const depthFactor = (p.rhoObj1 - effRhoY) / (p.rhoX - effRhoY);
+        obj1TargetY = colY + layerH * 2 - 12 + depthFactor * 16;
+      } else {
+        obj1TargetY = colY + colH - 25; // sinks into X
+      }
+
+      const obj1Y = obj1TargetY + Math.sin(simFrame * 0.06) * 2;
+      const obj1X = colX + colW * 0.32;
+
+      // Draw Object 1: Wooden Bead
+      ctx.beginPath();
+      ctx.arc(obj1X, obj1Y, 13, 0, Math.PI * 2);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 9px "Inter", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Obj 1', obj1X, obj1Y + 3);
+
+      // Physics Calculation for Object 2: Plastic Cube
+      // Sinks through Z, Y, and settles at bottom of Liquid X because rhoObj2 (1.45) > rhoX (1.30)
+      let obj2TargetY;
+      if (p.rhoObj2 > p.rhoX) {
+        obj2TargetY = colY + colH - 24; // rests at bottom
+      } else {
+        obj2TargetY = colY + layerH * 2 + 10;
+      }
+      const obj2X = colX + colW * 0.68 - 12;
+
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(obj2X, obj2TargetY, 24, 24);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(obj2X, obj2TargetY, 24, 24);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText('Obj 2', obj2X + 12, obj2TargetY + 15);
+
+      // Labels Left & Right
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.fillText(`Liquid Z (ρ = ${p.rhoZ.toFixed(2)})`, colX + colW + 14, colY + layerH * 0.5);
+
+      ctx.fillStyle = p.tempY > 40 ? '#fb7185' : '#fbbf24';
+      ctx.fillText(`Liquid Y (ρ = ${effRhoY.toFixed(2)})`, colX + colW + 14, colY + layerH * 1.5);
+      if (p.tempY > 40) {
+        ctx.font = '9px "Inter", sans-serif';
+        ctx.fillText(`(Thermal Expansion @ ${p.tempY}°C)`, colX + colW + 14, colY + layerH * 1.5 + 14);
+        ctx.font = '11px "JetBrains Mono", monospace';
+      }
+
+      ctx.fillStyle = '#a5b4fc';
+      ctx.fillText(`Liquid X (ρ = ${p.rhoX.toFixed(2)})`, colX + colW + 14, colY + layerH * 2.5);
+
+      // Update HUD telemetry
+      const tel = document.getElementById('simTelemetry');
+      if (tel) {
+        tel.innerHTML = `
+          <span><strong>Master Chain:</strong> <span class="mono text-cyan-300">Z (${p.rhoZ.toFixed(2)}) &lt; Y (${effRhoY.toFixed(2)}) &lt; Obj 1 (1.15) &lt; X (${p.rhoX.toFixed(2)}) &lt; Obj 2 (1.45)</span></span>
+          <span class="text-emerald-400 font-bold">Equilibrium: Sinking &amp; Floating Proven</span>
+        `;
+      }
+    }
+
+    // B. Draw Wetland Food Web Visualizer
+    function drawTrophicSim(ctx, w, h) {
+      const p = state.simParams.trophic;
+      const nodes = [
+        { id: 'grass', name: 'Marsh Grass', x: w * 0.15, y: h * 0.8, color: '#34d399', icon: '🌾' },
+        { id: 'hopper', name: 'Grasshoppers', x: w * 0.38, y: h * 0.65, color: '#fbbf24', icon: '🦗' },
+        { id: 'spider', name: 'Spiders', x: w * 0.62, y: h * 0.82, color: '#e2e8f0', icon: '🕷️' },
+        { id: 'frog', name: 'Frogs (Predator)', x: w * 0.62, y: h * 0.5, color: '#4ade80', icon: '🐸' },
+        { id: 'heron', name: 'Herons (Top Predator)', x: w * 0.88, y: h * 0.35, color: '#38bdf8', icon: '🪶' },
+        { id: 'mosquito', name: 'Mosquitoes', x: w * 0.15, y: h * 0.3, color: '#f87171', icon: '🦟' },
+        { id: 'dragonfly', name: 'Dragonflies', x: w * 0.38, y: h * 0.28, color: '#a78bfa', icon: '🛸' },
+        { id: 'fish', name: 'Fish', x: w * 0.62, y: h * 0.22, color: '#38bdf8', icon: '🐟' }
+      ];
+
+      const edges = [
+        { from: 'grass', to: 'hopper' },
+        { from: 'hopper', to: 'spider' },
+        { from: 'hopper', to: 'frog' },
+        { from: 'frog', to: 'heron' },
+        { from: 'mosquito', to: 'dragonfly' },
+        { from: 'dragonfly', to: 'fish' },
+        { from: 'fish', to: 'heron' }
+      ];
+
+      // Draw Edges with Animated Flow Particles
+      edges.forEach(e => {
+        const f = nodes.find(n => n.id === e.from);
+        const t = nodes.find(n => n.id === e.to);
+        if (!f || !t) return;
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(f.x, f.y);
+        ctx.lineTo(t.x, t.y);
+        ctx.stroke();
+
+        // Particle pulse along energy line
+        const speed = (simFrame * 0.02) % 1;
+        const px = f.x + (t.x - f.x) * speed;
+        const py = f.y + (t.y - f.y) * speed;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fill();
+      });
+
+      // Draw Nodes
+      nodes.forEach(n => {
+        let size = 26;
+        let opacity = 1.0;
+        let ringColor = n.color;
+
+        if (n.id === 'frog') {
+          opacity = Math.max(0.15, p.frogPop / 100);
+          if (p.frogPop <= 15) ringColor = '#ef4444';
+        } else if (n.id === 'hopper') {
+          if (p.frogPop <= 15) size = 34; // Pop boom
+        } else if (n.id === 'grass') {
+          if (p.frogPop <= 15) ringColor = '#ef4444'; // Under stress
+        }
+
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.fill();
+        ctx.strokeStyle = ringColor;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        ctx.font = `${size * 0.8}px "Inter", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(n.icon, n.x, n.y);
+
+        ctx.font = '10px "Inter", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(n.name, n.x, n.y + size + 12);
+        ctx.restore();
+      });
+
+      const tel = document.getElementById('simTelemetry');
+      if (tel) {
+        tel.innerHTML = `
+          <span><strong>Frog Biomass:</strong> <span class="mono ${p.frogPop <= 15 ? 'text-rose-400' : 'text-emerald-400'} font-bold">${p.frogPop}%</span></span>
+          <span><strong>Grasshopper Pressure:</strong> <span class="mono text-amber-400 font-bold">${p.frogPop <= 15 ? 'SURGE (+320%)' : 'Balanced'}</span></span>
+          <span><strong>Trophic Cascade:</strong> <span class="text-cyan-300 font-bold">${p.frogPop <= 15 ? 'Top-Down Overgrazing Active' : 'Equilibrium'}</span></span>
+        `;
+      }
+    }
+
+    // C. Draw Circuit Fair-Test Laboratory
+    function drawCircuitSim(ctx, w, h) {
+      const p = state.simParams.circuit;
+
+      const materials = {
+        iron: { name: 'Iron Nail', conductor: true, res: 4.2, color: '#94a3b8' },
+        wood: { name: 'Wooden Stick', conductor: false, res: 999999, color: '#d97706' },
+        copper: { name: 'Copper Paperclip', conductor: true, res: 0.5, color: '#f59e0b' },
+        straw: { name: 'Plastic Straw', conductor: false, res: 999999, color: '#f43f5e' },
+        graphite: { name: 'Graphite Pencil', conductor: true, res: 14.0, color: '#64748b' }
+      };
+
+      const mat = materials[p.selectedMaterial] || materials.iron;
+      const isConducting = p.switchClosed && mat.conductor;
+      const current = isConducting ? (p.voltage / mat.res) : 0; // I = V / R
+
+      // Circuit Schematic Path
+      const leftX = w * 0.15;
+      const rightX = w * 0.85;
+      const topY = h * 0.25;
+      const bottomY = h * 0.75;
+
+      // Draw Wire Lines
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+
+      // Top wire (split by switch)
+      const switchX = leftX + (rightX - leftX) * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(leftX, topY);
+      ctx.lineTo(switchX - 20, topY);
+      ctx.stroke();
+
+      // Knife Switch Graphic
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(switchX - 20, topY, 4, 0, Math.PI * 2);
+      ctx.arc(switchX + 20, topY, 4, 0, Math.PI * 2);
+      ctx.stroke();
+
+      if (p.switchClosed) {
+        ctx.beginPath();
+        ctx.moveTo(switchX - 20, topY);
+        ctx.lineTo(switchX + 20, topY);
+        ctx.stroke();
+      } else {
+        // Open knife blade tilted 35°
+        ctx.beginPath();
+        ctx.moveTo(switchX - 20, topY);
+        ctx.lineTo(switchX + 15, topY - 24);
+        ctx.stroke();
+      }
+
+      // Wire continuing to bulb
+      const bulbX = leftX + (rightX - leftX) * 0.65;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(switchX + 20, topY);
+      ctx.lineTo(bulbX - 25, topY);
+      ctx.moveTo(bulbX + 25, topY);
+      ctx.lineTo(rightX, topY);
+      ctx.lineTo(rightX, bottomY);
+      ctx.stroke();
+
+      // Bottom wire with Test Clips A and B Gap
+      const clipGapX = leftX + (rightX - leftX) * 0.5;
+      const clipGapW = 80;
+
+      ctx.beginPath();
+      ctx.moveTo(rightX, bottomY);
+      ctx.lineTo(clipGapX + clipGapW / 2, bottomY);
+      ctx.moveTo(clipGapX - clipGapW / 2, bottomY);
+      ctx.lineTo(leftX, bottomY);
+      ctx.lineTo(leftX, topY);
+      ctx.stroke();
+
+      // Battery on Left Wire
+      const batY = (topY + bottomY) / 2;
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(leftX - 16, batY - 25, 32, 50);
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(leftX - 16, batY - 25, 32, 50);
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${p.voltage}V`, leftX, batY + 4);
+      ctx.fillText('+', leftX, batY - 14);
+      ctx.fillText('-', leftX, batY + 20);
+
+      // Test Clips A and B
+      const clipAX = clipGapX - clipGapW / 2;
+      const clipBX = clipGapX + clipGapW / 2;
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(clipAX - 8, bottomY - 6, 12, 12);
+      ctx.fillRect(clipBX - 4, bottomY - 6, 12, 12);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '10px "Inter", sans-serif';
+      ctx.fillText('Clip A', clipAX - 4, bottomY + 20);
+      ctx.fillText('Clip B', clipBX + 4, bottomY + 20);
+
+      // Inserted Material in the Gap
+      ctx.fillStyle = mat.color;
+      ctx.fillRect(clipAX + 4, bottomY - 5, clipBX - clipAX - 8, 10);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 9px "Inter", sans-serif';
+      ctx.fillText(mat.name, clipGapX, bottomY - 10);
+
+      // Light Bulb Graphic
+      ctx.save();
+      ctx.translate(bulbX, topY);
+
+      if (isConducting) {
+        const glowRadius = Math.min(65, 25 + current * 18);
+        const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, glowRadius);
+        grad.addColorStop(0, 'rgba(251, 191, 36, 0.9)');
+        grad.addColorStop(0.5, 'rgba(251, 191, 36, 0.4)');
+        grad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 18, 0, Math.PI * 2);
+      ctx.fillStyle = isConducting ? '#fef08a' : 'rgba(30, 41, 59, 0.8)';
+      ctx.fill();
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Filament loop
+      ctx.strokeStyle = isConducting ? '#b45309' : '#64748b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-6, 8);
+      ctx.lineTo(-4, -4);
+      ctx.lineTo(4, -4);
+      ctx.lineTo(6, 8);
+      ctx.stroke();
+      ctx.restore();
+
+      // Electron Drift Animation if circuit closed and conducting
+      if (isConducting) {
+        ctx.fillStyle = '#38bdf8';
+        const drift = (simFrame * Math.min(6, current * 2)) % 60;
+        for (let d = drift; d < (rightX - leftX); d += 40) {
+          ctx.beginPath();
+          ctx.arc(leftX + d, topY, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const tel = document.getElementById('simTelemetry');
+      if (tel) {
+        tel.innerHTML = `
+          <span><strong>Ammeter Current:</strong> <span class="mono ${current > 0 ? 'text-amber-400' : 'text-slate-400'} font-bold">${current.toFixed(2)} A</span></span>
+          <span><strong>Bulb State:</strong> <span class="font-bold ${isConducting ? 'text-amber-300' : 'text-slate-400'}">${isConducting ? (current > 1.5 ? 'Very Bright Glow 💡' : 'Dim Glow 💡') : 'Dark (No Circuit) 🌑'}</span></span>
+          <span><strong>Material:</strong> <span class="font-bold ${mat.conductor ? 'text-emerald-400' : 'text-rose-400'}">${mat.conductor ? 'Conductor' : 'Insulator'}</span></span>
+        `;
+      }
+    }
+
+    // D. Draw Earth-Moon-Sun Geometry Visualizer
+    function drawOrbitSim(ctx, w, h) {
+      const p = state.simParams.orbit;
+
+      const sunX = 40;
+      const sunY = h / 2;
+      const earthX = w * 0.55;
+      const earthY = h / 2;
+      const orbitR = Math.min(100, w * 0.18);
+
+      // Parallel Sunlight Rays from the Left
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.25)';
+      ctx.lineWidth = 1.5;
+      for (let y = 30; y < h; y += 22) {
+        ctx.beginPath();
+        ctx.moveTo(sunX + 25, y);
+        ctx.lineTo(w - 20, y);
+        ctx.stroke();
+      }
+
+      // Sun on Left
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 35, 0, Math.PI * 2);
+      ctx.fillStyle = '#f59e0b';
+      ctx.shadowBlur = 25;
+      ctx.shadowColor = '#fbbf24';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 10px "Inter", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SUN', sunX, sunY + 4);
+
+      // Earth Orbit Ring for Moon
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.arc(earthX, earthY, orbitR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Earth at Center with Axial Tilt
+      ctx.save();
+      ctx.translate(earthX, earthY);
+      ctx.rotate((p.axialTilt * Math.PI) / 180);
+
+      // Earth body (left half illuminated by Sun, right half in shadow)
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, 0, Math.PI * 2);
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fill();
+
+      // Day side (left hemisphere)
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, Math.PI / 2, -Math.PI / 2);
+      ctx.fillStyle = '#0284c7';
+      ctx.fill();
+
+      // Earth Axis Line
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, -34);
+      ctx.lineTo(0, 34);
+      ctx.stroke();
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillText('N', 0, -38);
+      ctx.restore();
+
+      // Moon Position based on Phase Index (0 to 7)
+      // 0 = New Moon (between Sun and Earth), 4 = Full Moon (behind Earth)
+      const moonAngle = Math.PI - (p.phaseIndex * (Math.PI / 4));
+      const moonX = earthX + orbitR * Math.cos(moonAngle);
+      const moonY = earthY + orbitR * Math.sin(moonAngle);
+
+      // Moon Body (always sunlit on its left half)
+      ctx.save();
+      ctx.translate(moonX, moonY);
+
+      // Dark base
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fillStyle = '#334155';
+      ctx.fill();
+
+      // Left illuminated hemisphere facing Sun
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, Math.PI / 2, -Math.PI / 2);
+      ctx.fillStyle = '#f8fafc';
+      ctx.fill();
+
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+
+      // Earth View Sky Box (Inset Top Right)
+      const boxW = 90;
+      const boxH = 90;
+      const boxX = w - boxW - 20;
+      const boxY = 20;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 9px "Inter", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('View from Earth:', boxX + boxW / 2, boxY + 14);
+
+      // Draw Earth View Moon Phase Disc
+      const cx = boxX + boxW / 2;
+      const cy = boxY + boxH * 0.6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+      ctx.fillStyle = '#1e293b';
+      ctx.fill();
+
+      // Render exact illuminated phase
+      if (p.phaseIndex === 4) {
+        // Full Moon
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+      } else if (p.phaseIndex === 2) {
+        // First Quarter (Right half lit)
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, -Math.PI / 2, Math.PI / 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+      } else if (p.phaseIndex === 6) {
+        // Third Quarter (Left half lit)
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, Math.PI / 2, -Math.PI / 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+      } else if (p.phaseIndex === 1 || p.phaseIndex === 3) {
+        // Waxing Crescent or Gibbous
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, -Math.PI / 2, Math.PI / 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+      } else if (p.phaseIndex === 5 || p.phaseIndex === 7) {
+        // Waning Gibbous or Crescent
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, Math.PI / 2, -Math.PI / 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+      }
+
+      const tel = document.getElementById('simTelemetry');
+      if (tel) {
+        tel.innerHTML = `
+          <span><strong>Phase:</strong> <span class="mono text-cyan-300 font-bold">${['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Third Quarter', 'Waning Crescent'][p.phaseIndex]}</span></span>
+          <span><strong>Axial Tilt:</strong> <span class="mono text-amber-400 font-bold">${p.axialTilt.toFixed(1)}°</span></span>
+          <span><strong>Season Driver:</strong> <span class="text-emerald-400 font-bold">${p.axialTilt > 0 ? 'Angle of Sunlight Insolation' : 'Tilt Nullified'}</span></span>
+        `;
+      }
+    }
+
+    /**
+     * 2. 3-TIER SCAFFOLDING & CONCEPT HUB
+     */
+    function initScaffoldingSection() {
+      const tabs = document.querySelectorAll('.scaffold-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('scaffold-tab-active'));
+          tab.classList.add('scaffold-tab-active');
+          state.activeScaffoldTier = parseInt(tab.dataset.tier, 10);
+          renderScaffoldContent();
+        });
+      });
+      renderScaffoldContent();
+    }
+
+    function renderScaffoldContent() {
+      const container = document.getElementById('scaffoldContent');
+      if (!container) return;
+
+      const tierData = {
+        1: [
+          {
+            domain: 'Physical Science',
+            badge: 'Analogy Lens',
+            title: 'Crowded Bus Analogy',
+            body: 'Compare a crowded school bus packed with 60 students vs an empty bus with 3 students of the exact same size. Density is not how big you are—it is how tightly packed your stuff is!'
+          },
+          {
+            domain: 'Life Science',
+            badge: 'Story Hook',
+            title: 'The Vanishing Frog Mystery',
+            body: 'Imagine a lake where frogs disappear. Grasshoppers celebrate with no one to eat them, but the marsh grass suffers as an army of insects devours every blade.'
+          },
+          {
+            domain: 'Earth Science',
+            badge: 'Salad Dressing Model',
+            title: 'Oil & Vinegar Weather Fronts',
+            body: 'Pour oil and vinegar into a glass. Dense vinegar sinks while lighter oil floats. Cold air fronts act just like vinegar, wedging under warm moist air to spawn storms.'
+          },
+          {
+            domain: 'Inquiry',
+            badge: 'Playbook',
+            title: 'The Fair Test Rule',
+            body: 'If you want to know if fertilizer works, never put one plant in the sun and one in a dark closet! Change only ONE variable at a time, or your experiment is invalid.'
+          }
+        ],
+        2: [
+          {
+            domain: 'Physical Science',
+            badge: 'Operational Formula',
+            title: 'Density & Relative Buoyancy',
+            body: '<code>Density = Mass / Volume</code> (ρ = m / V). An object floats if ρ_object &lt; ρ_fluid, and sinks if ρ_object &gt; ρ_fluid. Buoyant Force: <code>F_b = ρ_fluid · V_sub · g</code>.'
+          },
+          {
+            domain: 'Life Science',
+            badge: 'Trophic Efficiency',
+            title: 'The 10% Energy Pyramid Rule',
+            body: 'Only ~10% of chemical energy transfers to the next trophic level. 1,000 kg of Marsh Grass supports 100 kg of Grasshoppers, which supports 10 kg of Frogs and 1 kg of Heron.'
+          },
+          {
+            domain: 'Earth Science',
+            badge: 'Thermodynamic Cycles',
+            title: 'Solar & Gravitational Vectors',
+            body: 'Solar radiation (<code>Q = m · L_v</code>) drives evaporation and transpiration. Earth\'s gravitational field (<code>g = 9.8 m/s²</code>) powers precipitation, runoff, and aquifer percolation.'
+          },
+          {
+            domain: 'Inquiry',
+            badge: 'Variable Matrix',
+            title: 'Independent vs Controlled Variables',
+            body: 'Independent Variable = What the experimenter changes. Dependent Variable = What is measured. Controlled Variables = Everything held strictly constant.'
+          }
+        ],
+        3: [
+          {
+            domain: 'Physical Science',
+            badge: 'Competition Trap',
+            title: 'Thermal Fluid Expansion',
+            body: 'When a liquid is heated, thermal expansion increases its volume while mass is conserved, lowering its density. Objects that once floated near the top sink deeper.'
+          },
+          {
+            domain: 'Life Science',
+            badge: 'Cascade Mechanics',
+            title: 'Second-Order Prey Shifts',
+            body: 'Top predators switch food targets when primary prey collapses. Herons shifting from missing Frogs to Fish triggers a secondary release for Dragonfly nymphs!'
+          },
+          {
+            domain: 'Earth Science',
+            badge: 'Spatial Geometry',
+            title: 'Axial Tilt vs Aphelion Orbit',
+            body: 'Earth is at aphelion (farthest from Sun) in July. Direct 90° sun angle (insolation concentration) in Northern Hemisphere overwhelms the minor ~3% orbital distance variation.'
+          },
+          {
+            domain: 'Inquiry',
+            badge: 'Rubric Rigor',
+            title: 'Confounding Variable Audits',
+            body: 'Science Olympiad Experimental Design judges deduct maximum points if wire lengths, ambient light, or battery voltages are altered across material trials.'
+          }
+        ]
+      };
+
+      const items = tierData[state.activeScaffoldTier] || tierData[1];
+      container.innerHTML = items.map(item => `
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-amber-400">${item.domain}</span>
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">${item.badge}</span>
+          </div>
+          <h4 class="font-heading font-bold text-sm text-white">${item.title}</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">${item.body}</p>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * 3. GAMIFIED QUESTION & ASSESSMENT ENGINE
+     */
+    function renderQuestion() {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      if (!q) return;
+
+      // Update Header Badges & Counters
+      document.getElementById('currentQuestionNum').textContent = state.currentQuestionIndex + 1;
+      document.getElementById('totalQuestionsNum').textContent = OLYMPIAD_QUESTIONS.length;
+      document.getElementById('questionDomainBadge').textContent = q.domain;
+      document.getElementById('questionTitle').textContent = `Challenge ${q.id}: ${q.title}`;
+      document.getElementById('questionBody').innerHTML = q.question;
+
+      // Progress bar
+      const pct = ((state.currentQuestionIndex + 1) / OLYMPIAD_QUESTIONS.length) * 100;
+      document.getElementById('quizProgressBar').style.width = `${pct}%`;
+
+      // Socratic Hints Left
+      state.hintStage = 0;
+      document.getElementById('hintsLeftCount').textContent = '3';
+      document.getElementById('socraticHintDrawer').classList.add('hidden');
+
+      // Sync Simulation to match active question
+      if (q.domainKey === 'physical' && q.id === 1 && state.currentSim !== 'density') {
+        switchSimDirect('density');
+      } else if (q.domainKey === 'life' && q.id === 2 && state.currentSim !== 'trophic') {
+        switchSimDirect('trophic');
+      } else if (q.domainKey === 'inquiry' && q.id === 3 && state.currentSim !== 'circuit') {
+        switchSimDirect('circuit');
+      }
+
+      // Render Options
+      const optContainer = document.getElementById('optionsContainer');
+      optContainer.innerHTML = q.options.map(opt => `
+        <button class="option-card p-4 rounded-xl bg-slate-900 border border-slate-800 text-left flex items-start gap-3 text-xs leading-relaxed" data-opt="${opt.id}" id="optBtn_${opt.id}">
+          <span class="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-400 shrink-0 text-xs">
+            ${opt.id}
+          </span>
+          <span class="text-slate-200 mt-0.5">${opt.text}</span>
+        </button>
+      `).join('');
+
+      // Bind Option Click Handlers
+      q.options.forEach(opt => {
+        const btn = document.getElementById(`optBtn_${opt.id}`);
+        if (btn) {
+          btn.onclick = () => handleOptionSelection(opt);
+        }
+      });
+
+      // Update Navigation Buttons State
+      document.getElementById('prevQuestionBtn').disabled = state.currentQuestionIndex === 0;
+
+      // Reset / start per-question timer
+      resetQuestionTimer();
+    }
+
+    function switchSimDirect(simKey) {
+      state.currentSim = simKey;
+      document.querySelectorAll('.sim-tab').forEach(t => {
+        t.classList.toggle('sim-tab-active', t.dataset.sim === simKey);
+      });
+      updateSimMeta();
+      renderSimControls();
+    }
+
+    function handleOptionSelection(opt) {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      const optBtn = document.getElementById(`optBtn_${opt.id}`);
+
+      if (opt.isCorrect) {
+        // Correct Answer!
+        playSound('correct');
+        optBtn.classList.remove('bg-slate-900', 'border-slate-800');
+        optBtn.classList.add('bg-emerald-950/80', 'border-emerald-500', 'text-emerald-100');
+
+        state.score += 100 + (state.streak * 20);
+        state.streak += 1;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+        if (state.streak % 3 === 0 && state.streak > 0) {
+          playSound('streak');
+        }
+
+        // Domain tracking
+        state.domainScores[q.domainKey].correct += 1;
+        state.domainScores[q.domainKey].total += 1;
+
+        updateHUD();
+        saveTrainingProgress();
+
+        // Reveal Coach Advice & Auto Advance or Show Solution
+        document.getElementById('coachAdviceText').innerHTML = `
+          <strong class="text-emerald-400">Brilliant deduction, Olympian!</strong> ${q.coachExplanation.whyCorrect}
+        `;
+
+        setTimeout(() => {
+          advanceToNextQuestion();
+        }, 1200);
+
+      } else {
+        // Incorrect Distractor Selected -> Trigger Coach's Pit Stop!
+        playSound('wrong');
+        optBtn.classList.remove('bg-slate-900', 'border-slate-800');
+        optBtn.classList.add('bg-rose-950/80', 'border-rose-500', 'text-rose-100');
+
+        state.streak = 0;
+        state.domainScores[q.domainKey].total += 1;
+        updateHUD();
+
+        openPitStopModal(opt, q);
+      }
+    }
+
+    function advanceToNextQuestion() {
+      if (state.currentQuestionIndex < OLYMPIAD_QUESTIONS.length - 1) {
+        state.currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        // Quiz complete!
+        showResultsDashboard();
+      }
+    }
+
+    /**
+     * 4. COACH'S PIT STOP MODAL & MISCONCEPTION ENGINE
+     */
+    function openPitStopModal(opt, q) {
+      const modal = document.getElementById('pitStopModal');
+      document.getElementById('pitStopTrapTitle').textContent = `Cognitive Trap: ${opt.trapName || 'Misconception'}`;
+      document.getElementById('pitStopTrapExplanation').innerHTML = opt.trapExplanation || 'Carefully evaluate the physical constraints of this scenario.';
+      document.getElementById('pitStopCoachRule').innerHTML = q.routine.step2;
+
+      // Handle Retry Tokens
+      const tokenPrompt = document.getElementById('retryTokenPrompt');
+      const useTokenBtn = document.getElementById('useTokenBtn');
+      if (state.tokens > 0) {
+        tokenPrompt.classList.remove('hidden');
+        useTokenBtn.onclick = () => {
+          state.tokens -= 1;
+          updateHUD();
+          closePitStop();
+          // Reset option button visual
+          const btn = document.getElementById(`optBtn_${opt.id}`);
+          if (btn) btn.classList.remove('bg-rose-950/80', 'border-rose-500');
+          playSound('click');
+        };
+      } else {
+        tokenPrompt.classList.add('hidden');
+      }
+
+      // View full solution button
+      document.getElementById('viewFullExplanationBtn').onclick = () => {
+        closePitStop();
+        openRoutineGuideModal();
+      };
+
+      modal.classList.add('active');
+
+      // Read trap aloud if TTS enabled
+      if (state.ttsEnabled) {
+        speakText(`Coach's Pit Stop! ${opt.trapName}. ${opt.trapExplanation}`);
+      }
+    }
+
+    function closePitStop() {
+      document.getElementById('pitStopModal').classList.remove('active');
+    }
+
+    function bindPitStopModal() {
+      document.getElementById('closePitStopBtn').onclick = closePitStop;
+    }
+
+    /**
+     * 5. 4-STEP OLYMPIAD SOLVING ROUTINE MODAL
+     */
+    function openRoutineGuideModal() {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      const modal = document.getElementById('routineGuideModal');
+      const content = document.getElementById('routineWalkthroughContent');
+
+      content.innerHTML = `
+        <div class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-500/40 space-y-1">
+          <strong class="font-bold text-cyan-300">Step 1: Identify Core Principle</strong>
+          <p class="text-slate-300">${q.routine.step1}</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-1">
+          <strong class="font-bold text-rose-300">Step 2: Eliminate Impossible Edge Cases</strong>
+          <p class="text-slate-300">${q.routine.step2}</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-amber-950/40 border border-amber-500/40 space-y-1">
+          <strong class="font-bold text-amber-300">Step 3: Test Remaining Logic</strong>
+          <p class="text-slate-300">${q.routine.step3}</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 space-y-1">
+          <strong class="font-bold text-emerald-300">Step 4: Verify with Scientific Principles</strong>
+          <p class="text-slate-300">${q.routine.step4}</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-800 text-slate-200">
+          <strong class="text-amber-400 font-bold">Why the Correct Option Wins:</strong>
+          <p class="mt-1">${q.coachExplanation.whyCorrect}</p>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeRoutineGuideModal() {
+      document.getElementById('routineGuideModal').classList.add('hidden');
+    }
+
+    /**
+     * 6. SOCRATIC COACH HINT ENGINE
+     */
+    function triggerSocraticHint() {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      const drawer = document.getElementById('socraticHintDrawer');
+      const title = document.getElementById('hintStageTitle');
+      const text = document.getElementById('hintTextContent');
+
+      state.hintStage = (state.hintStage % 3) + 1;
+      const left = 3 - state.hintStage;
+      document.getElementById('hintsLeftCount').textContent = Math.max(0, left);
+
+      const stageLabels = [
+        'Stage 1: Conceptual Nudge',
+        'Stage 2: Variable & Strategy Setup',
+        'Stage 3: Guided Walkthrough'
+      ];
+
+      title.innerHTML = `<span>🦉 Coach Nova (${stageLabels[state.hintStage - 1]}):</span>`;
+      text.textContent = q.hints[state.hintStage - 1];
+
+      drawer.classList.remove('hidden');
+      playSound('click');
+
+      if (state.ttsEnabled) {
+        speakText(`Coach Nova's hint: ${q.hints[state.hintStage - 1]}`);
+      }
+    }
+
+    /**
+     * 7. QUESTION TIMER & ZEN MODE
+     */
+    function initQuizTimer() {
+      const timerBtn = document.getElementById('toggleTimerBtn');
+      timerBtn.onclick = () => {
+        state.isTimerPaused = !state.isTimerPaused;
+        const timerElem = document.getElementById('hudTimer');
+        if (state.isTimerPaused) {
+          timerElem.textContent = 'Zen';
+          timerElem.classList.remove('text-amber-400');
+          timerElem.classList.add('text-cyan-400');
+        } else {
+          timerElem.classList.remove('text-cyan-400');
+          timerElem.classList.add('text-amber-400');
+        }
+      };
+    }
+
+    function resetQuestionTimer() {
+      clearInterval(state.timerInterval);
+      state.timerSeconds = 60;
+      updateTimerDisplay();
+
+      state.timerInterval = setInterval(() => {
+        if (!state.isTimerPaused) {
+          state.timerSeconds--;
+          updateTimerDisplay();
+          if (state.timerSeconds <= 0) {
+            clearInterval(state.timerInterval);
+            // Time out notification
+            state.streak = 0;
+            updateHUD();
+            playSound('wrong');
+            showCustomMessage(
+              'Time Expired on Challenge! ⏱️',
+              'The 60-second tournament timer ran out on this challenge. Review your core principle, disarm distractors, and try again!',
+              '⏱️',
+              'rose',
+              4500
+            );
+          }
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerElem = document.getElementById('hudTimer');
+      if (!timerElem) return;
+      if (state.isTimerPaused) {
+        timerElem.textContent = 'Zen';
+      } else {
+        timerElem.textContent = `${state.timerSeconds}s`;
+      }
+    }
+
+    /**
+     * 8. INTERACTIVE WHITEBOARD SCRATCHPAD OVERLAY
+     */
+    function initScratchpad() {
+      const canvas = document.getElementById('scratchpadCanvas');
+      const toolbar = document.getElementById('scratchpadToolbar');
+      const toggleBtn = document.getElementById('toggleScratchpadBtn');
+      const closeBtn = document.getElementById('spCloseBtn');
+      const clearBtn = document.getElementById('spClearBtn');
+      const penBtn = document.getElementById('spPenBtn');
+      const highBtn = document.getElementById('spHighlighterBtn');
+      const eraserBtn = document.getElementById('spEraserBtn');
+      const colorPicker = document.getElementById('spColorPicker');
+
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+      let tool = 'pen'; // 'pen', 'highlighter', 'eraser'
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function openScratchpad() {
+        canvas.classList.add('active');
+        toolbar.classList.add('visible');
+      }
+
+      function closeScratchpad() {
+        canvas.classList.remove('active');
+        toolbar.classList.remove('visible');
+      }
+
+      toggleBtn.onclick = () => {
+        if (canvas.classList.contains('active')) closeScratchpad();
+        else openScratchpad();
+      };
+      closeBtn.onclick = closeScratchpad;
+
+      clearBtn.onclick = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
+
+      penBtn.onclick = () => {
+        tool = 'pen';
+        penBtn.className = 'p-2 rounded-lg bg-cyan-600 text-white text-xs font-semibold';
+        highBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+        eraserBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+      };
+
+      highBtn.onclick = () => {
+        tool = 'highlighter';
+        highBtn.className = 'p-2 rounded-lg bg-amber-500 text-slate-950 text-xs font-semibold';
+        penBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+        eraserBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+      };
+
+      eraserBtn.onclick = () => {
+        tool = 'eraser';
+        eraserBtn.className = 'p-2 rounded-lg bg-rose-600 text-white text-xs font-semibold';
+        penBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+        highBtn.className = 'p-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold';
+      };
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        ctx.beginPath();
+        ctx.moveTo(e.clientX, e.clientY);
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        if (tool === 'pen') {
+          ctx.strokeStyle = colorPicker.value;
+          ctx.lineWidth = 2.5;
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.lineTo(e.clientX, e.clientY);
+          ctx.stroke();
+        } else if (tool === 'highlighter') {
+          ctx.strokeStyle = colorPicker.value + '40';
+          ctx.lineWidth = 14;
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.lineTo(e.clientX, e.clientY);
+          ctx.stroke();
+        } else if (tool === 'eraser') {
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.arc(e.clientX, e.clientY, 16, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      window.addEventListener('mouseup', () => { isDrawing = false; });
+    }
+
+    /**
+     * 9. HEADER CONTROLS & BINDINGS
+     */
+    function bindHeaderUtilities() {
+      // Sound Toggle
+      const soundBtn = document.getElementById('toggleSoundBtn');
+      soundBtn.onclick = () => {
+        state.soundEnabled = !state.soundEnabled;
+        soundBtn.textContent = state.soundEnabled ? '🔊' : '🔇';
+      };
+
+      // Voice TTS Toggle
+      const ttsBtn = document.getElementById('toggleTtsBtn');
+      ttsBtn.onclick = () => {
+        state.ttsEnabled = !state.ttsEnabled;
+        ttsBtn.textContent = state.ttsEnabled ? '🗣️ (On)' : '🗣️';
+        if (state.ttsEnabled) speakText('Coach Nova voice mentor enabled!');
+      };
+
+      // Read Question Aloud Button
+      document.getElementById('readQuestionBtn').onclick = () => {
+        const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+        speakText(`${q.title}. ${q.question}`);
+      };
+
+      // Socratic Hint Button
+      document.getElementById('socraticHintBtn').onclick = triggerSocraticHint;
+      document.getElementById('closeHintBtn').onclick = () => {
+        document.getElementById('socraticHintDrawer').classList.add('hidden');
+      };
+
+      // Dyslexia Mode Toggle
+      document.getElementById('toggleDyslexiaBtn').onclick = () => {
+        document.body.classList.toggle('dyslexia-mode');
+      };
+
+      // Theme Mode Toggle
+      document.getElementById('toggleThemeBtn').onclick = () => {
+        document.body.classList.toggle('theme-light');
+      };
+
+      // Download Offline Single File
+      document.getElementById('downloadAppBtn').onclick = () => {
+        const html = document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'science_olympiad_coach_4th_grade.html';
+        a.click();
+      };
+    }
+
+    function bindNavigationButtons() {
+      document.getElementById('prevQuestionBtn').onclick = () => {
+        if (state.currentQuestionIndex > 0) {
+          state.currentQuestionIndex--;
+          renderQuestion();
+        }
+      };
+
+      document.getElementById('nextQuestionBtn').onclick = () => {
+        advanceToNextQuestion();
+      };
+
+      document.getElementById('solveRoutineGuideBtn').onclick = openRoutineGuideModal;
+      document.getElementById('closeRoutineGuideBtn').onclick = closeRoutineGuideModal;
+      document.getElementById('dismissRoutineGuideBtn').onclick = closeRoutineGuideModal;
+    }
+
+    function updateHUD() {
+      document.getElementById('hudScore').textContent = state.score;
+      document.getElementById('hudStreak').textContent = state.streak;
+      document.getElementById('hudTokens').textContent = `${state.tokens}/3`;
+    }
+
+    /**
+     * 10. LOCALSTORAGE TRAINING TELEMETRY PERSISTENCE
+     */
+    function saveTrainingProgress() {
+      try {
+        let total = parseInt(localStorage.getItem('so_total_answered') || '0', 10);
+        let traps = parseInt(localStorage.getItem('so_traps_disarmed') || '0', 10);
+        let best = parseInt(localStorage.getItem('so_best_streak') || '0', 10);
+
+        total += 1;
+        if (state.bestStreak > best) best = state.bestStreak;
+
+        localStorage.setItem('so_total_answered', total.toString());
+        localStorage.setItem('so_traps_disarmed', (traps + 1).toString());
+        localStorage.setItem('so_best_streak', best.toString());
+
+        // Unlock badges
+        if (state.currentQuestionIndex === 0) localStorage.setItem('so_badge_density', 'true');
+        if (state.currentQuestionIndex === 1) localStorage.setItem('so_badge_trophic', 'true');
+        if (state.currentQuestionIndex === 2) localStorage.setItem('so_badge_circuit', 'true');
+        if (state.streak >= 4) localStorage.setItem('so_badge_trapproof', 'true');
+      } catch (e) {
+        console.warn('Storage save failed:', e);
+      }
+    }
+
+    /**
+     * 11. RESULTS DASHBOARD
+     */
+    function showResultsDashboard() {
+      clearInterval(state.timerInterval);
+      document.getElementById('assessmentSection').classList.add('hidden');
+      const results = document.getElementById('resultsDashboard');
+      results.classList.remove('hidden');
+
+      document.getElementById('finalScoreDisplay').textContent = state.score;
+      document.getElementById('finalStreakDisplay').textContent = state.bestStreak;
+
+      const accuracy = Math.round((state.score / (OLYMPIAD_QUESTIONS.length * 100)) * 100);
+      document.getElementById('finalAccuracyDisplay').textContent = `${Math.min(100, accuracy)}%`;
+
+      const medalElem = document.getElementById('finalMedalDisplay');
+      if (accuracy >= 85) medalElem.innerHTML = 'Gold Medalist 🥇';
+      else if (accuracy >= 65) medalElem.innerHTML = 'Silver Scholar 🥈';
+      else medalElem.innerHTML = 'Bronze Cadet 🥉';
+
+      // Update Domain breakdown
+      renderDomainScoreBar('Physical', state.domainScores.physical);
+      renderDomainScoreBar('Life', state.domainScores.life);
+      renderDomainScoreBar('Earth', state.domainScores.earth);
+      renderDomainScoreBar('Inquiry', state.domainScores.inquiry);
+
+      playSound('streak');
+
+      document.getElementById('restartFullQuizBtn').onclick = () => {
+        state.currentQuestionIndex = 0;
+        state.score = 0;
+        state.streak = 0;
+        state.tokens = 3;
+        results.classList.add('hidden');
+        document.getElementById('assessmentSection').classList.remove('hidden');
+        renderQuestion();
+      };
+
+      document.getElementById('retryMissedBtn').onclick = () => {
+        state.currentQuestionIndex = 0;
+        results.classList.add('hidden');
+        document.getElementById('assessmentSection').classList.remove('hidden');
+        renderQuestion();
+      };
+    }
+
+    function renderDomainScoreBar(key, data) {
+      const pct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 100;
+      const scoreElem = document.getElementById(`domainScore${key}`);
+      const barElem = document.getElementById(`domainBar${key}`);
+      if (scoreElem) scoreElem.textContent = `${pct}%`;
+      if (barElem) barElem.style.width = `${pct}%`;
+    }
+  </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGrade4MiniCanvas();
   initGrade4Q2MiniCanvas();
   initGrade5AigMiniCanvas();
+  initScienceOlympiadMiniCanvas();
   initSearchAndFilter();
   initModalRunner();
 });
@@ -801,3 +802,150 @@ function initModalRunner() {
     }
   });
 }
+
+// 4. Dynamic Science Olympiad Mini Canvas
+function initScienceOlympiadMiniCanvas() {
+  const canvas = document.getElementById('previewScienceOlympiadCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * (window.devicePixelRatio || 1);
+    canvas.height = rect.height * (window.devicePixelRatio || 1);
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  let frame = 0;
+
+  function render() {
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background subtle grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= width; x += 25) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = 0; y <= height; y += 25) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    // Mini Density Column (Left Center)
+    const colW = 75;
+    const colH = height - 44;
+    const colX = 35;
+    const colY = 22;
+
+    // Glass cylinder
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(colX, colY, colW, colH);
+
+    // Liquid layers
+    const layerH = colH / 3;
+    // Z: Cyan
+    ctx.fillStyle = 'rgba(6, 182, 212, 0.45)';
+    ctx.fillRect(colX, colY, colW, layerH);
+    // Y: Amber
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.45)';
+    ctx.fillRect(colX, colY + layerH, colW, layerH);
+    // X: Indigo
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.55)';
+    ctx.fillRect(colX, colY + layerH * 2, colW, layerH);
+
+    // Object 1: Bead floating at Y/X boundary
+    const bob = Math.sin(frame * 0.05) * 3;
+    const obj1Y = colY + layerH * 2 - 10 + bob;
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(colX + 24, obj1Y, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Object 2: Cube at bottom of X
+    ctx.fillStyle = '#10b981';
+    ctx.fillRect(colX + 44, colY + colH - 18, 14, 14);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(colX + 44, colY + colH - 18, 14, 14);
+
+    // Orbiting Atom Emblem (Right Center)
+    const atomX = width * 0.68;
+    const atomY = height * 0.46;
+
+    const orbits = [
+      { rx: 65, ry: 26, angle: Math.PI / 4, color: 'rgba(6, 182, 212, 0.5)' },
+      { rx: 65, ry: 26, angle: -Math.PI / 4, color: 'rgba(251, 191, 36, 0.5)' },
+      { rx: 70, ry: 28, angle: Math.PI / 2, color: 'rgba(139, 92, 246, 0.5)' }
+    ];
+
+    orbits.forEach((orb, i) => {
+      ctx.save();
+      ctx.translate(atomX, atomY);
+      ctx.rotate(orb.angle);
+
+      ctx.beginPath();
+      ctx.ellipse(0, 0, orb.rx, orb.ry, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = orb.color;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      const eAngle = frame * 0.035 + (i * Math.PI * 2 / 3);
+      const ex = orb.rx * Math.cos(eAngle);
+      const ey = orb.ry * Math.sin(eAngle);
+
+      ctx.beginPath();
+      ctx.arc(ex, ey, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      ctx.restore();
+    });
+
+    // Golden Core
+    ctx.beginPath();
+    ctx.arc(atomX, atomY, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#fbbf24';
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = '#fbbf24';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Telemetry Text
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText('ASO 4-Step Routine', 125, 24);
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.fillText('Z < Y < Obj1 < X < Obj2', 125, 40);
+
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('Trap Immunity: Active', 125, 56);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '9px "Inter", sans-serif';
+    ctx.fillText('Density • Trophic • Circuits • Orbits', width - 170, height - 12);
+
+    frame++;
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+}
+

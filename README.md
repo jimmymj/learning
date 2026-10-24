@@ -12,6 +12,7 @@ Deployed at: **[GitHub Repository](https://github.com/jimmymj/learning)**
 learning/
 ├── index.html                                        # Central LearningHub Portal & App Launcher
 ├── README.md                                         # Project Documentation & Guide
+├── science_olympiad_coach_4th_grade_app_module.md    # Comprehensive 4th Grade ASO App Module Spec
 ├── 5th_grade_aig_math_q1_spec.md                     # Comprehensive 5th Grade AIG Math Q1 Spec
 ├── 4th_grade_math_q2_spec.md                         # Comprehensive 4th Grade Math Q2 Spec
 ├── 4th_grade_math_spec.md                            # Comprehensive 4th Grade Math Q1 Spec
@@ -20,6 +21,9 @@ learning/
 │   └── skills/
 │       └── learning-app/                             # AI Learning App & Simulation Architect Skill
 ├── apps/                                             # Interactive Learning Applications
+│   ├── science/                                      # Science Olympiad & Scientific Inquiry Suite
+│   │   ├── index.html                                # Scalable Science Olympiad Coaching Portal (Div A, B, C)
+│   │   └── science_olympiad_coach_4th_grade.html     # Division A & Foundations Olympiad Coach, Simulations & Misconception Lab (Grades 3-6+)
 │   └── math/                                         # Mathematics Subject Area
 │       ├── 5th_grade_aig_math_volume_operations_decimals_q1.html             # Spatial Volume, Algorithms & Decimal Systems Lab (Q1 AIG)
 │       ├── 4th_grade_math_decimals_multi_digit_measurement_q2.html           # Decimals, Operations & Measurement (Q2)
@@ -35,7 +39,25 @@ learning/
 
 ---
 
-## 🚀 Available Learning Apps
+## 🚀 Available Learning Apps & Portals
+
+### 0. 🏆 Science Olympiad Coaching Portal & Division A Foundations Lab
+- **Portal Location:** [`apps/science/index.html`](apps/science/index.html)
+- **Flagship App Location:** [`apps/science/science_olympiad_coach_4th_grade.html`](apps/science/science_olympiad_coach_4th_grade.html)
+- **Target Audience:** Science Olympiad Competitors across Elementary & Junior grades (Division A: Grades 3-6+, Division B: Middle School 6-8, Division C: High School 9-12)
+- **Curriculum Domains (Division A & Foundations):**
+  - **Domain 1: Physical Science:** Matter, Mass, Volume & Relative Density (`ρ = m / V`), Buoyant Forces (`F_b = ρ_fluid · V_sub · g`), Stratification of immiscible liquids, Simple Machines (Levers, mechanical advantage force-distance tradeoffs), Energy Transformations, and Electrical Circuit conduction.
+  - **Domain 2: Earth & Space Science:** The Water Cycle (solar radiation energy source + gravity force vector), Weather systems, Earth-Moon-Sun orbital geometry, 8 Lunar Phases, and Earth's 23.5° axial tilt seasonal insolation angle (busting the orbital distance myth).
+  - **Domain 3: Life Science:** Wetland Food Webs & Trophic Cascades (predator removal triggering competitive release and overgrazing on producers), 10% Energy Pyramid Rule, Structural vs. Behavioral desert adaptations (Fennec Fox), and Interconnected Body Systems during exercise.
+  - **Domain 4: Scientific Inquiry & Nature of Science:** Experimental Design & Single-Variable Fair Tests (Independent, Dependent, and Controlled Variables), Confounding Variable Audits, and Phase Change Cooling Curve Temperature Plateaus (Latent Heat of Fusion).
+- **Core Features:**
+  - **Scalable Olympiad Hub:** Dynamic JSON registry (`OLYMPIAD_REGISTRY`) supporting quick filtering by Division (A, B, C), Domain (Physical, Earth, Life, Inquiry), and Status (Active vs. Roadmap), plus an embedded modal runner and personal training log (`localStorage`).
+  - **4 Synchronized Dynamic Simulations:** Density Stratification Column with thermal expansion heating, Wetland Trophic Cascade Network with pesticide mortality slider and prey shift toggles, Circuit Conductor Fair-Test Bench with live Ammeter current and bulb filament lumens, and Earth-Moon-Sun Orbit Model with axial tilt controls.
+  - **4-Step Olympiad Solving Routine:** Metacognitive discipline embedded in every challenge (*Step 1: Identify Core Principle*, *Step 2: Eliminate Impossible Edge Cases*, *Step 3: Test Remaining Logic*, *Step 4: Verify with Scientific Principles*).
+  - **Coach's Pit Stop Misconception Engine:** Interactive slide-up drawer for wrong answers analyzing cognitive traps (Size vs Density Fallacy, Open Switch Fallacy, Confounding Variables, Inverted Density, Reverse Physiology) with Retry Token support.
+  - **Coach Nova Voice Mentor & Whiteboard Scratchpad:** Text-to-Speech synthesis read-aloud and a full-screen drawing/annotation overlay with pen, highlighter, eraser, and color palette.
+  - **12 Graded Tournament Challenges:** Exhaustive coverage with 60s countdown timer (with Zen Mode toggle), score HUD, streak multipliers, and procedural Web Audio API feedback.
+  - **Custom Non-Intrusive Messaging:** 100% custom in-app glassmorphic toast notifications and confirmation modals (Zero disruptive browser `alert()` or `confirm()` popup windows).
 
 ### 1. 🧊 CMS 5th Grade AIG Math: Spatial Volume, Algorithms & Decimal Systems Lab (Q1)
 - **Location:** [`apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html`](apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html)
