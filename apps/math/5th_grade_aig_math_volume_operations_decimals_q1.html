@@ -983,6 +983,127 @@
       font-size: 0.82rem;
       text-align: center;
     }
+  
+    /* ==========================================================================
+       5TH GRADE AIG LIGHT THEME ENGINE (HIGH CONTRAST CONTINUITY)
+       ========================================================================== */
+    body.theme-light, [data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-card: rgba(255, 255, 255, 0.94);
+      --bg-card-hover: rgba(241, 245, 249, 0.98);
+      --border-subtle: rgba(0, 0, 0, 0.1);
+      --border-glow: rgba(2, 132, 199, 0.25);
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --text-dim: #64748b;
+    }
+
+    body.theme-light {
+      background-color: var(--bg-base) !important;
+      color: var(--text-main) !important;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%) !important;
+    }
+
+    body.theme-light .glass-card {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    body.theme-light .card-title {
+      color: #0f172a !important;
+    }
+
+    body.theme-light .card-desc {
+      color: #475569 !important;
+    }
+
+    body.theme-light .topic-nav-strip {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    body.theme-light .topic-selector-container {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.theme-light .topic-select {
+      color: #0f172a !important;
+    }
+
+    body.theme-light .topic-select option {
+      background: #ffffff !important;
+      color: #0f172a !important;
+    }
+
+    body.theme-light .topic-pill {
+      background: #f1f5f9 !important;
+      color: #475569 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.theme-light .topic-pill:hover {
+      background: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    body.theme-light .topic-pill.active {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+      border-color: #0284c7 !important;
+    }
+
+    body.theme-light .tab-btn {
+      color: #475569 !important;
+    }
+
+    body.theme-light .tab-btn:hover {
+      color: #0f172a !important;
+      background: #e2e8f0 !important;
+    }
+
+    body.theme-light .tab-btn.active {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+      border-color: #0284c7 !important;
+    }
+
+    body.theme-light .telemetry-box {
+      background: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.theme-light .telemetry-val {
+      color: #0f172a !important;
+    }
+
+    body.theme-light .telemetry-label {
+      color: #64748b !important;
+    }
+
+    body.theme-light .math-formula {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.theme-light .control-slider {
+      background: #e2e8f0 !important;
+    }
+
+    body.theme-light .app-header {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.theme-light .app-header h1 {
+      color: #0f172a !important;
+    }
+
   </style>
 </head>
 <body>
@@ -1053,6 +1174,7 @@
 
       <!-- Direct 1-Click Action Launchers for Selected Topic -->
       <div class="topic-nav-right">
+        <button type="button" class="btn btn-secondary btn-sm" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light/Dark Theme" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.9rem;">🌓</button>
         <button id="btnOpenTopicLab" class="btn btn-sm btn-primary" title="Launch Interactive Manipulative for this topic">
           <span>🔬 Open Lab</span>
         </button>
@@ -1448,6 +1570,14 @@
 
   <!-- Embedded Question Bank & Master Application Engine -->
   <script>
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('theme-light');
+      localStorage.setItem('app_theme', isLight ? 'light' : 'dark');
+      if (typeof showCustomToast === 'function') {
+        showCustomToast(isLight ? 'Light Mode Active ☀️' : 'Dark Mode Active 🌙', 'Theme contrast synchronized across 5th Grade AIG Lab.');
+      }
+    }
+
     const QUESTION_BANK = [
   {
     "id": "M1_T1_Q01",
@@ -3888,6 +4018,9 @@
 
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('app_theme') === 'light') {
+        document.body.classList.add('theme-light');
+      }
       resizePrismCanvas();
       updatePrismMetrics();
       activateTopic(1);

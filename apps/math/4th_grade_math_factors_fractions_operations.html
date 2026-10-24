@@ -176,6 +176,167 @@
     .animate-subtle-pulse {
       animation: subtlePulse 3s infinite ease-in-out;
     }
+  
+    /* ==========================================================================
+       COMPREHENSIVE SEAMLESS LIGHT THEME ENGINE (HIGH CONTRAST CONTINUITY)
+       ========================================================================== */
+    body.theme-light {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    
+    /* Background surfaces & cards */
+    body.theme-light .bg-slate-950,
+    body.theme-light .bg-slate-900,
+    body.theme-light [class*="bg-slate-950"],
+    body.theme-light [class*="bg-slate-900"],
+    body.theme-light .glass-card,
+    body.theme-light .glass-card-subtle,
+    body.theme-light .glass-panel {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    body.theme-light .bg-slate-800,
+    body.theme-light [class*="bg-slate-800"] {
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+
+    body.theme-light .bg-slate-700,
+    body.theme-light [class*="bg-slate-700"] {
+      background-color: #e2e8f0 !important;
+      border-color: #94a3b8 !important;
+      color: #0f172a !important;
+    }
+
+    /* Strict Font Contrast Overrides */
+    body.theme-light .text-white,
+    body.theme-light .text-slate-100,
+    body.theme-light h1,
+    body.theme-light h2,
+    body.theme-light h3,
+    body.theme-light h4,
+    body.theme-light .font-heading {
+      color: #0f172a !important;
+    }
+
+    body.theme-light .text-slate-200,
+    body.theme-light .text-slate-300 {
+      color: #1e293b !important;
+    }
+
+    body.theme-light .text-slate-400 {
+      color: #475569 !important;
+    }
+
+    body.theme-light .text-slate-500 {
+      color: #64748b !important;
+    }
+
+    /* Vibrant accents tuned for light backgrounds */
+    body.theme-light .text-sky-400,
+    body.theme-light .text-sky-300 {
+      color: #0284c7 !important;
+    }
+    body.theme-light .text-emerald-400,
+    body.theme-light .text-emerald-300 {
+      color: #059669 !important;
+    }
+    body.theme-light .text-amber-400,
+    body.theme-light .text-amber-300 {
+      color: #d97706 !important;
+    }
+    body.theme-light .text-indigo-400,
+    body.theme-light .text-indigo-300 {
+      color: #4f46e5 !important;
+    }
+    body.theme-light .text-purple-400,
+    body.theme-light .text-purple-300 {
+      color: #7c3aed !important;
+    }
+    body.theme-light .text-rose-400,
+    body.theme-light .text-rose-300 {
+      color: #e11d48 !important;
+    }
+
+    /* Mascot Banners & Announcement Boxes */
+    body.theme-light [class*="border-amber-500"],
+    body.theme-light .border-amber-500\/30 {
+      background-color: #fffbeb !important;
+      border-color: #f59e0b !important;
+    }
+    body.theme-light [class*="border-amber-500"] p,
+    body.theme-light [class*="border-amber-500"] span,
+    body.theme-light [class*="border-amber-500"] em,
+    body.theme-light .border-amber-500\/30 p,
+    body.theme-light .border-amber-500\/30 span {
+      color: #78350f !important;
+    }
+
+    /* Borders */
+    body.theme-light .border-slate-800,
+    body.theme-light .border-slate-700,
+    body.theme-light [class*="border-slate-800"],
+    body.theme-light [class*="border-slate-700"] {
+      border-color: #cbd5e1 !important;
+    }
+
+    /* Navigation & Tabs */
+    body.theme-light header {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    }
+    body.theme-light nav.bg-slate-950,
+    body.theme-light nav[class*="bg-slate-950"] {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.theme-light .tab-btn {
+      color: #475569 !important;
+    }
+    body.theme-light .tab-btn:hover {
+      color: #0f172a !important;
+      background-color: #e2e8f0 !important;
+    }
+    body.theme-light .tab-active {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+      color: #ffffff !important;
+    }
+
+    /* Inputs, Selects & Sliders */
+    body.theme-light input[type="text"],
+    body.theme-light input[type="number"],
+    body.theme-light select {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    /* SVG Diagram Elements */
+    body.theme-light svg text {
+      fill: #0f172a !important;
+    }
+    body.theme-light svg line.axis,
+    body.theme-light svg path.axis {
+      stroke: #334155 !important;
+    }
+    body.theme-light svg rect.canvas-bg {
+      fill: #f8fafc !important;
+    }
+
+    /* Slider value bubble */
+    body.theme-light #sliderValueBubble,
+    body.theme-light .slider-bubble {
+      background-color: #0284c7 !important;
+      color: #ffffff !important;
+      border-color: #0369a1 !important;
+    }
+
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
@@ -274,7 +435,7 @@
           <button onclick="toggleAudioMute()" id="audioMuteBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition" title="Toggle Sound Feedback">
             <span id="audioMuteIcon">🔊</span>
           </button>
-          <button onclick="toggleTheme()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition" title="Toggle Light/Dark Theme">
+          <button onclick="toggleTheme()" id="themeToggleBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition" title="Toggle Light/Dark Theme">
             🌓
           </button>
           <button onclick="toggleDyslexiaMode()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition" title="Toggle Dyslexia-Friendly Typography">
@@ -4579,8 +4740,17 @@
 
     // Theme & Dyslexia Mode
     function toggleTheme() {
-      document.body.classList.toggle('theme-light');
-      playSound('click');
+      const isLight = document.body.classList.toggle('theme-light');
+      localStorage.setItem('app_theme', isLight ? 'light' : 'dark');
+      if (typeof showCustomMessage === 'function') {
+        showCustomMessage(
+          isLight ? 'Light Mode Active ☀️' : 'Dark Mode Active 🌙',
+          'Theme contrast synchronized across text, cards, and interactive elements.',
+          isLight ? '☀️' : '🌙',
+          'info',
+          3000
+        );
+      }
     }
     function toggleDyslexiaMode() {
       document.body.classList.toggle('dyslexia-mode');
@@ -6718,6 +6888,9 @@
 
     // Initial Bootstrap
     document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('app_theme') === 'light') {
+        document.body.classList.add('theme-light');
+      }
       initScratchpad();
       renderConceptHub();
       buildMultiplicationTable();

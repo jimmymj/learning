@@ -1,0 +1,3119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Olympiad Coach: Division A & Intermediate Mastery Lab (Grades 4-7+)</title>
+  <meta name="description" content="Advanced Science Olympiad tournament coach & laboratory simulation app for Division A and Intermediate competitors. Features 4 interactive visualizers, Coach\'s Pit Stop misconception engine, and 12 graded challenges.">
+  <style>
+    /* ==========================================================================
+       1. CSS CUSTOM PROPERTIES & DUAL-THEME TOKENS (HIGH CONTRAST CONTINUITY)
+       ========================================================================== */
+    :root {
+      --bg-base: #090d16;
+      --bg-surface: #0f172a;
+      --bg-surface-elevated: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.72);
+      --bg-card-hover: rgba(51, 65, 85, 0.85);
+      --bg-glass: rgba(15, 23, 42, 0.82);
+      --bg-overlay: rgba(3, 7, 18, 0.88);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-inverse: #090d16;
+
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(56, 189, 248, 0.35);
+
+      --accent-gold: #fbbf24;
+      --accent-gold-glow: rgba(251, 191, 36, 0.35);
+      --accent-cyan: #22d3ee;
+      --accent-cyan-glow: rgba(34, 211, 238, 0.35);
+      --accent-emerald: #34d399;
+      --accent-emerald-glow: rgba(52, 211, 153, 0.35);
+      --accent-rose: #f43f5e;
+      --accent-rose-glow: rgba(244, 63, 94, 0.35);
+      --accent-purple: #c084fc;
+
+      --canvas-bg: #0b1120;
+      --canvas-grid: rgba(255, 255, 255, 0.08);
+      --canvas-text: #cbd5e1;
+      --canvas-text-muted: #64748b;
+      --canvas-axis: rgba(255, 255, 255, 0.35);
+      --canvas-beam: #94a3b8;
+      --canvas-fulcrum: #38bdf8;
+      --canvas-load: #f59e0b;
+      --canvas-effort: #10b981;
+
+      --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --panel-blur: blur(16px);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Mode Contrast Engine */
+    [data-theme="light"], .light-mode {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.94);
+      --bg-card-hover: rgba(241, 245, 249, 0.98);
+      --bg-glass: rgba(255, 255, 255, 0.9);
+      --bg-overlay: rgba(15, 23, 42, 0.65);
+
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-inverse: #f8fafc;
+
+      --border-color: rgba(0, 0, 0, 0.12);
+      --border-subtle: rgba(0, 0, 0, 0.06);
+      --border-glow: rgba(2, 132, 199, 0.3);
+
+      --accent-gold: #d97706;
+      --accent-gold-glow: rgba(217, 119, 6, 0.25);
+      --accent-cyan: #0284c7;
+      --accent-cyan-glow: rgba(2, 132, 199, 0.25);
+      --accent-emerald: #059669;
+      --accent-emerald-glow: rgba(5, 150, 105, 0.25);
+      --accent-rose: #e11d48;
+      --accent-rose-glow: rgba(225, 29, 72, 0.25);
+      --accent-purple: #7e22ce;
+
+      --canvas-bg: #f8fafc;
+      --canvas-grid: rgba(0, 0, 0, 0.08);
+      --canvas-text: #1e293b;
+      --canvas-text-muted: #64748b;
+      --canvas-axis: rgba(0, 0, 0, 0.4);
+      --canvas-beam: #475569;
+      --canvas-fulcrum: #0284c7;
+      --canvas-load: #d97706;
+      --canvas-effort: #059669;
+
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      --panel-blur: blur(12px);
+    }
+
+    /* Base Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    }
+
+    /* Layout Containers */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==========================================================================
+       2. TOP NAVIGATION & HEADER
+       ========================================================================== */
+    header.app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-glass);
+      backdrop-filter: var(--panel-blur);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-smooth);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      gap: 16px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 14px var(--accent-gold-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(to right, var(--text-primary), var(--accent-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:hover {
+      background: var(--bg-surface-elevated);
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
+      color: #0f172a;
+      box-shadow: 0 4px 15px var(--accent-gold-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-gold-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-cyan);
+      background: var(--bg-card-hover);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-gold {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid var(--accent-gold);
+    }
+
+    .badge-cyan {
+      background: rgba(34, 211, 238, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+    }
+
+    .badge-emerald {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid var(--accent-emerald);
+    }
+
+    .badge-purple {
+      background: rgba(192, 132, 252, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid var(--accent-purple);
+    }
+
+    /* ==========================================================================
+       3. HERO & 4-STEP METATRAINER BANNER
+       ========================================================================== */
+    .hero-banner {
+      padding: 32px 0 20px;
+    }
+
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: var(--panel-blur);
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, var(--accent-cyan-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .hero-title span.highlight-gold {
+      color: var(--accent-gold);
+    }
+
+    .hero-title span.highlight-cyan {
+      color: var(--accent-cyan);
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      max-width: 940px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    /* 4-Step Olympiad Routine Grid */
+    .routine-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .routine-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px;
+      transition: var(--transition-smooth);
+    }
+
+    .routine-box:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+
+    .routine-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-gold);
+      margin-bottom: 4px;
+    }
+
+    .routine-name {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .routine-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       4. CONCEPT SCAFFOLDING TABS (3-TIER ENGINE)
+       ========================================================================== */
+    .section-wrap {
+      margin-top: 36px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-surface);
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .scaffold-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      margin-top: 14px;
+    }
+
+    .scaffold-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .scaffold-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px;
+      transition: var(--transition-smooth);
+    }
+
+    .scaffold-item:hover {
+      border-color: var(--border-color);
+    }
+
+    .scaffold-item-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scaffold-item-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ==========================================================================
+       5. INTERACTIVE SIMULATION LAB (4 SYNCHRONIZED SIMS)
+       ========================================================================== */
+    .sim-lab-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: var(--panel-blur);
+    }
+
+    .sim-tabs-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      overflow-x: auto;
+    }
+
+    .sim-tab-item {
+      padding: 16px 22px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      transition: var(--transition-smooth);
+    }
+
+    .sim-tab-item:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .sim-tab-item.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      background: var(--bg-surface-elevated);
+    }
+
+    .sim-workspace {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      min-height: 480px;
+    }
+
+    @media (max-width: 960px) {
+      .sim-workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-viewport {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--canvas-bg);
+      position: relative;
+    }
+
+    .sim-canvas {
+      width: 100%;
+      height: 380px;
+      border-radius: 12px;
+      background: var(--canvas-bg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .sim-telemetry-hud {
+      position: absolute;
+      top: 28px;
+      left: 28px;
+      background: var(--bg-glass);
+      backdrop-filter: var(--panel-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .hud-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .hud-label {
+      color: var(--text-muted);
+    }
+
+    .hud-val {
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .sim-sidebar {
+      padding: 20px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-gold);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-range {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-surface-elevated);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .control-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s;
+    }
+
+    .control-range::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .preset-btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       6. TOURNAMENT ASSESSMENT QUEST (12 GRADED CHALLENGES)
+       ========================================================================== */
+    .quest-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      margin-top: 36px;
+      position: relative;
+    }
+
+    .quest-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+    }
+
+    .quest-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .progress-bar-bg {
+      width: 160px;
+      height: 8px;
+      background: var(--bg-surface-elevated);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+      width: 8.33%;
+      transition: width 0.3s ease;
+    }
+
+    .quest-stats-hud {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stat-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timer-pill {
+      font-weight: 700;
+      color: var(--accent-gold);
+      border-color: var(--accent-gold-glow);
+    }
+
+    .question-box {
+      margin-bottom: 24px;
+    }
+
+    .question-domain-tag {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .question-prompt {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .question-context {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .option-card:hover:not(.locked) {
+      border-color: var(--accent-cyan);
+      background: var(--bg-surface-elevated);
+      transform: translateX(4px);
+    }
+
+    .option-indicator {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.84rem;
+      color: var(--text-primary);
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .option-text {
+      font-size: 0.94rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .option-card.correct {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: var(--accent-emerald);
+    }
+
+    .option-card.correct .option-indicator {
+      background: var(--accent-emerald);
+      color: #0f172a;
+    }
+
+    .option-card.incorrect {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: var(--accent-rose);
+    }
+
+    .option-card.incorrect .option-indicator {
+      background: var(--accent-rose);
+      color: #ffffff;
+    }
+
+    /* Explanation Drawer & Pit Stop Modal */
+    .explanation-panel {
+      margin-top: 24px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 22px;
+      display: none;
+    }
+
+    .explanation-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       7. WHITEBOARD SCRATCHPAD OVERLAY
+       ========================================================================== */
+    #scratchpadOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 100;
+      pointer-events: none;
+      display: none;
+    }
+
+    #scratchpadOverlay.active {
+      display: block;
+      pointer-events: auto;
+    }
+
+    #scratchpadCanvas {
+      width: 100%;
+      height: 100%;
+      background: rgba(9, 13, 22, 0.45);
+      cursor: crosshair;
+    }
+
+    .scratchpad-toolbar {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-glass);
+      backdrop-filter: var(--panel-blur);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ==========================================================================
+       8. CUSTOM IN-APP FLOATING TOAST (NO BROWSER POPUPS)
+       ========================================================================== */
+    #customToast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      z-index: 200;
+      background: var(--bg-glass);
+      backdrop-filter: var(--panel-blur);
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 20px var(--accent-cyan-glow);
+      border-radius: 16px;
+      padding: 16px 22px;
+      max-width: 540px;
+      width: 90%;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #customToast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .toast-body {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .toast-msg {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .toast-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .toast-close-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Custom Confirm Modal */
+    #customConfirmModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 150;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #customConfirmModal.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 26px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon {
+      font-size: 1.5rem;
+    }
+
+    .modal-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Footer */
+    footer.app-footer {
+      margin-top: 60px;
+      border-top: 1px solid var(--border-color);
+      padding: 32px 0 40px;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       HEADER & NAVIGATION
+       ========================================================================== -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-wrap">
+        <div class="brand-icon-box">⚖️</div>
+        <div class="brand-text">
+          <h1>Science Olympiad Coach</h1>
+          <span>Division A &amp; Intermediate Mastery Lab (Grades 4-7+)</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <a href="index.html" class="btn btn-secondary btn-sm" id="returnHubBtn">
+          <span>← Olympiad Hub</span>
+        </a>
+        <button type="button" class="icon-btn" id="scratchpadToggleBtn" title="Toggle Whiteboard Scratchpad" aria-label="Toggle Whiteboard Scratchpad">✏️</button>
+        <button type="button" class="icon-btn" id="voiceReadToggleBtn" title="Coach Nova Read-Aloud" aria-label="Coach Nova Read-Aloud">🔊</button>
+        <button type="button" class="icon-btn" id="themeToggleBtn" title="Toggle Light/Dark Screen Mode" aria-label="Toggle Light/Dark Screen Mode">🌓</button>
+        <button type="button" class="btn btn-primary btn-sm" id="downloadAppBtn" title="Save offline copy">
+          <span>💾 Download App</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN WORKSPACE
+       ========================================================================== -->
+  <main class="container">
+
+    <!-- Hero Banner & Metatrainer -->
+    <section class="hero-banner">
+      <div class="hero-card">
+        <div class="hero-meta">
+          <span class="badge badge-gold">🏆 American Science Olympiad Tier II</span>
+          <span class="badge badge-cyan">Division A &amp; B Prep (Grades 4-7+)</span>
+          <span class="badge badge-emerald">4 Synchronized Simulators</span>
+          <span class="badge badge-purple">12 Graded Challenges</span>
+        </div>
+
+        <h2 class="hero-title">
+          Master <span class="highlight-gold">Quantitative Deduction</span> &amp; Build <span class="highlight-cyan">Cognitive Trap Immunity</span>
+        </h2>
+
+        <p class="hero-desc">
+          Competition tests in the American Science Olympiad do not test surface memorization—they challenge students to dissect multi-variable interactions, detect confounding errors, analyze torque equilibria, and deconstruct deceptive exam traps in the <strong>Coach\'s Pit Stop</strong>.
+        </p>
+
+        <!-- 4-Step Olympiad Routine -->
+        <div class="routine-grid">
+          <div class="routine-box">
+            <div class="routine-num">Step 01</div>
+            <div class="routine-name">Isolate System Variables</div>
+            <div class="routine-sub">Identify Independent, Dependent, and strictly Controlled variables before calculating.</div>
+          </div>
+          <div class="routine-box">
+            <div class="routine-num">Step 02</div>
+            <div class="routine-name">Map Underlying Law</div>
+            <div class="routine-sub">Anchor problems to fundamental physics, thermodynamics, cell energetics, or orbital mechanics.</div>
+          </div>
+          <div class="routine-box">
+            <div class="routine-num">Step 03</div>
+            <div class="routine-name">Deconstruct Distractor Traps</div>
+            <div class="routine-sub">Spot false premises (confounding factors, inverted ratios, reverse physiology).</div>
+          </div>
+          <div class="routine-box">
+            <div class="routine-num">Step 04</div>
+            <div class="routine-name">Verify Edge-Case Extremes</div>
+            <div class="routine-sub">Test answers against zero, infinite, and boundary condition states.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Tier Scaffolding Hub -->
+    <section class="section-wrap" id="concept-scaffolding">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span>🧠</span>
+          <span>Curriculum Mastery &amp; 3-Tier Scaffolding</span>
+        </h3>
+        <div class="tabs-nav" role="tablist">
+          <button class="tab-btn active" data-tier="1">Level 1: Intuitive Analogies</button>
+          <button class="tab-btn" data-tier="2">Level 2: Operational Principles</button>
+          <button class="tab-btn" data-tier="3">Level 3: Applied Edge Cases</button>
+        </div>
+      </div>
+
+      <div class="scaffold-card" id="scaffoldContent">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Synchronized Interactive Simulation Lab -->
+    <section class="section-wrap" id="simulation-lab">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span>🔬</span>
+          <span>Synchronized Laboratory Simulations</span>
+        </h3>
+        <span class="badge badge-cyan" id="activeSimBadge">Sim 1: Lever Mechanics &amp; Torque</span>
+      </div>
+
+      <div class="sim-lab-card">
+        <div class="sim-tabs-bar" role="tablist">
+          <button class="sim-tab-item active" data-sim="lever">
+            <span>⚖️</span>
+            <span>1. Lever &amp; Mechanical Advantage</span>
+          </button>
+          <button class="sim-tab-item" data-sim="eclipse">
+            <span>🌘</span>
+            <span>2. 5° Lunar Tilt &amp; Eclipses</span>
+          </button>
+          <button class="sim-tab-item" data-sim="trophic">
+            <span>🐟</span>
+            <span>3. 10% Trophic Energy &amp; Carp</span>
+          </button>
+          <button class="sim-tab-item" data-sim="dual">
+            <span>💎</span>
+            <span>4. Mohs Scratch &amp; Toll Circuit</span>
+          </button>
+        </div>
+
+        <div class="sim-workspace">
+          <!-- Viewport Canvas Left -->
+          <div class="sim-viewport">
+            <canvas id="mainSimCanvas" class="sim-canvas"></canvas>
+            <div class="sim-telemetry-hud" id="simTelemetryHud">
+              <!-- Live HUD entries -->
+            </div>
+          </div>
+
+          <!-- Controls Sidebar Right -->
+          <div class="sim-sidebar" id="simControlsSidebar">
+            <!-- Dynamic Controls based on selected sim -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 Graded Tournament Challenges -->
+    <section class="quest-card" id="quest-section">
+      <div class="quest-header">
+        <div class="quest-progress-wrap">
+          <span class="badge badge-gold" id="questIndexBadge">Question 1 of 12</span>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="questProgressBar"></div>
+          </div>
+        </div>
+
+        <div class="quest-stats-hud">
+          <div class="stat-pill timer-pill" id="questTimerPill">
+            <span>⏱️</span>
+            <span id="timerDisplay">60s</span>
+          </div>
+          <div class="stat-pill">
+            <span>🪙 Tokens:</span>
+            <strong id="tokensDisplay">3</strong>
+          </div>
+          <div class="stat-pill">
+            <span>🔥 Streak:</span>
+            <strong id="streakDisplay">0</strong>
+          </div>
+          <div class="stat-pill">
+            <span>🏆 Score:</span>
+            <strong id="scoreDisplay">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Content -->
+      <div class="question-box">
+        <div class="question-domain-tag" id="qDomainTag">Physical Science • Lever Mechanics</div>
+        <h4 class="question-prompt" id="qPromptText">Loading question prompt...</h4>
+        <div class="question-context" id="qContextBox">Detailed context diagram...</div>
+      </div>
+
+      <!-- Multiple Choice Options -->
+      <div class="options-grid" id="optionsGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 12px;">
+        <button type="button" class="btn btn-secondary" id="hintDrawerBtn">
+          <span>💡 Socratic Hint (3 Stages)</span>
+        </button>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-secondary" id="pitStopTriggerBtn" style="display: none; border-color: var(--accent-rose); color: var(--accent-rose);">
+            <span>🚨 Coach\'s Pit Stop Analysis</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="nextQuestionBtn" style="display: none;">
+            <span>Next Olympiad Challenge →</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Socratic Hint Box -->
+      <div class="explanation-panel" id="hintBox" style="border-left: 4px solid var(--accent-gold);">
+        <h5 style="color: var(--accent-gold); font-weight: 800; margin-bottom: 6px;" id="hintStageTitle">Socratic Hint 1: Conceptual Nudge</h5>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);" id="hintStageText">Analyzing scenario parameters...</p>
+      </div>
+
+      <!-- Explanation & Traps Panel -->
+      <div class="explanation-panel" id="explanationPanel">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       SCRATCHPAD OVERLAY & CUSTOM MESSAGING
+       ========================================================================== -->
+  <div id="scratchpadOverlay">
+    <canvas id="scratchpadCanvas"></canvas>
+    <div class="scratchpad-toolbar">
+      <button class="icon-btn" id="scratchPenBtn" title="Pen" style="border-color: var(--accent-cyan);">🖊️</button>
+      <button class="icon-btn" id="scratchHighlighterBtn" title="Highlighter">🖍️</button>
+      <button class="icon-btn" id="scratchEraserBtn" title="Eraser">🧹</button>
+      <button class="icon-btn" id="scratchClearBtn" title="Clear All">🗑️</button>
+      <button class="btn btn-primary btn-sm" id="scratchCloseBtn">Close Scratchpad</button>
+    </div>
+  </div>
+
+  <!-- Custom In-App Floating Toast Notification (Zero Browser Popups) -->
+  <aside id="customToast" role="alert" aria-live="polite">
+    <div class="toast-icon" id="toastIcon">💡</div>
+    <div class="toast-body">
+      <div class="toast-title" id="toastTitle">Notification Title</div>
+      <div class="toast-msg" id="toastMessage">Notification message content goes here.</div>
+    </div>
+    <button type="button" class="toast-close-btn" id="toastCloseBtn" aria-label="Close message">✕</button>
+  </aside>
+
+  <!-- Custom In-App Confirmation Modal -->
+  <div id="customConfirmModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-icon" id="confirmModalIcon">⚠️</span>
+        <h4 class="modal-title" id="confirmModalTitle">Confirm Action</h4>
+      </div>
+      <p class="modal-desc" id="confirmModalMessage">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary btn-sm" id="confirmModalCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" id="confirmModalActionBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="container">
+      <p>American Science Olympiad Division A &amp; Intermediate Coaching Platform &bull; Zero External Dependencies</p>
+      <p style="margin-top: 6px; font-size: 0.78rem;">Designed for Elementary &amp; Junior STEM Competitors &bull; Verified Fact-Checking Protocol &bull; Native Unicode Math</p>
+    </div>
+  </footer>
+
+
+  <!-- ==========================================================================
+       JAVASCRIPT APPLICATION ENGINE
+       ========================================================================== -->
+  <script>
+    /* Global Application State */
+    const state = {
+      currentSim: 'lever',
+      currentTier: 1,
+      currentQuestionIndex: 0,
+      score: 0,
+      streak: 0,
+      tokens: 3,
+      timerSeconds: 60,
+      timerInterval: null,
+      isZenMode: false,
+      isSoundMuted: false,
+      isVoiceActive: false,
+      userAnswers: {},
+      missedQuestions: [],
+      // Simulation Parameters
+      lever: {
+        beamLength: 2.5, // meters
+        fulcrumPos: 0.5, // meters from boulder (load arm)
+        loadMass: 120, // kg
+        effortForce: 300, // N
+        effortArm: 2.0, // meters from fulcrum
+        currentAngle: 0,
+        targetAngle: 0
+      },
+      eclipse: {
+        tiltDeg: 5.1,
+        moonPhase: 'new', // 'new' (solar) or 'full' (lunar)
+        orbitAngle: 0,
+        distance: 'perigee', // 'perigee' or 'apogee'
+        animating: false
+      },
+      trophic: {
+        carpInvasionPct: 0, // 0 to 90%
+        animCycle: 0
+      },
+      dual: {
+        mode: 'mohs', // 'mohs' or 'circuit'
+        selectedMineral: 'specimen_x',
+        scratchTool: 'penny',
+        scratchHistory: [],
+        circuitType: 'parallel', // 'series' or 'parallel'
+        branchCount: 2
+      }
+    };
+
+    /* ==========================================================================
+       9. 3-TIER CURRICULUM SCAFFOLDING DATA
+       ========================================================================== */
+    const SCAFFOLDING_DATA = {
+      1: {
+        title: "Level 1: Intuitive Analogies & Mental Models",
+        items: [
+          {
+            title: "Seesaws & Wheelbarrows (Levers)",
+            body: "A lever doesn't destroy or create energy—it trades distance for muscle force. Shifting the pivot point closer to a massive boulder multiplies your downward push, making you feel up to 9 times stronger!"
+          },
+          {
+            title: "The 5° Hula-Hoop Tilt (Eclipses)",
+            body: "Imagine Earth's orbit as a flat tabletop and the Moon's path as a tilted hula-hoop. Because the hoop is angled at 5°, the Moon's shadow usually shoots high into space above Earth or below it. Eclipses only happen when the Moon crosses the exact table surface level (the orbital nodes)!"
+          },
+          {
+            title: "The 10% Snack Bag Rule (Energy Flow)",
+            body: "Think of an energy pyramid like buying snacks with heavy tax. Only 10% of plant energy ever reaches grazing minnows; 90% is burned as heat and daily movement. Introducing hungry Asian carp diverts that small snack bag away from native fish!"
+          },
+          {
+            title: "Toll Plaza Highway (Parallel Circuits)",
+            body: "Adding more parallel branches in a circuit is like opening new express lanes at a busy bridge toll plaza. More pathways decrease overall resistance and let more total electric current flow through!"
+          }
+        ]
+      },
+      2: {
+        title: "Level 2: Operational Laws & Formulas",
+        items: [
+          {
+            title: "Law of the Lever & Mechanical Advantage",
+            body: "Mechanical Advantage (MA) = Effort Arm / Load Arm = Load Force / Effort Force. In equilibrium: Effort Force × Effort Arm = Load Force × Load Arm (Torque Balance). Work = Force × Distance is conserved!"
+          },
+          {
+            title: "Latent Heat & Heating Curve Plateaus",
+            body: "During phase changes (melting at 0°C, boiling at 100°C), temperature remains strictly constant despite continuous heat input. The thermal energy is absorbed as Latent Heat (Q = m · L) to break intermolecular bonds."
+          },
+          {
+            title: "Equivalent Resistance (Series vs Parallel)",
+            body: "Series: R_eq = R₁ + R₂ (voltages divide). Parallel: 1/R_eq = 1/R₁ + 1/R₂ (two 10 Ω bulbs in parallel give R_eq = 5 Ω; both receive full supply voltage)."
+          },
+          {
+            title: "Mohs Scratch Scale Diagnostics",
+            body: "Mohs scale runs 1 (Talc) to 10 (Diamond). Scratch Rule: A harder mineral scratches a softer one. Field tools: Fingernail (2.5), Copper Penny (3.5), Steel Pocketknife (5.5), Quartz (7.0)."
+          }
+        ]
+      },
+      3: {
+        title: "Level 3: Applied Edge Cases & Trap Immunity",
+        items: [
+          {
+            title: "Reverse Fulcrum & 3rd-Class Traps",
+            body: "Moving the fulcrum closer to the user cuts the effort arm, dropping MA below 1.0! 3rd class levers (brooms, tweezers) always have MA < 1; they multiply speed and sweeping reach, never force."
+          },
+          {
+            title: "Umbra vs Penumbra & Apogee Annular Rings",
+            body: "The Umbra is the dark central shadow cone of total blackout. When the Moon is near Apogee (farthest from Earth), its apparent disc is too small to cover the entire Sun, creating an Annular 'Ring of Fire' eclipse."
+          },
+          {
+            title: "Spinal Reflex Arc vs Synaptic Delay",
+            body: "Withdrawing a hand from a hot surface operates via a spinal reflex arc (50 ms), where sensory neurons synapse directly with motor neurons. Conscious perception requires afferent conduction to the sensory cortex (250 ms)."
+          },
+          {
+            title: "Confounding Variable Audit in Fair Tests",
+            body: "If salinity, surface area, and temperature all vary simultaneously, the experiment has zero internal validity. Scientific conclusions require all extraneous variables held strictly constant."
+          }
+        ]
+      }
+    };
+
+    /* ==========================================================================
+       10. 12 GRADED TOURNAMENT OLYMPIAD CHALLENGES
+       ========================================================================== */
+    const OLYMPIAD_QUESTIONS = [
+      {
+        id: 1,
+        domain: "Physical Science • Lever Mechanics & Torque",
+        prompt: "A 5th-grade Science Olympiad team is trying to lift a heavy 120 kg boulder off a soil bed using a strong 2.5-meter steel rod as a 1st-class lever. They place the fulcrum 0.5 meters away from the boulder, leaving a 2.0-meter effort arm where a student pushes down with 300 Newtons to balance it. The team now wants to lift a 240 kg boulder (twice the weight) without applying more than 300 Newtons. Which modification will succeed?",
+        context: "Original Lever Setup: Length = 2.5 m | Load Arm = 0.5 m | Effort Arm = 2.0 m | MA = 2.0 / 0.5 = 4\nTarget: Lift 240 kg boulder using maximum Effort Force ≤ 300 N.",
+        options: [
+          { id: 'A', text: "Move the fulcrum closer to the student so that the effort arm is 1.0 meter and the load arm is 1.5 meters." },
+          { id: 'B', text: "Move the fulcrum closer to the boulder so that the load arm is reduced to 0.25 meters and the effort arm becomes 2.25 meters." },
+          { id: 'C', text: "Reconfigure the rod into a 3rd-class lever by placing the fulcrum at the far end of the beam opposite the boulder." },
+          { id: 'D', text: "Keep the fulcrum at 0.5 meters from the boulder, but have the student push downward at a point 1.0 meter away from the fulcrum." }
+        ],
+        correct: 'B',
+        hints: [
+          "What is the original Mechanical Advantage (MA)? MA = Effort Arm / Load Arm = 2.0 m / 0.5 m = 4.",
+          "Doubling the boulder weight from 120 kg to 240 kg requires doubling the Mechanical Advantage from 4 to at least 8 to keep effort force at or below 300 N.",
+          "Calculate MA for Option B: Effort Arm = 2.25 m, Load Arm = 0.25 m. 2.25 / 0.25 = 9! Since 9 > 8, Option B easily balances and lifts the boulder!"
+        ],
+        explanation: {
+          step1: "Original MA = 2.0 m / 0.5 m = 4. The lever multiplies input force by 4×.",
+          step2: "New boulder is 240 kg (2× heavier). Required MA ≥ 4 × 2 = 8.",
+          step3: "Option B yields Load Arm = 0.25 m and Effort Arm = 2.25 m. MA = 2.25 / 0.25 = 9.",
+          step4: "With MA = 9, the required effort force is only (240 kg × 9.8 N/kg) / 9 ≈ 261 N, well below the 300 N limit!",
+          whyWins: "Moving the fulcrum closer to the load dramatically increases the effort-to-load arm ratio, boosting Mechanical Advantage to 9.",
+          traps: "Trap A (Reverse Fulcrum) drops MA to 1.0/1.5 = 0.67; Trap C (3rd Class) always has MA < 1; Trap D cuts effort arm in half, dropping MA to 2.",
+          keepWondering: "Work = Force × Distance. If Option B gives 9× force multiplication, what happens to the distance your hands push down compared to how high the boulder rises? (You must push down 9× farther!)"
+        }
+      },
+      {
+        id: 2,
+        domain: "Earth & Space Science • Celestial Geometry & Eclipses",
+        prompt: "A student constructs a physical scale model of the Earth-Moon-Sun system using a lamp (Sun), a small sphere (Moon), and a globe (Earth). She aligns all three celestial bodies in a straight line: Lamp (Sun) → Sphere (Moon) → Globe (Earth). The Moon casts a dark, narrow shadow cone hitting a small city on Earth. Which statement correctly identifies the event and explains why it does NOT occur every month?",
+        context: "Alignment: Sun → Moon → Earth (Moon in middle at New Moon phase).\nGeometry: Dark central umbral shadow cone hits a pinpoint region on Earth.",
+        options: [
+          { id: 'A', text: "The observer experiences a Total Lunar Eclipse; this event does not happen monthly because Earth's axis is tilted at 23.5° relative to its orbit." },
+          { id: 'B', text: "The observer experiences a Total Solar Eclipse; this event does not happen monthly because the Moon's orbital plane is tilted approximately 5° relative to Earth's orbital plane around the Sun." },
+          { id: 'C', text: "The observer experiences a Partial Lunar Eclipse; this event does not happen monthly because the Moon takes 365 days to complete one full revolution around Earth." },
+          { id: 'D', text: "The observer experiences a Total Solar Eclipse; this event does not happen monthly because the Moon's rotation speed slows down drastically during New Moon phases." }
+        ],
+        correct: 'B',
+        hints: [
+          "Which celestial body is in the middle? When the Moon passes between the Sun and Earth, it blocks sunlight from reaching Earth. Is that a Solar or Lunar eclipse?",
+          "A Solar Eclipse occurs at New Moon. Why doesn't the Moon's shadow hit Earth every single New Moon (~29.5 days)?",
+          "The Moon's orbital plane is not completely flat with Earth's orbit; it is inclined by about 5 degrees. The shadow usually passes above or below Earth!"
+        ],
+        explanation: {
+          step1: "Alignment is Sun → Moon → Earth. The Moon casts its shadow on Earth, which is a Solar Eclipse.",
+          step2: "The dark central cone where sunlight is completely blocked is the Umbra, causing a Total Solar Eclipse.",
+          step3: "The Moon orbits Earth every ~29.5 days, but its orbit is tilted by 5.1° relative to the ecliptic plane.",
+          step4: "During most New Moons, the 5° tilt angles the shadow into empty space above or below Earth. Eclipses only occur when New Moon aligns with the orbital nodes.",
+          whyWins: "Option B correctly identifies a Total Solar Eclipse and accurately cites the 5° lunar orbital inclination.",
+          traps: "Trap A confuses Solar with Lunar (Earth in middle) and axial tilt causes seasons; Trap C has incorrect period (Moon orbits in 27.3/29.5 days, not 365 days); Trap D assumes variable rotation speed (Moon rotation is constant synchronous).",
+          keepWondering: "The Moon's orbit is elliptical. What happens if a New Moon aligns at an orbital node when the Moon is at apogee (farthest from Earth)? (An Annular 'Ring of Fire' eclipse!)"
+        }
+      },
+      {
+        id: 3,
+        domain: "Life Science & Inquiry • Trophic Pyramids & Invasions",
+        prompt: "A coastal lake ecosystem has four trophic levels: Level 1 (Phytoplankton: 10,000 kJ/m²/yr) → Level 2 (Zooplankton: 1,020 kJ) → Level 3 (Minnows: 98 kJ) → Level 4 (Osprey: 9.1 kJ). Invasive Asian Carp enter the lake and consume 80% of Zooplankton, competing directly with native Minnows. Based on ecological thermodynamics, which prediction is scientifically sound?",
+        context: "Data: Level 1 (10,000 kJ) → Level 2 (1,020 kJ) → Level 3 (98 kJ) → Level 4 (9.1 kJ).\nDisruption: Asian Carp consume 80% of Zooplankton biomass.",
+        options: [
+          { id: 'A', text: "The energy at Level 1 will increase to 100,000 kJ/m²/year because energy automatically multiplies as it moves up a food web." },
+          { id: 'B', text: "The total energy available to Level 4 (Osprey) will decrease because a large portion of Zooplankton energy is now diverted into Asian Carp, reducing energy transfer to native Minnows." },
+          { id: 'C', text: "The Zooplankton population energy will double because Asian Carp perform photosynthesis and generate new chemical energy for the lake." },
+          { id: 'D', text: "The Osprey birds will adapt by absorbing 100% of their required energy directly from sunlight through their feathers." }
+        ],
+        correct: 'B',
+        hints: [
+          "Recall the 10% Rule: roughly 90% of energy is lost as metabolic heat at each trophic level. Does energy ever increase upward?",
+          "Asian Carp and Minnows are both eating Zooplankton. What happens to Minnow energy if Carp eat 80% of their food?",
+          "Since Osprey rely on Minnows, diverting Zooplankton energy into Asian Carp starves the Minnow population, causing a cascade drop in energy available to Osprey."
+        ],
+        explanation: {
+          step1: "Examine baseline: 10,000 kJ → 1,020 kJ (~10.2%) → 98 kJ (~9.6%) → 9.1 kJ (~9.3%). Energy drops ~90% at each tier.",
+          step2: "Asian Carp consume 80% of Level 2 Zooplankton. Minnows now only access 20% of their previous food supply.",
+          step3: "Minnow biomass crashes by ~80%, yielding only ~19.6 kJ/m²/year.",
+          step4: "With far fewer Minnows, Level 4 Osprey suffer severe energy starvation, dropping to ~1.8 kJ/m²/year.",
+          whyWins: "Option B directly applies thermodynamic energy conservation and trophic competition principles.",
+          traps: "Trap A violates the 1st and 2nd Laws of Thermodynamics; Trap C misclassifies fish as photosynthetic autotrophs; Trap D posits impossible bird photosynthesis.",
+          keepWondering: "If 90% of energy is lost at each tier, why can a human population survive on significantly less agricultural land eating grains rather than apex predator fish?"
+        }
+      },
+      {
+        id: 4,
+        domain: "Physical Science • Phase Changes & Latent Heat",
+        prompt: "A student heats 500 g of crushed ice starting at -10°C in an insulated calorimeter with a constant 500-Watt burner at 1 atm. From Minute 3 to Minute 11, the thermometer reads exactly 0.0°C without changing, even though heat is continuously being absorbed. Which statement correctly explains this temperature plateau?",
+        context: "Observation: Constant 500 W heat input from Minute 3 to 11.\nThermometer reading: Firmly locked at 0.0°C during solid-liquid transition.",
+        options: [
+          { id: 'A', text: "The thermometer malfunctioned because thermal energy cannot enter ice without raising its temperature." },
+          { id: 'B', text: "Thermal energy is absorbed as Latent Heat of Fusion to overcome intermolecular hydrogen bonds between water molecules rather than increasing average kinetic energy." },
+          { id: 'C', text: "The heat energy escapes into the surrounding room because ice has zero heat capacity." },
+          { id: 'D', text: "The mass of water is destroyed during phase change, absorbing heat without temperature change." }
+        ],
+        correct: 'B',
+        hints: [
+          "What does temperature actually measure in physics? Temperature measures average molecular kinetic energy.",
+          "During melting, does molecular speed increase, or are molecular bonds rearranging?",
+          "Latent heat of fusion breaks intermolecular crystal bonds. Kinetic energy (and thus temperature) remains flat until all solid ice melts!"
+        ],
+        explanation: {
+          step1: "Temperature is a direct measure of average molecular kinetic energy (vibrational/translational speed).",
+          step2: "During a phase transition, added heat does NOT increase molecular speed.",
+          step3: "Instead, heat energy does work against intermolecular hydrogen bonds (Latent Heat of Fusion, 334 J/g).",
+          step4: "Once every gram of ice has transitioned into liquid water at 0°C, temperature resumes rising toward 100°C.",
+          whyWins: "Option B correctly distinguishes between kinetic energy (temperature) and potential energy of intermolecular bonds (latent heat).",
+          traps: "Trap A assumes heat always changes temperature; Trap C denies specific heat capacity; Trap D violates mass conservation.",
+          keepWondering: "Why is steam at 100°C capable of causing significantly more severe thermal burns to human skin than boiling liquid water at 100°C? (Latent Heat of Vaporization releases 2,260 J/g upon condensing!)"
+        }
+      },
+      {
+        id: 5,
+        domain: "Physical Science • Circuits: Series vs Parallel Resistance",
+        prompt: "An engineering team builds two circuits using identical 6-Volt batteries and identical 10 Ω light bulbs. Setup 1 connects two bulbs in Series. Setup 2 connects two bulbs in Parallel. How do the equivalent resistance and individual bulb brightness compare between the two setups?",
+        context: "Setup 1: 6V battery with two 10 Ω bulbs in Series.\nSetup 2: 6V battery with two 10 Ω bulbs in Parallel.",
+        options: [
+          { id: 'A', text: "Setup 1 has lower resistance (5 Ω) and both bulbs glow twice as brightly as in Setup 2." },
+          { id: 'B', text: "Setup 2 has lower equivalent resistance (5 Ω vs 20 Ω in Setup 1), and each bulb in Setup 2 receives the full 6 V, glowing significantly brighter than bulbs in Setup 1." },
+          { id: 'C', text: "Both setups have the exact same 20 Ω resistance because they use the same two 10 Ω bulbs." },
+          { id: 'D', text: "In Setup 2, only the first bulb lights up because electricity takes the shortest path and ignores the second branch." }
+        ],
+        correct: 'B',
+        hints: [
+          "Series resistors add up: R_eq = R₁ + R₂. What is 10 + 10?",
+          "Parallel resistors divide: 1/R_eq = 1/10 + 1/10 = 2/10. What is R_eq?",
+          "Think of the Toll Plaza analogy: opening another parallel booth cuts traffic resistance in half and lets more current flow!"
+        ],
+        explanation: {
+          step1: "Setup 1 (Series): R_eq = 10 + 10 = 20 Ω. Current I = V / R = 6 / 20 = 0.3 A. Voltage splits (3 V per bulb). Power = 0.9 W per bulb.",
+          step2: "Setup 2 (Parallel): 1/R_eq = 1/10 + 1/10 = 2/10 → R_eq = 5 Ω. Total current I = 6 / 5 = 1.2 A.",
+          step3: "Each parallel branch experiences the full 6 V potential difference. Branch current = 6 / 10 = 0.6 A.",
+          step4: "Individual bulb power in parallel = 6 V × 0.6 A = 3.6 W (4× brighter than in series!).",
+          whyWins: "Option B correctly calculates 5 Ω vs 20 Ω and explains the full 6V voltage drop across parallel branches.",
+          traps: "Trap A inverts series and parallel formulas; Trap C assumes circuit topology doesn't matter; Trap D confuses short circuits with parallel branches.",
+          keepWondering: "Why are all modern home electrical wall outlets wired in parallel rather than in series? (So turning off one lamp doesn't shut down the entire house!)"
+        }
+      },
+      {
+        id: 6,
+        domain: "Physical Science • Electromagnetism Proportionality",
+        prompt: "Students build an electromagnet by tightly winding 20 turns of insulated copper wire around an iron bolt connected to a 1.5 V D-cell battery, picking up 4 steel paperclips. Which modification will substantially increase the magnetic lifting strength of the electromagnet?",
+        context: "Device: 20 wire turns around an iron bolt + 1.5 V D-cell = lifts 4 paperclips.\nGoal: Maximize magnetic field intensity B.",
+        options: [
+          { id: 'A', text: "Replace the iron core with a solid wooden dowel while keeping 20 coils." },
+          { id: 'B', text: "Increase the number of tightly wrapped wire coils to 60 turns around the iron bolt." },
+          { id: 'C', text: "Reverse the battery orientation so the positive and negative terminals switch." },
+          { id: 'D', text: "Uncoil the wire into a single straight horizontal wire hanging 10 cm above the table." }
+        ],
+        correct: 'B',
+        hints: [
+          "Magnetic field strength in a solenoid is proportional to the number of wire turns (N): B = μ · (N/L) · I.",
+          "Iron is ferromagnetic; wood and plastic are non-magnetic insulators.",
+          "Tripling the wire coils from 20 to 60 multiplies the magnetic field lines concentrated inside the iron core!"
+        ],
+        explanation: {
+          step1: "Solenoid magnetic field formula: B = μ · n · I (where n = turns per unit length, I = current, μ = core permeability).",
+          step2: "Increasing turns from 20 to 60 triples the magnetic flux density generated by the current.",
+          step3: "Iron has high magnetic permeability, channeling and multiplying the magnetic domain alignment.",
+          step4: "More aligned domains create a significantly stronger macroscopic dipole, lifting more paperclips.",
+          whyWins: "Option B directly scales the number of electromagnetic turns, tripling magnetic strength.",
+          traps: "Trap A replaces ferromagnetic core with non-magnetic wood, collapsing field strength; Trap C only flips North/South poles; Trap D eliminates the solenoid geometry.",
+          keepWondering: "Why does an iron bolt lose most of its magnetic attraction immediately after you disconnect the battery, while a refrigerator magnet stays magnetic forever? (Soft iron vs hard ferromagnets!)"
+        }
+      },
+      {
+        id: 7,
+        domain: "Earth Science • Mineralogy & Mohs Hardness Matrix",
+        prompt: "A student geologist performs field scratch tests on an unknown mineral specimen: 1) A copper penny (Hardness 3.5) fails to scratch the specimen. 2) A steel pocketknife blade (Hardness 5.5) easily scratches a deep groove into the specimen. 3) The specimen easily scratches fluorite (Hardness 4.0). Which mineral could this specimen logically be?",
+        context: "Scratch Log: Specimen > Penny (3.5) | Knife (5.5) > Specimen | Specimen > Fluorite (4.0).\nHardness constraint: 4.0 < H < 5.5.",
+        options: [
+          { id: 'A', text: "Talc (Hardness 1.0)" },
+          { id: 'B', text: "Calcite (Hardness 3.0)" },
+          { id: 'C', text: "Apatite (Hardness 5.0)" },
+          { id: 'D', text: "Quartz (Hardness 7.0)" }
+        ],
+        correct: 'C',
+        hints: [
+          "Scratch rule: A mineral scratches anything softer than itself and is scratched by anything harder.",
+          "Test 1: Specimen resists penny (3.5), so H > 3.5.",
+          "Test 2: Specimen is scratched by knife (5.5), so H < 5.5. Test 3: Specimen scratches fluorite (4.0), so H > 4.0. Which mineral has hardness between 4.0 and 5.5?"
+        ],
+        explanation: {
+          step1: "Deduce from Test 1: Specimen > 3.5 (eliminates Talc H=1, Calcite H=3).",
+          step2: "Deduce from Test 2: Specimen < 5.5 (eliminates Quartz H=7, Topaz H=8).",
+          step3: "Deduce from Test 3: Specimen > 4.0 (confirms H is strictly between 4.0 and 5.5).",
+          step4: "Apatite has an exact Mohs hardness rating of 5.0, satisfying all three scratch observations perfectly.",
+          whyWins: "Option C falls precisely inside the 4.0 < H < 5.5 experimental bracket.",
+          traps: "Trap A (Talc 1.0) is scratched by fingernail; Trap B (Calcite 3.0) would be scratched by the penny; Trap D (Quartz 7.0) cannot be scratched by a steel knife.",
+          keepWondering: "Why is the Mohs scale called an 'ordinal' scale rather than a proportional linear scale? (Diamond 10 is actually 4 times harder than Corundum 9, not 10% harder!)"
+        }
+      },
+      {
+        id: 8,
+        domain: "Earth Science • Rock Cycle & Igneous Crystal Growth",
+        prompt: "A Science Olympiad team compares two igneous rock specimens under a stereomicroscope. Specimen Alpha exhibits large, interlocking coarse mineral crystals visible to the naked eye (3-6 mm). Specimen Beta exhibits a glassy, fine-grained matrix with no visible crystals (< 0.1 mm). What can the team accurately conclude regarding the formation environments of these two rocks?",
+        context: "Specimen Alpha: Coarse-grained, visible 3-6 mm crystals (e.g., Granite).\nSpecimen Beta: Fine-grained, glassy texture < 0.1 mm crystals (e.g., Basalt/Obsidian).",
+        options: [
+          { id: 'A', text: "Specimen Alpha cooled rapidly on Earth's surface from lava; Specimen Beta cooled slowly deep underground inside magma chambers." },
+          { id: 'B', text: "Specimen Alpha is an intrusive igneous rock that cooled slowly deep underground, allowing large crystals time to grow; Specimen Beta is an extrusive rock that quenched rapidly at or near the surface." },
+          { id: 'C', text: "Specimen Alpha formed from compressed sedimentary organic shells; Specimen Beta is a foliated metamorphic rock." },
+          { id: 'D', text: "Specimen Beta must contain higher silica content, which automatically prevents any crystals from ever forming." }
+        ],
+        correct: 'B',
+        hints: [
+          "Crystal size is dictated by cooling rate. Think of freezing water slowly vs flash-freezing.",
+          "When magma cools slowly over thousands of years deep underground, atoms have ample time to migrate and build large crystal lattices.",
+          "Lava erupting onto the cold surface cools in days or seconds, freezing before crystals can grow."
+        ],
+        explanation: {
+          step1: "Igneous petrology principle: Crystal size is inversely proportional to cooling rate.",
+          step2: "Intrusive (plutonic) rocks cool slowly beneath insulating rock layers, forming coarse phaneritic crystals (Alpha).",
+          step3: "Extrusive (volcanic) rocks quench rapidly in air or ocean water, producing aphanitic or glassy textures (Beta).",
+          step4: "Therefore, Alpha is intrusive (e.g., Granite/Gabbro) and Beta is extrusive (e.g., Basalt/Rhyolite).",
+          whyWins: "Option B correctly pairs slow subsurface cooling with large crystal growth and rapid surface quenching with fine grain size.",
+          traps: "Trap A inverts the cooling rate rule; Trap C incorrectly reclassifies igneous rocks as sedimentary/metamorphic; Trap D misattributes texture to silica content alone.",
+          keepWondering: "How can a single volcanic rock (like Porphyritic Andesite) contain both giant visible crystals and a microscopic fine-grained background matrix? (Two-stage cooling: slow underground, then erupted!)"
+        }
+      },
+      {
+        id: 9,
+        domain: "Earth/Space Science • Umbra vs Penumbra Geometry",
+        prompt: "During a solar eclipse, observers at Station East report seeing the Sun completely blocked with the solar corona visible, while observers at Station West (120 km away) report seeing a crescent sliver of the Sun remaining uncovered. In certain years, an eclipse occurs where the Moon is centered in front of the Sun but leaves a bright 'ring of fire' visible around its perimeter. What explains these two distinct phenomena?",
+        context: "Observation 1: Station East sees total eclipse; Station West sees partial eclipse.\nObservation 2: Annular 'ring of fire' eclipse occurs in certain years.",
+        options: [
+          { id: 'A', text: "Station East was in the penumbra; the 'ring of fire' happens because the Sun expands during summer." },
+          { id: 'B', text: "Station East was inside the Moon's Umbra shadow while Station West was in the Penumbra; the 'ring of fire' (Annular Eclipse) occurs when the Moon is near Apogee (greatest distance from Earth), making its apparent angular diameter too small to fully cover the Sun." },
+          { id: 'C', text: "Station West was blocked by clouds; the 'ring of fire' is caused by Earth's atmosphere burning up sunlight." },
+          { id: 'D', text: "The Moon only casts an umbral shadow on leap years due to calendar adjustments." }
+        ],
+        correct: 'B',
+        hints: [
+          "The shadow cone has two zones: the dark inner core (Umbra) and the partial outer shadow (Penumbra).",
+          "What is the difference between Perigee (closest to Earth) and Apogee (farthest from Earth)?",
+          "When the Moon is at Apogee, it looks slightly smaller in our sky. It cannot cover the entire solar disk, leaving a bright ring called an Annular Eclipse."
+        ],
+        explanation: {
+          step1: "The Umbra is the direct shadow cone where sunlight is 100% blocked (Station East = Total Solar Eclipse).",
+          step2: "The Penumbra is the surrounding zone where only a portion of the solar disk is obscured (Station West = Partial).",
+          step3: "The Moon's orbit is elliptical (perigee ~363,300 km vs apogee ~405,500 km).",
+          step4: "At apogee, the Moon's angular size is ~29.5 arcminutes, while the Sun is ~31.6 arcminutes. The Moon cannot cover the Sun's rim, creating an Annular Eclipse.",
+          whyWins: "Option B precisely identifies the Umbra/Penumbra distinction and the apogee distance geometry responsible for annular eclipses.",
+          traps: "Trap A inverts shadow zones and invents solar expansion; Trap C invokes clouds; Trap D confuses human calendar conventions with celestial mechanics.",
+          keepWondering: "Because tidal friction causes the Moon to drift ~3.8 cm farther away from Earth every year, what will eventually happen to Total Solar Eclipses millions of years in the future? (They will become extinct, leaving only Annular eclipses!)"
+        }
+      },
+      {
+        id: 10,
+        domain: "Life Science • Cardiovascular-Respiratory Coordination",
+        prompt: "During a 400-meter sprint, a student's skeletal muscle cells rapidly consume oxygen and glucose to synthesize ATP, releasing carbon dioxide (CO₂) and metabolic heat into the bloodstream. How do the nervous, respiratory, and cardiovascular systems coordinate to maintain cellular homeostasis?",
+        context: "Physiological Trigger: High muscle ATP demand → blood CO₂ surges → blood pH drops.\nHomeostatic Goal: Accelerate O₂ delivery and CO₂ clearance.",
+        options: [
+          { id: 'A', text: "Brainstem chemoreceptors detect falling blood CO₂; heart rate slows down to preserve existing oxygen." },
+          { id: 'B', text: "Brainstem chemoreceptors detect elevated blood CO₂ (lowering blood pH), triggering increased ventilation rate while the autonomic nervous system accelerates cardiac output and vasodilates arterioles to working muscles." },
+          { id: 'C', text: "The lungs pump deoxygenated blood directly into skeletal muscles, bypassing the heart entirely." },
+          { id: 'D', text: "The stomach releases stored oxygen gas into the bloodstream to avoid breathing harder." },
+        ],
+        correct: 'B',
+        hints: [
+          "What chemical signal triggers breathing rate: lack of oxygen or buildup of carbon dioxide?",
+          "Elevated CO₂ reacts with water to form carbonic acid, lowering blood pH.",
+          "Brainstem respiratory centers detect this acidity and rapidly increase breathing rate and heart rate to pump oxygenated blood to muscles."
+        ],
+        explanation: {
+          step1: "Cellular respiration produces CO₂: C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O + ATP.",
+          step2: "CO₂ enters plasma: CO₂ + H₂O ⇌ H₂CO₃ ⇌ H⁺ + HCO₃⁻. Excess H⁺ lowers blood pH (acidosis).",
+          step3: "Central chemoreceptors in the medulla oblongata detect elevated H⁺/CO₂, signaling the phrenic nerve to increase ventilation rate.",
+          step4: "The sympathetic nervous system increases heart rate and cardiac stroke volume while dilating arterioles in active legs.",
+          whyWins: "Option B accurately describes the physiological feedback loop: CO₂ detection, respiratory surge, and cardiovascular vasodilation.",
+          traps: "Trap A reverses the CO₂ response and falsely claims heart rate slows; Trap C misidentifies lungs as blood pumps; Trap D assigns oxygen storage to the stomach.",
+          keepWondering: "Why do free-divers who hyperventilate (blow out all their CO₂) sometimes black out underwater without ever feeling the urge to breathe? (The brain monitors high CO₂, not low O₂!)"
+        }
+      },
+      {
+        id: 11,
+        domain: "Life Science • Reflex Arc vs Conscious Brain Pathways",
+        prompt: "A student accidentally touches a hot beaker in the laboratory. Her hand jerks backwards in approximately 50 milliseconds (0.05 s), well before she consciously feels the sensation of pain or yells 'Ouch!' at 250 milliseconds (0.25 s). What neuroanatomical pathway explains why the muscle retraction occurs significantly faster than conscious awareness?",
+        context: "Telemetry: Muscle Jerk = 50 ms | Conscious Pain Perception = 250 ms.\nBiological Question: What creates the 200 ms time gap?",
+        options: [
+          { id: 'A', text: "Nerve impulses travel faster backwards through motor neurons than forwards through sensory neurons." },
+          { id: 'B', text: "The withdrawal reflex is mediated by a spinal reflex arc where sensory neurons synapse directly with interneurons and motor neurons in the spinal cord, bypassing the longer sensory-cortex pathway to the brain." },
+          { id: 'C', text: "The hand muscles possess their own independent brains capable of making conscious decisions." },
+          { id: 'D', text: "Pain sensations travel through the lymphatic vessels rather than the nervous system." }
+        ],
+        correct: 'B',
+        hints: [
+          "Does a reflex impulse have to travel all the way up to the cerebral cortex of the brain before the muscle pulls away?",
+          "The spinal cord contains reflex circuits (interneurons) that act like local emergency shortcuts.",
+          "The signal loops through the spinal cord in 50 ms to yank your hand back; the signal continuing up the spinal cord to the brain takes 250 ms to register conscious pain."
+        ],
+        explanation: {
+          step1: "Nociceptors (pain receptors) in the skin detect intense heat and fire an action potential along an afferent sensory neuron.",
+          step2: "The sensory neuron enters the dorsal horn of the spinal cord and synapses directly onto an excitatory interneuron.",
+          step3: "The interneuron immediately stimulates an efferent motor neuron in the ventral horn, contracting biceps to pull the hand away (50 ms).",
+          step4: "A second branch of the signal travels up the spinothalamic tract to the thalamus and somatosensory cortex, arriving at 250 ms for conscious awareness.",
+          whyWins: "Option B correctly outlines the spinal reflex arc shortcut and explains the anatomical latency to the cerebral cortex.",
+          traps: "Trap A claims directional speed differences in neurons; Trap C invents muscle brains; Trap D confuses nerves with lymphatic ducts.",
+          keepWondering: "Why is a spinal reflex evolutionary advantageous? (Saving 200 milliseconds prevents deep third-degree thermal tissue damage before the brain can deliberate!)"
+        }
+      },
+      {
+        id: 12,
+        domain: "Scientific Inquiry • Controlled Fair Tests & Correlation",
+        prompt: "A student team investigates whether liquid salinity affects evaporation rate. They set up three containers: 1) Beaker A: 100 mL pure water in a wide shallow dish (12 cm diameter) on a sunny windowsill at 26°C. 2) Beaker B: 100 mL 5% salt water in a tall narrow cylinder (4 cm diameter) in a dark cabinet at 20°C. 3) Beaker C: 100 mL 10% salt water in an insulated thermos (5 cm diameter) at 18°C. After 48 hours, Beaker A lost 65 mL, B lost 18 mL, and C lost 4 mL. The students conclude: 'Increasing salt concentration directly causes liquid evaporation rate to drastically decrease.' Why is this conclusion scientifically invalid?",
+        context: "Setup Flaws:\n• Beaker A: 12 cm dish, 26°C, Sunny, 0% Salt → -65 mL\n• Beaker B: 4 cm cylinder, 20°C, Dark, 5% Salt → -18 mL\n• Beaker C: 5 cm thermos, 18°C, Cool, 10% Salt → -4 mL",
+        options: [
+          { id: 'A', text: "Salt water can never evaporate under any conditions because salt crystals lock all water molecules permanently." },
+          { id: 'B', text: "The experiment contains multiple uncontrolled confounding variables (surface area, ambient temperature, air circulation, and light exposure) that vary simultaneously with salinity, making it impossible to isolate the effect of salt." },
+          { id: 'C', text: "The students should have measured evaporation in pounds instead of milliliters." },
+          { id: 'D', text: "Evaporation only occurs at exactly 100°C boiling point, so no water actually evaporated." }
+        ],
+        correct: 'B',
+        hints: [
+          "In a valid scientific experiment (fair test), how many independent variables can be changed at the same time?",
+          "Look at the differences between the three beakers: salinity changed, but so did container width, temperature, and sunlight!",
+          "Beaker A had 9 times the surface area of Beaker B and was 6°C warmer. Did Beaker A evaporate faster because of zero salt, or because of the massive surface area and heat?"
+        ],
+        explanation: {
+          step1: "Core principle of experimental design: To prove causation, an experiment must isolate a single Independent Variable (IV) while keeping all Controlled Variables (CV) identical.",
+          step2: "Here, the intended IV is Salinity (0%, 5%, 10%).",
+          step3: "However, container surface area (12 cm vs 4 cm vs 5 cm), ambient temperature (26°C vs 20°C vs 18°C), and lighting were all altered simultaneously.",
+          step4: "Evaporation rate is heavily accelerated by increased surface area and higher temperature. These confounding factors make it impossible to attribute the results to salinity.",
+          whyWins: "Option B identifies the presence of multiple confounding variables that destroy the internal validity of the test.",
+          traps: "Trap A claims saline water can't evaporate (water evaporates leaving salt); Trap C concerns unit selection; Trap D confuses evaporation (surface phase change at any temp) with boiling (bulk vaporization at 100°C).",
+          keepWondering: "How should the students redesign this exact experiment to make it a bulletproof Science Olympiad fair test? (Use three identical 10 cm glass dishes, side-by-side in the same room at 22°C, varying only the salt concentration!)"
+        }
+      }
+    ];
+
+    /* ==========================================================================
+       11. WEB AUDIO API SOUND SYNTHESIZER
+       ========================================================================== */
+    let audioCtx = null;
+    function playSound(type) {
+      if (state.isSoundMuted) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.05);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'correct') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(146.83, now + 0.25);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'streak') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.setValueAtTime(880.00, now + 0.1); // A5
+          osc.frequency.setValueAtTime(1174.66, now + 0.2); // D6
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        }
+      } catch (e) {
+        console.warn('AudioContext disabled or error:', e);
+      }
+    }
+
+    /* ==========================================================================
+       12. CUSTOM IN-APP FLOATING TOAST & CONFIRM (ZERO BROWSER POPUPS)
+       ========================================================================== */
+    let toastTimeout = null;
+    function showCustomMessage(title, message, icon = '💡', type = 'info', duration = 4800) {
+      const toast = document.getElementById('customToast');
+      if (!toast) return;
+
+      const titleEl = document.getElementById('toastTitle');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+
+      if (titleEl) titleEl.textContent = title;
+      if (msgEl) msgEl.innerHTML = message;
+      if (iconEl) iconEl.textContent = icon;
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+
+      toast.classList.remove('show');
+      void toast.offsetWidth; // trigger reflow
+      toast.classList.add('show');
+
+      playSound('click');
+
+      toastTimeout = setTimeout(() => {
+        hideCustomMessage();
+      }, duration);
+    }
+
+    function hideCustomMessage() {
+      const toast = document.getElementById('customToast');
+      if (!toast) return;
+      toast.classList.remove('show');
+    }
+
+    function showCustomConfirm(title, message, onConfirm, icon = '⚠️') {
+      const modal = document.getElementById('customConfirmModal');
+      if (!modal) {
+        if (onConfirm) onConfirm();
+        return;
+      }
+      document.getElementById('confirmModalTitle').textContent = title;
+      document.getElementById('confirmModalMessage').innerHTML = message;
+      document.getElementById('confirmModalIcon').textContent = icon;
+
+      modal.classList.add('active');
+
+      const confirmBtn = document.getElementById('confirmModalActionBtn');
+      const cancelBtn = document.getElementById('confirmModalCancelBtn');
+
+      const cleanup = () => {
+        modal.classList.remove('active');
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+      };
+
+      confirmBtn.onclick = () => {
+        cleanup();
+        if (onConfirm) onConfirm();
+      };
+      cancelBtn.onclick = cleanup;
+    }
+
+    /* ==========================================================================
+       13. DYNAMIC CANVAS THEME COLOR SYNCHRONIZATION
+       ========================================================================== */
+    function getCanvasThemeColors() {
+      const isLight = document.body.classList.contains('light-mode') || document.documentElement.getAttribute('data-theme') === 'light';
+      return {
+        isLight,
+        bg: isLight ? '#f8fafc' : '#0b1120',
+        grid: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)',
+        text: isLight ? '#1e293b' : '#cbd5e1',
+        textMuted: isLight ? '#64748b' : '#94a3b8',
+        axis: isLight ? 'rgba(0, 0, 0, 0.35)' : 'rgba(255, 255, 255, 0.35)',
+        accentGold: isLight ? '#d97706' : '#fbbf24',
+        accentCyan: isLight ? '#0284c7' : '#22d3ee',
+        accentEmerald: isLight ? '#059669' : '#34d399',
+        accentRose: isLight ? '#e11d48' : '#f43f5e',
+        beam: isLight ? '#475569' : '#94a3b8',
+        fulcrum: isLight ? '#0284c7' : '#38bdf8',
+        load: isLight ? '#d97706' : '#f59e0b',
+        effort: isLight ? '#059669' : '#10b981'
+      };
+    }
+
+    /* ==========================================================================
+       14. SIMULATION RENDERING ROUTINES (LEVER, ECLIPSE, TROPHIC, DUAL)
+       ========================================================================== */
+    let animFrameId = null;
+
+    function initSimEngine() {
+      const tabs = document.querySelectorAll('.sim-tab-item');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.currentSim = tab.dataset.sim;
+
+          const badge = document.getElementById('activeSimBadge');
+          if (badge) {
+            const titles = {
+              lever: 'Sim 1: Lever Mechanics & Torque Balance',
+              eclipse: 'Sim 2: 5° Lunar Tilt & Eclipse Geometry',
+              trophic: 'Sim 3: 10% Trophic Energy & Asian Carp',
+              dual: 'Sim 4: Mohs Hardness & Toll Plaza Circuit'
+            };
+            badge.textContent = titles[state.currentSim] || 'Laboratory Simulation';
+          }
+
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        });
+      });
+
+      renderSimSidebarControls();
+      updateSimTelemetryHud();
+      startSimLoop();
+    }
+
+    function startSimLoop() {
+      const canvas = document.getElementById('mainSimCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // Adjust canvas resolution for DPI
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * (window.devicePixelRatio || 1);
+        canvas.height = rect.height * (window.devicePixelRatio || 1);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function render() {
+        const rect = canvas.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+        const theme = getCanvasThemeColors();
+
+        ctx.clearRect(0, 0, w, h);
+
+        if (state.currentSim === 'lever') {
+          renderLeverSim(ctx, w, h, theme);
+        } else if (state.currentSim === 'eclipse') {
+          renderEclipseSim(ctx, w, h, theme);
+        } else if (state.currentSim === 'trophic') {
+          renderTrophicSim(ctx, w, h, theme);
+        } else if (state.currentSim === 'dual') {
+          renderDualSim(ctx, w, h, theme);
+        }
+
+        animFrameId = requestAnimationFrame(render);
+      }
+
+      cancelAnimationFrame(animFrameId);
+      animFrameId = requestAnimationFrame(render);
+    }
+
+    /* 14.1 LEVER SIMULATION */
+    function renderLeverSim(ctx, w, h, theme) {
+      const p = state.lever;
+      // Physics calculations
+      const loadArm = p.fulcrumPos;
+      const effortArm = p.beamLength - p.fulcrumPos;
+      const loadForce = p.loadMass * 9.8; // N
+      const effortForce = p.effortForce; // N
+
+      const loadTorque = loadForce * loadArm;
+      const effortTorque = effortForce * effortArm;
+      const netTorque = effortTorque - loadTorque;
+
+      // Target angle (-15 deg to +15 deg)
+      let targetDeg = 0;
+      if (Math.abs(netTorque) < 50) {
+        targetDeg = 0; // balanced
+      } else if (netTorque > 0) {
+        targetDeg = -12; // effort pushes down on right
+      } else {
+        targetDeg = 12; // boulder pushes down on left
+      }
+
+      // Smooth spring damp
+      p.currentAngle += (targetDeg - p.currentAngle) * 0.08;
+      const angleRad = (p.currentAngle * Math.PI) / 180;
+
+      // Draw Grid / Ground
+      ctx.strokeStyle = theme.grid;
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+
+      const groundY = h - 60;
+      ctx.strokeStyle = theme.axis;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(40, groundY);
+      ctx.lineTo(w - 40, groundY);
+      ctx.stroke();
+
+      // Fulcrum position in pixels
+      const beamPixelLength = w * 0.75;
+      const fulcrumRatio = p.fulcrumPos / p.beamLength;
+      const fulcrumX = (w - beamPixelLength) / 2 + beamPixelLength * fulcrumRatio;
+      const fulcrumY = groundY - 50;
+
+      // Draw Fulcrum Triangle
+      ctx.fillStyle = theme.fulcrum;
+      ctx.beginPath();
+      ctx.moveTo(fulcrumX, fulcrumY);
+      ctx.lineTo(fulcrumX - 24, groundY);
+      ctx.lineTo(fulcrumX + 24, groundY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Fulcrum Pivot Pin
+      ctx.fillStyle = theme.text;
+      ctx.beginPath();
+      ctx.arc(fulcrumX, fulcrumY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Beam (Rotated around fulcrum)
+      ctx.save();
+      ctx.translate(fulcrumX, fulcrumY);
+      ctx.rotate(angleRad);
+
+      const leftBeamPx = beamPixelLength * fulcrumRatio;
+      const rightBeamPx = beamPixelLength * (1 - fulcrumRatio);
+
+      ctx.fillStyle = theme.beam;
+      ctx.fillRect(-leftBeamPx, -8, beamPixelLength, 16);
+      ctx.strokeStyle = theme.border || '#cbd5e1';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-leftBeamPx, -8, beamPixelLength, 16);
+
+      // Boulder (Load) on Left End
+      const boulderRadius = 18 + Math.min(22, p.loadMass * 0.08);
+      ctx.fillStyle = theme.load;
+      ctx.beginPath();
+      ctx.arc(-leftBeamPx + boulderRadius + 6, -8 - boulderRadius, boulderRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${p.loadMass} kg`, -leftBeamPx + boulderRadius + 6, -8 - boulderRadius + 4);
+
+      // Student Effort Push on Right
+      const effortX = rightBeamPx - 16;
+      ctx.fillStyle = theme.effort;
+      // Downward Arrow
+      ctx.beginPath();
+      ctx.moveTo(effortX, -45);
+      ctx.lineTo(effortX, -12);
+      ctx.stroke();
+      // Arrowhead
+      ctx.beginPath();
+      ctx.moveTo(effortX - 7, -22);
+      ctx.lineTo(effortX, -10);
+      ctx.lineTo(effortX + 7, -22);
+      ctx.fill();
+
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillStyle = theme.effort;
+      ctx.fillText(`${p.effortForce} N`, effortX, -50);
+
+      ctx.restore();
+
+      // Telemetry Overlay Callout
+      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'left';
+      ctx.fillText(`Load Arm (dl): ${loadArm.toFixed(2)} m`, 30, h - 30);
+      ctx.fillText(`Effort Arm (de): ${effortArm.toFixed(2)} m`, 220, h - 30);
+      const ma = (effortArm / loadArm).toFixed(2);
+      ctx.fillStyle = theme.accentGold;
+      ctx.fillText(`Mechanical Advantage (MA): ${ma}×`, 420, h - 30);
+    }
+
+    /* 14.2 ECLIPSE SIMULATION */
+    function renderEclipseSim(ctx, w, h, theme) {
+      const p = state.eclipse;
+      // Background space glow
+      ctx.fillStyle = theme.isLight ? '#f1f5f9' : '#030712';
+      ctx.fillRect(0, 0, w, h);
+
+      // Sun on Left
+      const sunX = 70;
+      const sunY = h / 2;
+      const sunR = 34;
+      const sunGlow = ctx.createRadialGradient(sunX, sunY, sunR * 0.5, sunX, sunY, sunR * 2.5);
+      sunGlow.addColorStop(0, '#fef08a');
+      sunGlow.addColorStop(0.5, 'rgba(250, 204, 21, 0.4)');
+      sunGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = sunGlow;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, sunR * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Earth in Center-Right
+      const earthX = w - 140;
+      const earthY = h / 2;
+      const earthR = 28;
+
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+      ctx.fill();
+      // Green continents
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(earthX - 6, earthY - 4, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Moon Position based on Phase and Tilt
+      const moonOrbitRadius = 130;
+      // If new moon, moon is between Sun and Earth. If full, moon is behind Earth
+      const baseMoonX = p.moonPhase === 'new' ? earthX - moonOrbitRadius : earthX + moonOrbitRadius;
+      // Vertical displacement based on 5° tilt
+      const tiltOffset = Math.sin((p.tiltDeg * Math.PI) / 180) * 110;
+      const moonX = baseMoonX;
+      const moonY = (h / 2) - tiltOffset;
+      const moonR = p.distance === 'perigee' ? 12 : 9;
+
+      // Draw Ecliptic Plane (Flat)
+      ctx.strokeStyle = theme.grid;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(30, h / 2);
+      ctx.lineTo(w - 30, h / 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Tilted Orbital Plane
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
+      ctx.beginPath();
+      ctx.moveTo(earthX - 160, (h / 2) - (tiltOffset * 1.2));
+      ctx.lineTo(earthX + 160, (h / 2) + (tiltOffset * 1.2));
+      ctx.stroke();
+
+      // Moon Body
+      ctx.fillStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Shadow Cones Projection if New Moon (Solar)
+      if (p.moonPhase === 'new') {
+        // Umbra Cone (dark central)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(earthX, moonY);
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.closePath();
+        ctx.fill();
+
+        // Penumbra Cone (diffuse expanding)
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(earthX + 40, moonY - 38);
+        ctx.lineTo(earthX + 40, moonY + 38);
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.closePath();
+        ctx.fill();
+
+        // Check if shadow hits Earth
+        const shadowYAtEarth = moonY;
+        const hitsEarth = Math.abs(shadowYAtEarth - earthY) < earthR;
+
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        if (hitsEarth) {
+          ctx.fillStyle = '#34d399';
+          ctx.fillText('✨ TOTAL SOLAR ECLIPSE ALIGNED! (Shadow hits Earth)', w / 2, 35);
+        } else {
+          ctx.fillStyle = '#f43f5e';
+          ctx.fillText(`⚠️ 5° TILT MISS! Shadow shoots ${shadowYAtEarth < earthY ? 'ABOVE' : 'BELOW'} Earth!`, w / 2, 35);
+        }
+      }
+
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'left';
+      ctx.fillText(`Lunar Orbit Inclination: ${p.tiltDeg.toFixed(1)}°`, 30, h - 25);
+      ctx.fillText(`Distance: ${p.distance.toUpperCase()}`, 250, h - 25);
+      ctx.fillText(`Phase: ${p.moonPhase === 'new' ? 'New Moon (Solar)' : 'Full Moon (Lunar)'}`, 430, h - 25);
+    }
+
+    /* 14.3 TROPHIC SIMULATION */
+    function renderTrophicSim(ctx, w, h, theme) {
+      const p = state.trophic;
+      p.animCycle += 0.02;
+
+      // Pyramid Tiers Data
+      const baseEnergy = [10000, 1020, 98, 9.1];
+      const carpImpact = p.carpInvasionPct / 100;
+
+      // If carp invade, Zooplankton consumed by carp reduces available minnow energy
+      const zooAvailable = 1020 * (1 - carpImpact * 0.8);
+      const minnowEnergy = 98 * (1 - carpImpact * 0.8);
+      const ospreyEnergy = 9.1 * (1 - carpImpact * 0.8);
+
+      const energies = [10000, Math.round(zooAvailable), Math.round(minnowEnergy), Number(ospreyEnergy.toFixed(1))];
+      const tierLabels = [
+        'Level 1: Phytoplankton (Producers)',
+        'Level 2: Zooplankton (Primary)',
+        'Level 3: Native Minnows (Secondary)',
+        'Level 4: Osprey (Apex Predators)'
+      ];
+      const tierColors = [
+        '#10b981', // green
+        '#06b6d4', // cyan
+        '#f59e0b', // amber
+        '#f43f5e'  // rose
+      ];
+
+      const pyramidBottom = h - 60;
+      const tierHeight = 55;
+      const maxTierWidth = w * 0.72;
+
+      // Draw Tiers
+      for (let i = 0; i < 4; i++) {
+        const tierY = pyramidBottom - (i * (tierHeight + 8));
+        const tierWidth = maxTierWidth * Math.pow(0.55, i);
+        const tierX = (w - tierWidth) / 2;
+
+        ctx.fillStyle = tierColors[i];
+        ctx.globalAlpha = 0.85;
+        ctx.fillRect(tierX, tierY - tierHeight, tierWidth, tierHeight);
+        ctx.globalAlpha = 1.0;
+
+        ctx.strokeStyle = theme.border || '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(tierX, tierY - tierHeight, tierWidth, tierHeight);
+
+        // Labels
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(tierLabels[i], w / 2, tierY - tierHeight + 22);
+
+        ctx.font = 'bold 13px "JetBrains Mono", monospace';
+        ctx.fillText(`${energies[i]} kJ/m²/yr`, w / 2, tierY - tierHeight + 42);
+      }
+
+      // Asian Carp Diversion Box on Right
+      if (p.carpInvasionPct > 0) {
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(w - 180, 40, 150, 110);
+        ctx.fillRect(w - 180, 40, 150, 110);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🚨 ASIAN CARP', w - 105, 62);
+        ctx.fillText('INVASION SINK', w - 105, 78);
+
+        const diverted = Math.round(1020 * (carpImpact * 0.8));
+        ctx.font = 'bold 14px "JetBrains Mono", monospace';
+        ctx.fillText(`-${diverted} kJ`, w - 105, 106);
+        ctx.font = '10px sans-serif';
+        ctx.fillText('Diverted from minnows!', w - 105, 126);
+      }
+
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.fillStyle = theme.text;
+      ctx.textAlign = 'left';
+      ctx.fillText(`Asian Carp Consumption: ${p.carpInvasionPct}% of Zooplankton`, 30, h - 20);
+      ctx.fillText(`10% Thermodynamic Efficiency Rule Observed`, 360, h - 20);
+    }
+
+    /* 14.4 DUAL SIMULATION (MOHS / CIRCUIT) */
+    function renderDualSim(ctx, w, h, theme) {
+      const p = state.dual;
+      if (p.mode === 'mohs') {
+        // Mineral Detective Bench
+        ctx.fillStyle = theme.isLight ? '#f1f5f9' : '#030712';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = theme.text;
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Mineral Detective: Mohs Scratch Test Workbench', w / 2, 35);
+
+        // Specimen Box in Center
+        const specX = w / 2 - 90;
+        const specY = 80;
+        const specW = 180;
+        const specH = 140;
+
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(specX, specY, specW, specH);
+        ctx.strokeStyle = theme.accentCyan;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(specX, specY, specW, specH);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText('Unknown Specimen X', w / 2, specY + 30);
+        ctx.font = '11px sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('Glassy, vitreous luster', w / 2, specY + 50);
+
+        // Draw Scratches
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        p.scratchHistory.forEach((s, idx) => {
+          ctx.beginPath();
+          ctx.moveTo(specX + 25, specY + 75 + idx * 18);
+          ctx.lineTo(specX + specW - 25, specY + 75 + idx * 18);
+          ctx.stroke();
+        });
+
+        // Current Tool representation
+        ctx.fillStyle = theme.accentGold;
+        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Selected Tool: ${p.scratchTool.toUpperCase()}`, w / 2, 260);
+
+        // Deduction readout
+        ctx.fillStyle = theme.accentEmerald;
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText('Deduction: Harder than Penny (3.5), softer than Knife (5.5) → Apatite (5.0)!', w / 2, 300);
+      } else {
+        // Parallel Toll Plaza Circuit
+        ctx.fillStyle = theme.isLight ? '#f8fafc' : '#0b1120';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillStyle = theme.text;
+        ctx.textAlign = 'center';
+        ctx.fillText(`Circuit Bench: ${p.circuitType.toUpperCase()} Configuration (${p.branchCount} Bulbs)`, w / 2, 35);
+
+        const r1 = 10;
+        const rEq = p.circuitType === 'series' ? 10 * p.branchCount : 10 / p.branchCount;
+        const totalI = 6 / rEq;
+
+        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.fillStyle = theme.accentGold;
+        ctx.fillText(`Total Resistance (Req): ${rEq.toFixed(2)} Ω  |  Total Current: ${totalI.toFixed(2)} A`, w / 2, 65);
+
+        // Draw Circuit Wire Loops
+        ctx.strokeStyle = theme.accentCyan;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(100, 100, w - 200, 180);
+
+        // Bulbs
+        for (let i = 0; i < p.branchCount; i++) {
+          const bx = 160 + i * ((w - 320) / Math.max(1, p.branchCount - 1));
+          const by = p.circuitType === 'series' ? 100 : 100 + i * 50;
+
+          ctx.fillStyle = '#fef08a';
+          ctx.beginPath();
+          ctx.arc(bx, by, 16, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#eab308';
+          ctx.stroke();
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.fillText('10 Ω', bx, by + 4);
+        }
+      }
+    }
+
+    /* 14.5 SIDEBAR CONTROLS GENERATOR */
+    function renderSimSidebarControls() {
+      const container = document.getElementById('simControlsSidebar');
+      if (!container) return;
+
+      if (state.currentSim === 'lever') {
+        container.innerHTML = `
+          <div class="sidebar-section-title">Lever Controls</div>
+          <div class="control-group">
+            <div class="control-label">
+              <span>Fulcrum Position (Load Arm)</span>
+              <span class="mono" id="valFulcrum">${state.lever.fulcrumPos.toFixed(2)} m</span>
+            </div>
+            <input type="range" class="control-range" min="0.2" max="2.0" step="0.05" value="${state.lever.fulcrumPos}" id="sliderFulcrum">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Boulder Load Mass</span>
+              <span class="mono" id="valLoad">${state.lever.loadMass} kg</span>
+            </div>
+            <input type="range" class="control-range" min="80" max="300" step="10" value="${state.lever.loadMass}" id="sliderLoad">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Student Effort Force</span>
+              <span class="mono" id="valEffort">${state.lever.effortForce} N</span>
+            </div>
+            <input type="range" class="control-range" min="50" max="400" step="10" value="${state.lever.effortForce}" id="sliderEffort">
+          </div>
+
+          <div class="sidebar-section-title" style="margin-top: 10px;">Scenario Presets</div>
+          <div class="preset-btn-group">
+            <button class="btn btn-secondary btn-sm" id="preset120kg">Original 120 kg</button>
+            <button class="btn btn-primary btn-sm" id="presetWinning240">Option B (240kg)</button>
+            <button class="btn btn-secondary btn-sm" id="presetTrapA">Trap A Reverse</button>
+            <button class="btn btn-secondary btn-sm" id="presetResetLever">Reset Bench</button>
+          </div>
+
+          <button class="btn btn-primary" id="testLeverHypothesisBtn" style="margin-top: 14px;">
+            <span>🚀 Test 240 kg Boulder Setup</span>
+          </button>
+        `;
+
+        document.getElementById('sliderFulcrum').oninput = (e) => {
+          state.lever.fulcrumPos = parseFloat(e.target.value);
+          document.getElementById('valFulcrum').textContent = `${state.lever.fulcrumPos.toFixed(2)} m`;
+          updateSimTelemetryHud();
+        };
+        document.getElementById('sliderLoad').oninput = (e) => {
+          state.lever.loadMass = parseInt(e.target.value);
+          document.getElementById('valLoad').textContent = `${state.lever.loadMass} kg`;
+          updateSimTelemetryHud();
+        };
+        document.getElementById('sliderEffort').oninput = (e) => {
+          state.lever.effortForce = parseInt(e.target.value);
+          document.getElementById('valEffort').textContent = `${state.lever.effortForce} N`;
+          updateSimTelemetryHud();
+        };
+
+        document.getElementById('preset120kg').onclick = () => {
+          state.lever.fulcrumPos = 0.5;
+          state.lever.loadMass = 120;
+          state.lever.effortForce = 300;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('presetWinning240').onclick = () => {
+          state.lever.fulcrumPos = 0.25;
+          state.lever.loadMass = 240;
+          state.lever.effortForce = 300;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+          showCustomMessage(
+            'Option B Verified! 🥇',
+            'Fulcrum shifted to 0.25 m from boulder! Mechanical Advantage surged to 9.0×. The 240 kg boulder is lifted with only 261 N!',
+            '⚖️',
+            'emerald',
+            5200
+          );
+        };
+        document.getElementById('presetTrapA').onclick = () => {
+          state.lever.fulcrumPos = 1.5;
+          state.lever.loadMass = 120;
+          state.lever.effortForce = 300;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+          showCustomMessage(
+            'Trap A Triggered! 🚨',
+            'Fulcrum placed 1.5 m from boulder leaves only 1.0 m effort arm. MA collapses to 0.67×! The boulder slams to the ground!',
+            '⚠️',
+            'rose',
+            5000
+          );
+        };
+        document.getElementById('presetResetLever').onclick = () => {
+          state.lever.fulcrumPos = 0.5;
+          state.lever.loadMass = 120;
+          state.lever.effortForce = 300;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('testLeverHypothesisBtn').onclick = () => {
+          document.getElementById('presetWinning240').click();
+        };
+
+      } else if (state.currentSim === 'eclipse') {
+        container.innerHTML = `
+          <div class="sidebar-section-title">Celestial Controls</div>
+          <div class="control-group">
+            <div class="control-label">
+              <span>Orbital Plane Inclination</span>
+              <span class="mono" id="valTilt">${state.eclipse.tiltDeg.toFixed(1)}°</span>
+            </div>
+            <input type="range" class="control-range" min="0" max="8" step="0.1" value="${state.eclipse.tiltDeg}" id="sliderTilt">
+          </div>
+
+          <div class="sidebar-section-title" style="margin-top: 10px;">Moon Phase</div>
+          <div class="preset-btn-group">
+            <button class="btn btn-sm ${state.eclipse.moonPhase === 'new' ? 'btn-primary' : 'btn-secondary'}" id="btnPhaseNew">New Moon (Solar)</button>
+            <button class="btn btn-sm ${state.eclipse.moonPhase === 'full' ? 'btn-primary' : 'btn-secondary'}" id="btnPhaseFull">Full Moon (Lunar)</button>
+          </div>
+
+          <div class="sidebar-section-title" style="margin-top: 10px;">Lunar Distance</div>
+          <div class="preset-btn-group">
+            <button class="btn btn-sm ${state.eclipse.distance === 'perigee' ? 'btn-primary' : 'btn-secondary'}" id="btnPerigee">Perigee (Total)</button>
+            <button class="btn btn-sm ${state.eclipse.distance === 'apogee' ? 'btn-primary' : 'btn-secondary'}" id="btnApogee">Apogee (Annular)</button>
+          </div>
+
+          <button class="btn btn-primary" id="testEclipseHypothesisBtn" style="margin-top: 16px;">
+            <span>🔭 Test 5° Tilt Eclipse Alignment</span>
+          </button>
+        `;
+
+        document.getElementById('sliderTilt').oninput = (e) => {
+          state.eclipse.tiltDeg = parseFloat(e.target.value);
+          document.getElementById('valTilt').textContent = `${state.eclipse.tiltDeg.toFixed(1)}°`;
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnPhaseNew').onclick = () => {
+          state.eclipse.moonPhase = 'new';
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnPhaseFull').onclick = () => {
+          state.eclipse.moonPhase = 'full';
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnPerigee').onclick = () => {
+          state.eclipse.distance = 'perigee';
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnApogee').onclick = () => {
+          state.eclipse.distance = 'apogee';
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+          showCustomMessage(
+            'Apogee Distance Active! 🌘',
+            'Moon is at its farthest orbital distance (Apogee). Its angular diameter shrinks, producing an Annular Ring of Fire eclipse!',
+            '🔭',
+            'amber',
+            5000
+          );
+        };
+        document.getElementById('testEclipseHypothesisBtn').onclick = () => {
+          state.eclipse.tiltDeg = 0.0;
+          state.eclipse.moonPhase = 'new';
+          state.eclipse.distance = 'perigee';
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+          showCustomMessage(
+            'Orbital Node Alignment Verified! 🌍',
+            'Tilt set to 0.0°! Moon shadow hits Earth directly. Without the 5° tilt, eclipses would occur every single month!',
+            '🌑',
+            'cyan',
+            5200
+          );
+        };
+
+      } else if (state.currentSim === 'trophic') {
+        container.innerHTML = `
+          <div class="sidebar-section-title">Ecosystem Controls</div>
+          <div class="control-group">
+            <div class="control-label">
+              <span>Asian Carp Zooplankton Consumption</span>
+              <span class="mono" id="valCarp">${state.trophic.carpInvasionPct}%</span>
+            </div>
+            <input type="range" class="control-range" min="0" max="90" step="5" value="${state.trophic.carpInvasionPct}" id="sliderCarp">
+          </div>
+
+          <div class="preset-btn-group" style="margin-top: 14px;">
+            <button class="btn btn-secondary btn-sm" id="btnCarpPristine">Pristine Lake (0%)</button>
+            <button class="btn btn-primary btn-sm" id="btnCarp80">80% Carp Crash</button>
+          </div>
+
+          <button class="btn btn-primary" id="testCarpHypothesisBtn" style="margin-top: 16px;">
+            <span>🐟 Test Invasive Disruption</span>
+          </button>
+        `;
+
+        document.getElementById('sliderCarp').oninput = (e) => {
+          state.trophic.carpInvasionPct = parseInt(e.target.value);
+          document.getElementById('valCarp').textContent = `${state.trophic.carpInvasionPct}%`;
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnCarpPristine').onclick = () => {
+          state.trophic.carpInvasionPct = 0;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+        };
+        document.getElementById('btnCarp80').onclick = () => {
+          state.trophic.carpInvasionPct = 80;
+          renderSimSidebarControls();
+          updateSimTelemetryHud();
+          showCustomMessage(
+            'Option B Verified! 🐟',
+            '80% Zooplankton consumed by Asian Carp! Minnow energy collapses from 98 kJ to 19.6 kJ, starving apex Osprey down to 1.8 kJ/m²/yr!',
+            '📉',
+            'rose',
+            5200
+          );
+        };
+        document.getElementById('testCarpHypothesisBtn').onclick = () => {
+          document.getElementById('btnCarp80').click();
+        };
+
+      } else if (state.currentSim === 'dual') {
+        container.innerHTML = `
+          <div class="sidebar-section-title">Dual Sub-Lab Toggle</div>
+          <div class="preset-btn-group">
+            <button class="btn btn-sm ${state.dual.mode === 'mohs' ? 'btn-primary' : 'btn-secondary'}" id="btnModeMohs">Mineral Detective</button>
+            <button class="btn btn-sm ${state.dual.mode === 'circuit' ? 'btn-primary' : 'btn-secondary'}" id="btnModeCircuit">Toll Circuit</button>
+          </div>
+
+          ${state.dual.mode === 'mohs' ? `
+            <div class="sidebar-section-title" style="margin-top: 14px;">Scratch Tool</div>
+            <div class="preset-btn-group">
+              <button class="btn btn-secondary btn-sm" id="toolPenny">Penny (3.5)</button>
+              <button class="btn btn-secondary btn-sm" id="toolKnife">Knife (5.5)</button>
+              <button class="btn btn-secondary btn-sm" id="toolFluorite">Fluorite (4.0)</button>
+              <button class="btn btn-secondary btn-sm" id="toolResetScratch">Clear Scratches</button>
+            </div>
+          ` : `
+            <div class="sidebar-section-title" style="margin-top: 14px;">Circuit Topology</div>
+            <div class="preset-btn-group">
+              <button class="btn btn-sm ${state.dual.circuitType === 'series' ? 'btn-primary' : 'btn-secondary'}" id="btnSeries">Series</button>
+              <button class="btn btn-sm ${state.dual.circuitType === 'parallel' ? 'btn-primary' : 'btn-secondary'}" id="btnParallel">Parallel</button>
+            </div>
+            <div class="control-group" style="margin-top: 10px;">
+              <div class="control-label">
+                <span>Bulb Count</span>
+                <span class="mono">${state.dual.branchCount}</span>
+              </div>
+              <input type="range" class="control-range" min="1" max="3" step="1" value="${state.dual.branchCount}" id="sliderBranches">
+            </div>
+          `}
+        `;
+
+        if (state.dual.mode === 'mohs') {
+          document.getElementById('btnModeMohs').onclick = () => { state.dual.mode = 'mohs'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('btnModeCircuit').onclick = () => { state.dual.mode = 'circuit'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('toolPenny').onclick = () => {
+            state.dual.scratchTool = 'penny (3.5)';
+            showCustomMessage('Scratch Test 1 🔍', 'Copper Penny (3.5) glides off without leaving any scratch mark! Specimen hardness > 3.5.', '🪙', 'cyan', 4500);
+          };
+          document.getElementById('toolKnife').onclick = () => {
+            state.dual.scratchTool = 'knife (5.5)';
+            state.dual.scratchHistory.push(1);
+            showCustomMessage('Scratch Test 2 🗡️', 'Steel Pocketknife (5.5) gouges a deep groove! Specimen hardness < 5.5.', '⚡', 'amber', 4500);
+          };
+          document.getElementById('toolFluorite').onclick = () => {
+            state.dual.scratchTool = 'fluorite (4.0)';
+            state.dual.scratchHistory.push(1);
+            showCustomMessage('Scratch Test 3 💎', 'Specimen easily scratches Fluorite (4.0)! Hardness bracket: 4.0 < H < 5.5 → Apatite (5.0)!', '🧪', 'emerald', 4800);
+          };
+          document.getElementById('toolResetScratch').onclick = () => {
+            state.dual.scratchHistory = [];
+          };
+        } else {
+          document.getElementById('btnModeMohs').onclick = () => { state.dual.mode = 'mohs'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('btnModeCircuit').onclick = () => { state.dual.mode = 'circuit'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('btnSeries').onclick = () => { state.dual.circuitType = 'series'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('btnParallel').onclick = () => { state.dual.circuitType = 'parallel'; renderSimSidebarControls(); updateSimTelemetryHud(); };
+          document.getElementById('sliderBranches').oninput = (e) => {
+            state.dual.branchCount = parseInt(e.target.value);
+            updateSimTelemetryHud();
+          };
+        }
+      }
+    }
+
+    /* 14.6 TELEMETRY HUD UPDATE */
+    function updateSimTelemetryHud() {
+      const hud = document.getElementById('simTelemetryHud');
+      if (!hud) return;
+
+      if (state.currentSim === 'lever') {
+        const p = state.lever;
+        const dl = p.fulcrumPos;
+        const de = p.beamLength - p.fulcrumPos;
+        const ma = de / dl;
+        const loadForce = p.loadMass * 9.8;
+        const requiredEffort = (loadForce / ma).toFixed(0);
+
+        hud.innerHTML = `
+          <div class="hud-row"><span class="hud-label">Load Arm:</span><span class="hud-val">${dl.toFixed(2)} m</span></div>
+          <div class="hud-row"><span class="hud-label">Effort Arm:</span><span class="hud-val">${de.toFixed(2)} m</span></div>
+          <div class="hud-row"><span class="hud-label">Mechanical Adv:</span><span class="hud-val" style="color: var(--accent-gold);">${ma.toFixed(2)}×</span></div>
+          <div class="hud-row"><span class="hud-label">Balance Force:</span><span class="hud-val">${requiredEffort} N</span></div>
+        `;
+      } else if (state.currentSim === 'eclipse') {
+        const p = state.eclipse;
+        hud.innerHTML = `
+          <div class="hud-row"><span class="hud-label">Orbital Tilt:</span><span class="hud-val">${p.tiltDeg.toFixed(1)}°</span></div>
+          <div class="hud-row"><span class="hud-label">Distance:</span><span class="hud-val">${p.distance.toUpperCase()}</span></div>
+          <div class="hud-row"><span class="hud-label">Moon Phase:</span><span class="hud-val">${p.moonPhase.toUpperCase()}</span></div>
+          <div class="hud-row"><span class="hud-label">Eclipse State:</span><span class="hud-val" style="color: ${p.tiltDeg < 1.0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${p.tiltDeg < 1.0 ? 'ALIGNED' : '5° MISS'}</span></div>
+        `;
+      } else if (state.currentSim === 'trophic') {
+        const p = state.trophic;
+        const impact = p.carpInvasionPct / 100;
+        const ospreyE = (9.1 * (1 - impact * 0.8)).toFixed(1);
+        hud.innerHTML = `
+          <div class="hud-row"><span class="hud-label">Carp Consumption:</span><span class="hud-val">${p.carpInvasionPct}%</span></div>
+          <div class="hud-row"><span class="hud-label">Minnow Energy:</span><span class="hud-val">${(98 * (1 - impact * 0.8)).toFixed(0)} kJ</span></div>
+          <div class="hud-row"><span class="hud-label">Osprey Energy:</span><span class="hud-val" style="color: var(--accent-rose);">${ospreyE} kJ</span></div>
+          <div class="hud-row"><span class="hud-label">Transfer Loss:</span><span class="hud-val">90% per tier</span></div>
+        `;
+      } else if (state.currentSim === 'dual') {
+        const p = state.dual;
+        if (p.mode === 'mohs') {
+          hud.innerHTML = `
+            <div class="hud-row"><span class="hud-label">Specimen:</span><span class="hud-val">Mineral X</span></div>
+            <div class="hud-row"><span class="hud-label">Scratch Tool:</span><span class="hud-val">${p.scratchTool}</span></div>
+            <div class="hud-row"><span class="hud-label">Hardness Range:</span><span class="hud-val" style="color: var(--accent-gold);">4.0 < H < 5.5</span></div>
+            <div class="hud-row"><span class="hud-label">Match:</span><span class="hud-val">Apatite (5)</span></div>
+          `;
+        } else {
+          const req = p.circuitType === 'series' ? 10 * p.branchCount : 10 / p.branchCount;
+          hud.innerHTML = `
+            <div class="hud-row"><span class="hud-label">Topology:</span><span class="hud-val">${p.circuitType.toUpperCase()}</span></div>
+            <div class="hud-row"><span class="hud-label">Bulbs:</span><span class="hud-val">${p.branchCount}</span></div>
+            <div class="hud-row"><span class="hud-label">Equivalent R:</span><span class="hud-val">${req.toFixed(1)} Ω</span></div>
+            <div class="hud-row"><span class="hud-label">Total Current:</span><span class="hud-val" style="color: var(--accent-cyan);">${(6 / req).toFixed(2)} A</span></div>
+          `;
+        }
+      }
+    }
+
+    /* ==========================================================================
+       15. QUESTION RENDERING & ASSESSMENT ENGINE
+       ========================================================================== */
+    function renderQuestion() {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      if (!q) return;
+
+      // Update Header Badges
+      document.getElementById('questIndexBadge').textContent = `Question ${state.currentQuestionIndex + 1} of ${OLYMPIAD_QUESTIONS.length}`;
+      document.getElementById('questProgressBar').style.width = `${((state.currentQuestionIndex + 1) / OLYMPIAD_QUESTIONS.length) * 100}%`;
+      document.getElementById('scoreDisplay').textContent = state.score;
+      document.getElementById('streakDisplay').textContent = state.streak;
+      document.getElementById('tokensDisplay').textContent = state.tokens;
+
+      // Question Box
+      document.getElementById('qDomainTag').textContent = q.domain;
+      document.getElementById('qPromptText').textContent = q.prompt;
+      document.getElementById('qContextBox').innerHTML = q.context.replace(/\n/g, '<br>');
+
+      // Reset panels
+      document.getElementById('explanationPanel').classList.remove('active');
+      document.getElementById('explanationPanel').style.display = 'none';
+      document.getElementById('hintBox').classList.remove('active');
+      document.getElementById('hintBox').style.display = 'none';
+      document.getElementById('pitStopTriggerBtn').style.display = 'none';
+      document.getElementById('nextQuestionBtn').style.display = 'none';
+
+      // Render Options
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.id = `optBtn_${opt.id}`;
+        card.innerHTML = `
+          <div class="option-indicator">${opt.id}</div>
+          <div class="option-text">${opt.text}</div>
+        `;
+        card.onclick = () => handleAnswerSelect(opt.id);
+        grid.appendChild(card);
+      });
+
+      resetTimer();
+    }
+
+    function handleAnswerSelect(selectedId) {
+      const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+      const isCorrect = (selectedId === q.correct);
+
+      // Lock options
+      document.querySelectorAll('.option-card').forEach(card => card.classList.add('locked'));
+
+      const chosenCard = document.getElementById(`optBtn_${selectedId}`);
+      const correctCard = document.getElementById(`optBtn_${q.correct}`);
+
+      if (isCorrect) {
+        if (chosenCard) chosenCard.classList.add('correct');
+        state.score += 100 + (state.streak * 20);
+        state.streak += 1;
+        playSound('correct');
+        showCustomMessage(
+          'Scientific Principle Verified! 🏆',
+          `Outstanding deduction! ${q.explanation.whyWins}`,
+          '🥇',
+          'emerald',
+          4500
+        );
+      } else {
+        if (chosenCard) chosenCard.classList.add('incorrect');
+        if (correctCard) correctCard.classList.add('correct');
+        state.streak = 0;
+        state.missedQuestions.push(q.id);
+        playSound('wrong');
+
+        document.getElementById('pitStopTriggerBtn').style.display = 'inline-flex';
+        showCustomMessage(
+          'Cognitive Trap Detected! ⚠️',
+          "Incorrect. Open the Coach\'s Pit Stop to deconstruct the deceptive distractor trap!",
+          '🚨',
+          'rose',
+          4800
+        );
+      }
+
+      // Display Explanation
+      renderExplanationPanel(q, isCorrect);
+      document.getElementById('nextQuestionBtn').style.display = 'inline-flex';
+      clearInterval(state.timerInterval);
+    }
+
+    function renderExplanationPanel(q, isCorrect) {
+      const p = document.getElementById('explanationPanel');
+      p.style.display = 'block';
+      p.classList.add('active');
+
+      p.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <h4 style="font-size: 1.1rem; font-weight: 800; color: ${isCorrect ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+            ${isCorrect ? '✅ Olympiad Master Explanation' : '⚠️ Misconception Breakdown'}
+          </h4>
+          <span class="badge ${isCorrect ? 'badge-emerald' : 'badge-gold'}">Correct Key: Option ${q.correct}</span>
+        </div>
+
+        <div style="font-size: 0.92rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
+          <p><strong>1. Understand the System:</strong> ${q.explanation.step1}</p>
+          <p style="margin-top: 6px;"><strong>2. Map the Principle:</strong> ${q.explanation.step2}</p>
+          <p style="margin-top: 6px;"><strong>3. Solve the Variables:</strong> ${q.explanation.step3}</p>
+          <p style="margin-top: 6px;"><strong>4. Verify Edge Cases:</strong> ${q.explanation.step4}</p>
+        </div>
+
+        <div style="background: var(--bg-surface-elevated); border-radius: 10px; padding: 14px; margin-bottom: 14px; border-left: 4px solid var(--accent-cyan);">
+          <strong style="color: var(--accent-cyan); display: block; margin-bottom: 4px;">Why Option ${q.correct} Wins:</strong>
+          <span style="font-size: 0.88rem; color: var(--text-primary);">${q.explanation.whyWins}</span>
+        </div>
+
+        <div style="background: rgba(244, 63, 94, 0.1); border-radius: 10px; padding: 14px; margin-bottom: 14px; border-left: 4px solid var(--accent-rose);">
+          <strong style="color: var(--accent-rose); display: block; margin-bottom: 4px;">Deconstructing the Traps:</strong>
+          <span style="font-size: 0.88rem; color: var(--text-secondary);">${q.explanation.traps}</span>
+        </div>
+
+        <div style="background: rgba(251, 191, 36, 0.1); border-radius: 10px; padding: 14px; border-left: 4px solid var(--accent-gold);">
+          <strong style="color: var(--accent-gold); display: block; margin-bottom: 4px;">Keep Wondering (Metacognitive Challenge):</strong>
+          <span style="font-size: 0.88rem; color: var(--text-secondary); font-style: italic;">${q.explanation.keepWondering}</span>
+        </div>
+      `;
+    }
+
+    /* Timer Controls */
+    function resetTimer() {
+      clearInterval(state.timerInterval);
+      state.timerSeconds = 60;
+      const display = document.getElementById('timerDisplay');
+      if (display) display.textContent = `${state.timerSeconds}s`;
+
+      if (state.isZenMode) return;
+
+      state.timerInterval = setInterval(() => {
+        state.timerSeconds--;
+        if (display) display.textContent = `${state.timerSeconds}s`;
+        if (state.timerSeconds <= 0) {
+          clearInterval(state.timerInterval);
+          handleAnswerSelect('TIMEOUT');
+        }
+      }, 1000);
+    }
+
+    /* ==========================================================================
+       16. WHITEBOARD SCRATCHPAD ENGINE
+       ========================================================================== */
+    function initScratchpad() {
+      const overlay = document.getElementById('scratchpadOverlay');
+      const canvas = document.getElementById('scratchpadCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let drawing = false;
+      let tool = 'pen'; // 'pen', 'highlighter', 'eraser'
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function getPos(e) {
+        if (e.touches && e.touches.length > 0) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+      }
+
+      function startDraw(e) {
+        drawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      }
+
+      function draw(e) {
+        if (!drawing) return;
+        const pos = getPos(e);
+
+        if (tool === 'pen') {
+          ctx.strokeStyle = '#22d3ee';
+          ctx.lineWidth = 3;
+          ctx.globalAlpha = 1.0;
+        } else if (tool === 'highlighter') {
+          ctx.strokeStyle = '#facc15';
+          ctx.lineWidth = 16;
+          ctx.globalAlpha = 0.35;
+        } else if (tool === 'eraser') {
+          ctx.strokeStyle = 'rgba(9, 13, 22, 1)';
+          ctx.lineWidth = 26;
+          ctx.globalAlpha = 1.0;
+        }
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      }
+
+      function stopDraw() {
+        drawing = false;
+      }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('touchstart', startDraw);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', stopDraw);
+
+      document.getElementById('scratchpadToggleBtn').onclick = () => {
+        overlay.classList.toggle('active');
+      };
+      document.getElementById('scratchCloseBtn').onclick = () => {
+        overlay.classList.remove('active');
+      };
+      document.getElementById('scratchPenBtn').onclick = () => { tool = 'pen'; };
+      document.getElementById('scratchHighlighterBtn').onclick = () => { tool = 'highlighter'; };
+      document.getElementById('scratchEraserBtn').onclick = () => { tool = 'eraser'; };
+      document.getElementById('scratchClearBtn').onclick = () => {
+        showCustomConfirm(
+          'Clear Scratchpad?',
+          'Are you sure you want to erase all drawings and mathematical scratchings from the screen?',
+          () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            showCustomMessage('Scratchpad Cleared', 'Canvas is clean and ready for new deductions.', '🧹', 'info', 3000);
+          }
+        );
+      };
+    }
+
+    /* ==========================================================================
+       17. THEME & UTILITIES SETUP
+       ========================================================================== */
+    function initUtilities() {
+      // Theme Toggle with Canvas Redraw Sync
+      document.getElementById('themeToggleBtn').onclick = () => {
+        const isLight = document.body.classList.toggle('light-mode');
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        showCustomMessage(
+          isLight ? 'Light Mode Active ☀️' : 'Dark Mode Active 🌙',
+          'Theme contrast synchronized across all UI cards, text tokens, and interactive canvas visualizers.',
+          isLight ? '☀️' : '🌙',
+          'info',
+          3200
+        );
+      };
+
+      // Download Offline App (Blob Link)
+      document.getElementById('downloadAppBtn').onclick = () => {
+        const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'science_olympiad_coach_division_a_mastery.html';
+        a.click();
+        showCustomMessage('Offline App Packaged! 💾', 'Saved single-file HTML app directly to your device. Runs 100% offline!', '📦', 'emerald', 4500);
+      };
+
+      // Toast Close Button
+      document.getElementById('toastCloseBtn').onclick = hideCustomMessage;
+
+      // Socratic Hint Drawer
+      let currentHintStage = 0;
+      document.getElementById('hintDrawerBtn').onclick = () => {
+        const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+        const box = document.getElementById('hintBox');
+        box.style.display = 'block';
+        box.classList.add('active');
+
+        currentHintStage = (currentHintStage % 3);
+        const titles = [
+          'Socratic Hint 1: Conceptual Nudge 💡',
+          'Socratic Hint 2: Operational Setup 📐',
+          'Socratic Hint 3: Guided Walkthrough 🎯'
+        ];
+        document.getElementById('hintStageTitle').textContent = titles[currentHintStage];
+        document.getElementById('hintStageText').textContent = q.hints[currentHintStage];
+        playSound('click');
+        currentHintStage++;
+      };
+
+      // Next Question Button
+      document.getElementById('nextQuestionBtn').onclick = () => {
+        if (state.currentQuestionIndex < OLYMPIAD_QUESTIONS.length - 1) {
+          state.currentQuestionIndex++;
+          renderQuestion();
+        } else {
+          showCustomMessage(
+            'Quest Completed! 🥇',
+            `Final Tournament Score: ${state.score} Points. Mastered all 12 Science Olympiad competition challenges!`,
+            '🏆',
+            'gold',
+            6000
+          );
+        }
+      };
+
+      // Coach's Pit Stop Modal Trigger
+      document.getElementById('pitStopTriggerBtn').onclick = () => {
+        const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+        showCustomConfirm(
+          "Coach Nova's Pit Stop Analysis 🚨",
+          `<strong>Cognitive Trap Diagnosed:</strong><br>${q.explanation.traps}<br><br>Would you like to spend 1 Retry Token to attempt this problem again?`,
+          () => {
+            if (state.tokens > 0) {
+              state.tokens--;
+              renderQuestion();
+              showCustomMessage('Token Redeemed! 🪙', 'Retry attempt granted. Apply the corrected scientific principle!', '🎯', 'emerald', 4000);
+            } else {
+              showCustomMessage('Out of Tokens', 'No retry tokens remaining for this session. Study the solution steps carefully!', '⚠️', 'rose', 4000);
+            }
+          },
+          '🚨'
+        );
+      };
+
+      // Scaffolding Tier Tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.currentTier = parseInt(btn.dataset.tier);
+          renderScaffoldingContent();
+        };
+      });
+
+      // Voice Read Aloud Toggle
+      document.getElementById('voiceReadToggleBtn').onclick = () => {
+        state.isVoiceActive = !state.isVoiceActive;
+        const q = OLYMPIAD_QUESTIONS[state.currentQuestionIndex];
+        if (state.isVoiceActive && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const cleanText = q.prompt.replace(/[^a-zA-Z0-9 .,?]/g, ' ');
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.rate = 1.0;
+          window.speechSynthesis.speak(utterance);
+          showCustomMessage('Coach Nova Reading Aloud 🔊', 'Reading active question prompt.', '🎙️', 'cyan', 3000);
+        } else {
+          window.speechSynthesis.cancel();
+          showCustomMessage('Voice Muted', 'Audio narration stopped.', '🔇', 'info', 2500);
+        }
+      };
+    }
+
+    function renderScaffoldingContent() {
+      const card = document.getElementById('scaffoldContent');
+      const data = SCAFFOLDING_DATA[state.currentTier];
+      if (!card || !data) return;
+
+      let html = `<div class="scaffold-grid">`;
+      data.items.forEach(item => {
+        html += `
+          <div class="scaffold-item">
+            <div class="scaffold-item-title">
+              <span>✨</span>
+              <span>${item.title}</span>
+            </div>
+            <div class="scaffold-item-body">${item.body}</div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      card.innerHTML = html;
+    }
+
+    /* ==========================================================================
+       18. APPLICATION INITIALIZATION
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('app_theme') === 'light') {
+        document.body.classList.add('light-mode');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+      initSimEngine();
+      initScratchpad();
+      initUtilities();
+      renderScaffoldingContent();
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>

@@ -23,7 +23,8 @@ learning/
 ├── apps/                                             # Interactive Learning Applications
 │   ├── science/                                      # Science Olympiad & Scientific Inquiry Suite
 │   │   ├── index.html                                # Scalable Science Olympiad Coaching Portal (Div A, B, C)
-│   │   └── science_olympiad_coach_4th_grade.html     # Division A & Foundations Olympiad Coach, Simulations & Misconception Lab (Grades 3-6+)
+│   │   ├── science_olympiad_coach_4th_grade.html     # Division A & Foundations Olympiad Coach, Simulations & Misconception Lab (Grades 3-6+)
+│   │   └── science_olympiad_coach_5th_grade.html     # Division A & Intermediate Mastery Lab, Levers & Eclipses (Grades 4-7+)
 │   └── math/                                         # Mathematics Subject Area
 │       ├── 5th_grade_aig_math_volume_operations_decimals_q1.html             # Spatial Volume, Algorithms & Decimal Systems Lab (Q1 AIG)
 │       ├── 4th_grade_math_decimals_multi_digit_measurement_q2.html           # Decimals, Operations & Measurement (Q2)
@@ -58,6 +59,26 @@ learning/
   - **Coach Nova Voice Mentor & Whiteboard Scratchpad:** Text-to-Speech synthesis read-aloud and a full-screen drawing/annotation overlay with pen, highlighter, eraser, and color palette.
   - **12 Graded Tournament Challenges:** Exhaustive coverage with 60s countdown timer (with Zen Mode toggle), score HUD, streak multipliers, and procedural Web Audio API feedback.
   - **Custom Non-Intrusive Messaging:** 100% custom in-app glassmorphic toast notifications and confirmation modals (Zero disruptive browser `alert()` or `confirm()` popup windows).
+
+### 0B. ⚖️ Science Olympiad Coach: Intermediate Tournament & Misconception Lab (Grades 4-7+)
+- **App Location:** [`apps/science/science_olympiad_coach_5th_grade.html`](apps/science/science_olympiad_coach_5th_grade.html)
+- **Target Audience:** Science Olympiad Competitors across Upper Elementary and Junior High (Division A & B Prep, Grades 4–7+)
+- **Curriculum Domains & Core Concepts:**
+  - **Domain 1: Physical Science:** Lever Mechanics & Mechanical Advantage (`MA = d_e / d_l = F_l / F_e`), Torque Balance equilibrium (`F_e · d_e = F_l · d_l`), Phase Changes and Kinetic Molecular Theory (Latent Heat of Fusion `Q = m · L` temperature plateaus), Series vs. Parallel Circuit Dynamics (Toll Plaza analogy, equivalent resistance `1/R_eq = 1/R_1 + 1/R_2`, voltage division vs. current branching), and Electromagnetism (coil turns and ferromagnetic core permeability).
+  - **Domain 2: Earth & Space Science:** The Rock Cycle (intrusive slow plutonic cooling vs. extrusive rapid volcanic quenching), Mohs Hardness Scratch Deduction Matrix (`4.0 < H < 5.5` isolating Apatite), and Celestial Orbital Mechanics (Moon's 5.1° orbital inclination, Umbra vs. Penumbra shadow cones, and Annular 'Ring of Fire' eclipses at Apogee).
+  - **Domain 3: Life Science:** Quantitative Energy Pyramids & 10% Trophic Transfer Rule, Invasive Asian Carp ecological disruptions (diverting 80% Zooplankton biomass causing native minnow collapse and apex osprey starvation), Human Cardiovascular-Respiratory homeostatic loops (brainstem medulla $CO_2$ chemoreceptors and vasodilation), and the Spinal Reflex Arc (50 ms spinal shortcut vs. 250 ms conscious sensory-cortex latency).
+  - **Domain 4: Scientific Inquiry & Nature of Science:** Experimental Design & Single-Variable Fair Tests (Independent, Dependent, and Controlled Variables), Confounding Variable Audits (salinity, surface area, and temperature), and distinguishing Correlation from direct Causation.
+- **Core Features:**
+  - **4 Synchronized Interactive Simulators:**
+    1. *Lever Mechanics & Torque Bench:* Dynamic beam with spring-damped angular deflection, movable fulcrum slider ($0.2\text{ m}$ to $2.0\text{ m}$), boulder load mass ($80\text{ kg}$ to $300\text{ kg}$), student effort force, and presets for Option B ($MA = 9\times$) vs. Trap A ($MA = 0.67\times$).
+    2. *5° Lunar Tilt & Eclipse Visualizer:* Sun-Earth-Moon orbital space model, orbital plane inclination slider ($0.0^\circ$ to $8.0^\circ$), New/Full Moon toggle, Perigee/Apogee distance toggle, and umbra/penumbra shadow cone projection.
+    3. *10% Trophic Energy Ledger:* 4-tier energy pyramid ($10,000 \rightarrow 1,020 \rightarrow 98 \rightarrow 9.1\text{ kJ}$) with an invasive Asian carp slider and real-time secondary predation collapse tracking.
+    4. *Mohs Hardness Scratch Bench & Toll Circuits:* Field scratch tests with Penny (3.5), Knife (5.5), and Fluorite (4.0) with real-time hardness deduction, plus a Series vs. Parallel toll plaza circuit workbench.
+  - **12 Graded Olympiad Challenges:** Exhaustive coverage with 60s countdown timer (with Zen Mode toggle), score HUD, streak multipliers, and procedural Web Audio API feedback.
+  - **Coach's Pit Stop Misconception Engine:** Interactive modal deconstructing cognitive traps (Reverse Fulcrum, 3rd Class Lever, Open Switch, Confounding Factors, Reverse Physiology) with Retry Token support.
+  - **Coach Nova Voice Mentor & Whiteboard Scratchpad:** Text-to-Speech synthesis read-aloud and a full-screen drawing/annotation overlay with pen, highlighter, eraser, and color palette.
+  - **Seamless Adaptive Dark/Light Mode:** Full contrast continuity for all text, background cards, borders, and synchronized canvas visualizers.
+  - **Zero Browser Popups:** 100% custom in-app glassmorphic floating toast notifications and confirmation modals.
 
 ### 1. 🧊 CMS 5th Grade AIG Math: Spatial Volume, Algorithms & Decimal Systems Lab (Q1)
 - **Location:** [`apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html`](apps/math/5th_grade_aig_math_volume_operations_decimals_q1.html)

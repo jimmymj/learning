@@ -1,3 +1,22 @@
+
+// Centralized Dark/Light Theme Persistence & Binding
+(function initPortalTheme() {
+  if (localStorage.getItem('app_theme') === 'light') {
+    document.body.classList.add('theme-light');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('theme-light');
+        localStorage.setItem('app_theme', isLight ? 'light' : 'dark');
+        window.dispatchEvent(new CustomEvent('themechange', { detail: { isLight } }));
+      });
+    }
+  });
+})();
+
 // Portal Interactivity & Dynamic Canvas Visualizer
 
 document.addEventListener('DOMContentLoaded', () => {
