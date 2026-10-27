@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGrade4MiniCanvas();
   initGrade4Q2MiniCanvas();
   initGrade5AigMiniCanvas();
+  initGrade5SsaMiniCanvas();
   initScienceOlympiadMiniCanvas();
   initSearchAndFilter();
   initModalRunner();
@@ -960,6 +961,195 @@ function initScienceOlympiadMiniCanvas() {
     ctx.fillStyle = '#94a3b8';
     ctx.font = '9px "Inter", sans-serif';
     ctx.fillText('Density • Trophic • Circuits • Orbits', width - 170, height - 12);
+
+    frame++;
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+}
+
+// 5. Dynamic Mini Canvas for 5th Grade SSA Math Featured Card
+function initGrade5SsaMiniCanvas() {
+  const canvas = document.getElementById('previewCanvasGrade5Ssa');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  let frame = 0;
+
+  function render() {
+    const rect = canvas.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background subtle grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= width; x += 24) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+    }
+    for (let y = 0; y <= height; y += 24) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+    }
+
+    // Mini Algebraic Balance Beam (Left Center)
+    const fulcrumX = width * 0.42;
+    const fulcrumY = height * 0.58;
+    const beamLen = width * 0.32;
+    const tilt = Math.sin(frame * 0.035) * 0.08;
+
+    // Fulcrum base
+    ctx.fillStyle = '#64748b';
+    ctx.beginPath();
+    ctx.moveTo(fulcrumX, fulcrumY);
+    ctx.lineTo(fulcrumX - 16, fulcrumY + 36);
+    ctx.lineTo(fulcrumX + 16, fulcrumY + 36);
+    ctx.closePath();
+    ctx.fill();
+
+    // Beam
+    ctx.save();
+    ctx.translate(fulcrumX, fulcrumY);
+    ctx.rotate(tilt);
+
+    ctx.strokeStyle = '#8b5cf6';
+    ctx.lineWidth = 4.5;
+    ctx.beginPath();
+    ctx.moveTo(-beamLen, 0);
+    ctx.lineTo(beamLen, 0);
+    ctx.stroke();
+
+    // Pivot pin
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(0, 0, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pans & strings
+    const drop = 42;
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.2;
+    // Left string & pan
+    ctx.beginPath();
+    ctx.moveTo(-beamLen, 0);
+    ctx.lineTo(-beamLen - 12, drop);
+    ctx.moveTo(-beamLen, 0);
+    ctx.lineTo(-beamLen + 12, drop);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(139, 92, 246, 0.35)';
+    ctx.strokeStyle = '#8b5cf6';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(-beamLen - 22, drop, 44, 7, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    // Left Box: [12]·h
+    ctx.fillStyle = '#8b5cf6';
+    ctx.fillRect(-beamLen - 14, drop - 24, 28, 24);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-beamLen - 14, drop - 24, 28, 24);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 9px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('12·h', -beamLen, drop - 9);
+
+    // Right string & pan
+    ctx.strokeStyle = '#94a3b8';
+    ctx.beginPath();
+    ctx.moveTo(beamLen, 0);
+    ctx.lineTo(beamLen - 12, drop);
+    ctx.moveTo(beamLen, 0);
+    ctx.lineTo(beamLen + 12, drop);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(beamLen - 22, drop, 44, 7, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    // Right Constant Stack: 144
+    ctx.fillStyle = '#10b981';
+    ctx.fillRect(beamLen - 14, drop - 22, 28, 22);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(beamLen - 14, drop - 22, 28, 22);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('144', beamLen, drop - 8);
+
+    ctx.restore();
+
+    // Mini Ratio Coordinate Rays (Right Side)
+    const rox = width * 0.78;
+    const roy = height * 0.78;
+    const rScaleX = 22;
+    const rScaleY = 9;
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(rox - 10, roy);
+    ctx.lineTo(width - 15, roy);
+    ctx.moveTo(rox, roy + 10);
+    ctx.lineTo(rox, 35);
+    ctx.stroke();
+
+    // Ray A: slope 2.5
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rox, roy);
+    ctx.lineTo(rox + 3 * rScaleX, roy - 7.5 * rScaleY);
+    ctx.stroke();
+
+    // Ray B: slope 2.0
+    ctx.strokeStyle = '#06b6d4';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rox, roy);
+    ctx.lineTo(rox + 3 * rScaleX, roy - 6.0 * rScaleY);
+    ctx.stroke();
+
+    // Top Telemetry Text
+    ctx.font = 'bold 11px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#c084fc';
+    ctx.textAlign = 'left';
+    ctx.fillText('SSA Rigor: 12 · h = 144 ⟹ h = 12 ft', 20, 26);
+
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('Decimals: 0.425 × 12.8 = 5.44 L', 20, 42);
+
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('Fractions: 9/6 ÷ 4/6 = 2 ¼ hrs (15m rem)', 20, 58);
+
+    // Bottom Telemetry
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText('Ratio Rays: Slope A (2.5) > Slope B (2.0)', 20, height - 16);
+
+    ctx.font = '9px "Inter", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'right';
+    ctx.fillText('Balance • Decimals • Fractions • Rays', width - 20, height - 16);
 
     frame++;
     requestAnimationFrame(render);

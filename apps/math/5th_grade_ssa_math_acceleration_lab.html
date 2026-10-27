@@ -1,0 +1,3995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5th Grade SSA Math Acceleration &amp; Algebraic Bridges Lab</title>
+  <meta name="description" content="State-of-the-art interactive learning platform for 5th Grade Single Subject Acceleration (SSA) Mathematics scholars bridging into 6th Grade standards. Features 5 interactive manipulatives, Socratic coaching, 4-stage pedagogical loop, and 28 rigorous verified challenges." />
+
+  <!-- Typography: Outfit, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CSS Custom Properties & Design Tokens (Dark Default + Light Mode)
+       ========================================================================== */
+    :root {
+      --bg-base: #0f172a;           /* Slate 900 */
+      --bg-surface: #1e293b;        /* Slate 800 */
+      --bg-card: rgba(30, 41, 59, 0.75);
+      --bg-card-hover: rgba(51, 65, 85, 0.85);
+      --bg-glass: rgba(15, 23, 42, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(139, 92, 246, 0.35); /* Violet Focus Glow */
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --accent-primary: #2563eb;    /* Royal Blue */
+      --accent-emerald: #059669;    /* Target Invariant / Correct */
+      --accent-amber: #d97706;      /* Diagnostic Trap Accent */
+      --accent-violet: #8b5cf6;     /* SSA Rigor Glow */
+      --accent-cyan: #06b6d4;       /* Base-10 Cyan */
+      --accent-rose: #f43f5e;
+      --accent-gold: #fbbf24;
+
+      --canvas-bg: #0b1120;
+      --canvas-grid: rgba(255, 255, 255, 0.06);
+      --canvas-text: #cbd5e1;
+
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+      --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      --shadow-elevation: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"], .light-mode {
+      --bg-base: #f8fafc;           /* Slate 50 */
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card-hover: rgba(241, 245, 249, 1);
+      --bg-glass: rgba(248, 250, 252, 0.92);
+      --border-subtle: rgba(0, 0, 0, 0.09);
+      --border-glow: rgba(139, 92, 246, 0.35);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --accent-primary: #1d4ed8;
+      --accent-emerald: #047857;
+      --accent-amber: #b45309;
+      --accent-violet: #7c3aed;
+      --accent-cyan: #0284c7;
+
+      --canvas-bg: #f1f5f9;
+      --canvas-grid: rgba(0, 0, 0, 0.06);
+      --canvas-text: #1e293b;
+    }
+
+    /* Universal Resets */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.05) 0%, transparent 60%);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, .brand-title {
+      font-family: var(--font-heading);
+      letter-spacing: -0.02em;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    /* Native Math Display Formatting */
+    .math-eq {
+      font-family: var(--font-mono);
+      color: var(--accent-violet);
+      background: rgba(139, 92, 246, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      display: inline-block;
+      font-size: 0.9em;
+      white-space: nowrap;
+    }
+
+    .math-fraction {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      padding: 0 4px;
+      font-size: 0.9em;
+      line-height: 1.1;
+    }
+
+    .math-fraction .num {
+      border-bottom: 1.5px solid currentColor;
+      padding-bottom: 1px;
+    }
+
+    .math-fraction .den {
+      padding-top: 1px;
+    }
+
+    /* ==========================================================================
+       2. Navigation Header & SSA Status HUD
+       ========================================================================== */
+    header.app-header {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-violet), var(--accent-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-ssa {
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Purposeful Gamification HUD */
+    .hud-stats-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-surface);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .hud-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .hud-stat-item .val {
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+    }
+
+    .hud-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border-subtle);
+    }
+
+    .hud-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 16px;
+    }
+
+    .btn-icon:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-action-sm {
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .btn-action-sm:hover {
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .btn-action-sm.primary {
+      background: linear-gradient(135deg, var(--accent-violet), var(--accent-primary));
+      color: #fff;
+      border: none;
+    }
+
+    /* Module Navigation Tabs Bar */
+    .module-nav-bar {
+      background: rgba(15, 23, 42, 0.4);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .module-nav-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .module-tabs-list {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      padding: 4px 16px;
+      gap: 8px;
+    }
+
+    .module-tab-btn {
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 0.84rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .module-tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .module-tab-btn.active {
+      color: #fff;
+      background: var(--accent-violet);
+      box-shadow: 0 2px 10px rgba(139, 92, 246, 0.35);
+    }
+
+    .module-tab-btn .badge-pill {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ==========================================================================
+       3. Responsive 50/50 Split-Screen Workspace Grid
+       ========================================================================== */
+    .workspace-main {
+      flex: 1;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace-main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-elevation);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       4. LEFT PANEL: Socratic Coach, 4-Stage Loop, Problem & Forensics
+       ========================================================================== */
+    .coach-euler-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(37, 99, 235, 0.12));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+    }
+
+    .coach-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent-violet);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+    }
+
+    .coach-dialogue-text {
+      flex: 1;
+    }
+
+    .coach-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-violet);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .coach-speech {
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      margin-top: 2px;
+      line-height: 1.45;
+    }
+
+    /* 4-Stage Pedagogical Loop Navigation */
+    .stage-loop-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--bg-surface);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .stage-btn {
+      padding: 7px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.74rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stage-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .stage-btn.active {
+      background: var(--accent-violet);
+      color: #fff;
+    }
+
+    .stage-btn .sub-tag {
+      font-size: 0.62rem;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    /* Question Selection Header */
+    .question-navigator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .q-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .q-pill {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .q-pill:hover {
+      border-color: var(--border-glow);
+      color: var(--text-primary);
+    }
+
+    .q-pill.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #fff;
+    }
+
+    .q-pill.passed {
+      background: rgba(5, 150, 105, 0.2);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .q-meta-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    /* Question Problem Box */
+    .problem-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .problem-narrative {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    /* 3-Column Schema: Knowns, Unknowns, Core Invariant */
+    .schema-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-size: 0.76rem;
+    }
+
+    .schema-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .schema-label {
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+    }
+
+    .schema-val {
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Answer Choices Grid */
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .option-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .option-card:hover {
+      border-color: var(--border-glow);
+      background: var(--bg-card-hover);
+      transform: translateX(3px);
+    }
+
+    .option-card.selected {
+      border-color: var(--accent-primary);
+      background: rgba(37, 99, 235, 0.12);
+    }
+
+    .option-card.correct {
+      border-color: var(--accent-emerald) !important;
+      background: rgba(5, 150, 105, 0.15) !important;
+    }
+
+    .option-card.trap {
+      border-color: var(--accent-amber) !important;
+      background: rgba(217, 119, 6, 0.15) !important;
+    }
+
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .option-forensic-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: none;
+    }
+
+    .option-card.correct .option-forensic-tag {
+      display: inline-block;
+      background: var(--accent-emerald);
+      color: #fff;
+    }
+
+    .option-card.trap .option-forensic-tag {
+      display: inline-block;
+      background: var(--accent-amber);
+      color: #fff;
+    }
+
+    /* Socratic Hint Drawer */
+    .hint-drawer {
+      background: var(--bg-surface);
+      border: 1px dashed rgba(139, 92, 246, 0.4);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .hint-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .hint-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-violet);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint-stage-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .hint-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-subtle);
+    }
+
+    .hint-dot.active {
+      background: var(--accent-violet);
+    }
+
+    .hint-content {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* 4-Step Solution Accordion */
+    .solution-accordion {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .solution-accordion.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .solution-step {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .solution-step:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .step-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-violet);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 3px;
+    }
+
+    .step-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       5. RIGHT PANEL: Visual Sandbox & Manipulative Canvas
+       ========================================================================== */
+    .sandbox-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .sandbox-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sandbox-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-violet);
+      background: rgba(139, 92, 246, 0.15);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .sandbox-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Manipulative Canvas Container */
+    .manipulative-canvas-wrapper {
+      position: relative;
+      background: var(--canvas-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    canvas.interactive-canvas {
+      width: 100%;
+      height: 380px;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* Whiteboard Scratchpad Overlay Canvas */
+    canvas.scratchpad-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    canvas.scratchpad-overlay.active {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    /* Live Telemetry Bar */
+    .telemetry-readout-bar {
+      background: rgba(15, 23, 42, 0.9);
+      border-top: 1px solid var(--border-subtle);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+    }
+
+    .telemetry-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .telemetry-item .label {
+      color: var(--text-muted);
+    }
+
+    .telemetry-item .val {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    /* Manipulative Interactive Controls Bar */
+    .manipulative-controls-bar {
+      padding: 12px;
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .control-slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.8rem;
+    }
+
+    .control-slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent-violet);
+      cursor: pointer;
+    }
+
+    .button-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Scratchpad Toolbar */
+    .scratchpad-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.76rem;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+
+    .tool-btn.active {
+      background: var(--accent-violet);
+      color: #fff;
+      border-color: var(--accent-violet);
+    }
+
+    .color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* What-If Curiosity Section */
+    .what-if-box {
+      margin-top: 14px;
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+    }
+
+    .what-if-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .what-if-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .what-if-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       6. Custom In-App Toast & Confirmation Modal (Zero Native Popups)
+       ========================================================================== */
+    #customToast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--accent-violet);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 14px 18px 18px 18px;
+      border-radius: var(--radius-md);
+      color: #fff;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transform: translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    #customToast .toast-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+      border-bottom-left-radius: var(--radius-md);
+      border-bottom-right-radius: var(--radius-md);
+      transition: width 15000ms linear;
+    }
+
+    #customToast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #customToast .toast-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    #customToast .toast-content {
+      flex: 1;
+    }
+
+    #customToast .toast-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    #customToast .toast-msg {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    #customToast .toast-close {
+      cursor: pointer;
+      font-size: 14px;
+      color: #64748b;
+      background: none;
+      border: none;
+    }
+
+    /* Custom In-App Modal */
+    #customConfirmModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #customConfirmModal.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      max-width: 480px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .modal-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ==========================================================================
+       7. Footer & Offline Status
+       ========================================================================== */
+    footer.app-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      padding: 16px 20px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .footer-standards-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       TOP APP HEADER & STATUS HUD
+       ========================================================================== -->
+  <header class="app-header">
+    <div class="header-container">
+      
+      <!-- Brand & Navigation -->
+      <a href="../../index.html" class="brand-cluster" id="homeBrandLink" title="Return to Portal Home">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>
+            <span>5th SSA Math Lab</span>
+            <span class="badge-ssa">Grade 5 → 6 Acceleration</span>
+          </h1>
+          <p>Algebraic Bridges, Precision Decimals &amp; Proportional Systems</p>
+        </div>
+      </a>
+
+      <!-- Purposeful Gamification HUD -->
+      <div class="hud-stats-cluster">
+        <div class="hud-stat-item" title="Deep Thinking Focus Duration">
+          <span>🧠 Focus:</span>
+          <span class="val" id="hudTimerVal">00:00</span>
+        </div>
+        <div class="hud-divider"></div>
+        <div class="hud-stat-item" title="Curiosity Gems unlocked through What-If stress tests">
+          <span>💎 Gems:</span>
+          <span class="val" id="hudGemsVal">0</span>
+        </div>
+        <div class="hud-divider"></div>
+        <div class="hud-stat-item" title="Trap-Hunter Badges from distractor forensics">
+          <span>🎯 Traps:</span>
+          <span class="val" id="hudTrapsVal">0</span>
+        </div>
+        <div class="hud-divider"></div>
+        <div class="hud-stat-item" title="Retry Tokens for second chance mastery">
+          <span>🎟️ Tokens:</span>
+          <span class="val" id="hudTokensVal">3</span>
+        </div>
+      </div>
+
+      <!-- Action & Utility Controls -->
+      <div class="hud-controls-group">
+        <button type="button" class="btn-icon" id="themeToggleBtn" title="Toggle Light/Dark Theme">🌓</button>
+        <button type="button" class="btn-icon" id="audioToggleBtn" title="Toggle Web Audio SFX">🔊</button>
+        <button type="button" class="btn-action-sm primary" id="downloadAppBtn" title="Download Standalone Offline HTML File">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Offline App</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MODULE SELECTION TAB BAR
+       ========================================================================== -->
+  <nav class="module-nav-bar" aria-label="Learning Modules">
+    <div class="module-tabs-list">
+      <button class="module-tab-btn active" data-mod="1" id="tabMod1">
+        <span>⚖️ Mod 1: Algebraic Thinking</span>
+        <span class="badge-pill">NC.5.OA • NC.6.EE</span>
+      </button>
+      <button class="module-tab-btn" data-mod="2" id="tabMod2">
+        <span>🔍 Mod 2: Base-Ten Decimals</span>
+        <span class="badge-pill">NC.5.NBT • NC.6.NS</span>
+      </button>
+      <button class="module-tab-btn" data-mod="3" id="tabMod3">
+        <span>📏 Mod 3: Advanced Fractions</span>
+        <span class="badge-pill">NC.5.NF • NC.6.NS</span>
+      </button>
+      <button class="module-tab-btn" data-mod="4" id="tabMod4">
+        <span>📐 Mod 4: Proportional Rays</span>
+        <span class="badge-pill">NC.5.OA • NC.6.RP</span>
+      </button>
+      <button class="module-tab-btn" data-mod="5" id="tabMod5">
+        <span>📦 Mod 5: 3D Spatial Geometry</span>
+        <span class="badge-pill">NC.5.MD • NC.6.G</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       MAIN WORKSPACE (50/50 SPLIT SCREEN)
+       ========================================================================== -->
+  <main class="workspace-main">
+
+    <!-- ====================================================================
+         LEFT PANEL: Socratic Coach, 4-Stage Loop & Question Workspace
+         ==================================================================== -->
+    <section class="panel-card" id="leftSocraticPanel">
+      
+      <!-- Coach Euler Dialogue Banner -->
+      <div class="coach-euler-banner">
+        <div class="coach-avatar">🦉</div>
+        <div class="coach-dialogue-text">
+          <div class="coach-title">
+            <span>Coach Euler • Socratic Mentor</span>
+            <button type="button" class="btn-action-sm" id="speakDialogueBtn" style="padding: 2px 8px; font-size: 0.72rem;">
+              <span>🗣️ Listen</span>
+            </button>
+          </div>
+          <p class="coach-speech" id="coachDialogueText">
+            Welcome to SSA Acceleration. We build mathematical invariance rather than memorize recipes. Let us deconstruct the balance before calculating.
+          </p>
+        </div>
+      </div>
+
+      <!-- 4-Stage Pedagogical Loop Stepper -->
+      <div class="stage-loop-bar" role="tablist">
+        <button class="stage-btn active" data-stage="1" id="stageBtn1">
+          <span>1. Deconstruct</span>
+          <span class="sub-tag">Schema &amp; Knowns</span>
+        </button>
+        <button class="stage-btn" data-stage="2" id="stageBtn2">
+          <span>2. Reconstruct</span>
+          <span class="sub-tag">Sanity Check</span>
+        </button>
+        <button class="stage-btn" data-stage="3" id="stageBtn3">
+          <span>3. Forensics</span>
+          <span class="sub-tag">Spot the Trap</span>
+        </button>
+        <button class="stage-btn" data-stage="4" id="stageBtn4">
+          <span>4. Curiosity</span>
+          <span class="sub-tag">What-If Mutator</span>
+        </button>
+      </div>
+
+      <!-- Question Selector Header -->
+      <div class="question-navigator">
+        <div class="q-pills-row" id="qPillsContainer">
+          <!-- Rendered dynamically per module -->
+        </div>
+        <div class="q-meta-badges">
+          <button type="button" class="btn-action-sm" id="shuffleBtn" title="Dynamically shuffle order of questions and answer choices">
+            <span>🔀 Shuffle Order</span>
+          </button>
+          <span class="meta-badge" id="qStandardTag">NC.6.EE.2</span>
+          <span class="meta-badge" id="qDifficultyTag">SSA Accelerated</span>
+        </div>
+      </div>
+
+      <!-- Problem Context & Narrative -->
+      <div class="problem-box">
+        <p class="problem-narrative" id="problemPromptText">
+          Loading problem context...
+        </p>
+
+        <!-- 3-Column Schema: Knowns, Unknowns, Core Invariant -->
+        <div class="schema-3col">
+          <div class="schema-item">
+            <span class="schema-label">Known Constants</span>
+            <span class="schema-val" id="schemaKnownsVal">-</span>
+          </div>
+          <div class="schema-item">
+            <span class="schema-label">Target Unknown</span>
+            <span class="schema-val" id="schemaUnknownsVal">-</span>
+          </div>
+          <div class="schema-item">
+            <span class="schema-label">Core Invariant</span>
+            <span class="schema-val" id="schemaInvariantVal">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answer Options (Multiple Choice with Distractor Forensics) -->
+      <div class="options-container" id="optionsContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Socratic 3-Stage Hint Drawer -->
+      <div class="hint-drawer">
+        <div class="hint-header" id="hintToggleHeader">
+          <div class="hint-title">
+            <span>💡 Socratic Hint Drawer</span>
+            <span id="hintStageLabel" class="mono" style="font-size: 0.72rem; color: var(--text-muted);">(Tier 1 / 3)</span>
+          </div>
+          <div class="hint-stage-dots">
+            <div class="hint-dot active" id="hDot1"></div>
+            <div class="hint-dot" id="hDot2"></div>
+            <div class="hint-dot" id="hDot3"></div>
+          </div>
+        </div>
+        <div class="hint-content" id="hintBodyText">
+          Click to reveal a Tier 1 conceptual nudge without giving away the solution.
+        </div>
+      </div>
+
+      <!-- 4-Step Solution Accordion (Revealed on submission) -->
+      <div class="solution-accordion" id="solutionAccordion">
+        <div class="solution-step">
+          <div class="step-title">Step 1: Deconstruct &amp; Understand</div>
+          <div class="step-desc" id="solStep1">-</div>
+        </div>
+        <div class="solution-step">
+          <div class="step-title">Step 2: Mathematical Model</div>
+          <div class="step-desc" id="solStep2">-</div>
+        </div>
+        <div class="solution-step">
+          <div class="step-title">Step 3: Solve Systematically</div>
+          <div class="step-desc" id="solStep3">-</div>
+        </div>
+        <div class="solution-step">
+          <div class="step-title">Step 4: Verify &amp; Stress-Test</div>
+          <div class="step-desc" id="solStep4">-</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         RIGHT PANEL: Interactive Sandbox, Manipulative Canvas & Whiteboard
+         ==================================================================== -->
+    <section class="panel-card" id="rightSandboxPanel">
+      
+      <!-- Sandbox Header -->
+      <div class="sandbox-panel-header">
+        <div class="sandbox-title-group">
+          <span class="sandbox-badge" id="manipulativeBadgeName">Algebraic Balance Scale</span>
+          <span style="font-size: 0.78rem; color: var(--text-muted);" id="manipulativeSubtext">Live Equilibrium &amp; Weight Physics</span>
+        </div>
+        <div class="sandbox-controls-row">
+          <button type="button" class="btn-action-sm" id="resetSandboxBtn" title="Reset Sandbox to Problem Defaults">
+            <span>↻ Reset</span>
+          </button>
+          <button type="button" class="btn-action-sm" id="toggleScratchpadBtn" title="Toggle Whiteboard Drawing Layer">
+            <span>✏️ Scratchpad</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Interactive Manipulative Canvas Wrapper -->
+      <div class="manipulative-canvas-wrapper" id="canvasWrapper">
+        <canvas id="activeManipulativeCanvas" class="interactive-canvas"></canvas>
+        <canvas id="scratchpadCanvas" class="scratchpad-overlay"></canvas>
+        
+        <!-- Live HUD Telemetry Readout -->
+        <div class="telemetry-readout-bar" id="telemetryReadoutBar">
+          <div class="telemetry-item">
+            <span class="label">Left Pan:</span>
+            <span class="val" id="telVal1">12 · h</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="label">Right Pan:</span>
+            <span class="val" id="telVal2">144 units</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="label">State:</span>
+            <span class="val" id="telVal3" style="color: var(--accent-emerald);">EQUILIBRIUM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scratchpad Whiteboard Toolbar (Toggled) -->
+      <div class="scratchpad-toolbar" id="scratchpadToolbar" style="display: none;">
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-violet);">Tools:</span>
+        <button type="button" class="tool-btn active" data-tool="pen" id="toolPenBtn">Pen</button>
+        <button type="button" class="tool-btn" data-tool="highlighter" id="toolHighlighterBtn">Highlighter</button>
+        <button type="button" class="tool-btn" data-tool="eraser" id="toolEraserBtn">Eraser</button>
+        <div style="display: flex; gap: 6px; align-items: center; margin-left: 8px;">
+          <div class="color-swatch" style="background: #38bdf8;" data-color="#38bdf8"></div>
+          <div class="color-swatch" style="background: #fbbf24;" data-color="#fbbf24"></div>
+          <div class="color-swatch" style="background: #34d399;" data-color="#34d399"></div>
+          <div class="color-swatch" style="background: #ffffff;" data-color="#ffffff"></div>
+        </div>
+        <button type="button" class="tool-btn" id="clearScratchpadBtn" style="margin-left: auto;">Clear Whiteboard</button>
+      </div>
+
+      <!-- Dynamic Manipulative Slider & Action Controls -->
+      <div class="manipulative-controls-bar" id="dynamicControlsBar">
+        <!-- Rendered dynamically depending on the active module! -->
+      </div>
+
+      <!-- "What-If" Curiosity Engine Panel -->
+      <div class="what-if-box" id="whatIfContainer">
+        <div class="what-if-header">
+          <div class="what-if-title">
+            <span>🔬 Curiosity Engine • What-If Stress-Test</span>
+          </div>
+          <span class="badge-pill" style="background: rgba(251, 191, 36, 0.2); color: #fbbf24;" id="whatIfGemBadge">+1 Gem Available</span>
+        </div>
+        <p class="what-if-desc" id="whatIfDescText">
+          Slide the parameter controls to mutate base conditions and prove why the invariant relationship holds true.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       CUSTOM IN-APP FLOATING TOAST (Zero Native Popups)
+       ========================================================================== -->
+  <div id="customToast" role="alert" aria-live="polite">
+    <div class="toast-icon" id="toastIcon">💡</div>
+    <div class="toast-content">
+      <div class="toast-title" id="toastTitle">Notification</div>
+      <div class="toast-msg" id="toastMsg">Action executed successfully.</div>
+    </div>
+    <button type="button" class="toast-close" id="toastCloseBtn" aria-label="Close notification">✕</button>
+    <div class="toast-progress-bar" id="toastProgressBar"></div>
+  </div>
+
+  <!-- ==========================================================================
+       CUSTOM IN-APP CONFIRMATION MODAL (Zero Native Popups)
+       ========================================================================== -->
+  <div id="customConfirmModal" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+    <div class="modal-box">
+      <h3 class="modal-title" id="modalHeading">Confirm Action</h3>
+      <p class="modal-body" id="modalBodyText">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-action-sm" id="modalCancelBtn">Cancel</button>
+        <button type="button" class="btn-action-sm primary" id="modalConfirmBtn">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER & STANDARDS COMPLIANCE
+       ========================================================================== -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <strong>5th Grade SSA Math Acceleration Engine</strong> • Single-Subject Acceleration (Grade 5 into 6)
+      </div>
+      <div class="footer-standards-list">
+        <span>Standards:</span>
+        <span class="meta-badge">NC.5.OA</span>
+        <span class="meta-badge">NC.5.NBT</span>
+        <span class="meta-badge">NC.5.NF</span>
+        <span class="meta-badge">NC.5.MD</span>
+        <span class="meta-badge">NC.6.EE</span>
+        <span class="meta-badge">NC.6.NS</span>
+        <span class="meta-badge">NC.6.RP</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       EMBEDDED CLIENT SCRIPT: ENGINE, MANIPULATIVES & QUESTION DATABASE
+       ========================================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ==========================================================================
+       1. WEB AUDIO API PROCEDURAL SOUND SYNTHESIZER
+       ========================================================================== */
+    const SoundManager = {
+      ctx: null,
+      muted: false,
+
+      init() {
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        } catch (e) {
+          console.warn('Web Audio not supported.');
+        }
+      },
+
+      playTone(freq, type, duration, gainVal = 0.15) {
+        if (this.muted || !this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+        gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      },
+
+      playSuccess() {
+        this.playTone(523.25, 'triangle', 0.15, 0.2); // C5
+        setTimeout(() => this.playTone(659.25, 'triangle', 0.15, 0.2), 100); // E5
+        setTimeout(() => this.playTone(783.99, 'triangle', 0.3, 0.25), 200); // G5
+      },
+
+      playTrapTone() {
+        this.playTone(329.63, 'sawtooth', 0.2, 0.15); // E4
+        setTimeout(() => this.playTone(293.66, 'sawtooth', 0.35, 0.18), 120); // D4
+      },
+
+      playClick() {
+        this.playTone(800, 'sine', 0.04, 0.08);
+      },
+
+      playFanfare() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 'triangle', 0.25, 0.2), i * 90);
+        });
+      }
+    };
+
+    /* ==========================================================================
+       2. IN-APP MESSAGING CONTROLLERS (No Native Alert/Confirm)
+       ========================================================================== */
+    const UI = {
+      toastTimer: null,
+
+      showToast(title, msg, icon = '💡') {
+        const toast = document.getElementById('customToast');
+        const titleEl = document.getElementById('toastTitle');
+        const msgEl = document.getElementById('toastMsg');
+        const iconEl = document.getElementById('toastIcon');
+        const barEl = document.getElementById('toastProgressBar');
+
+        if (!toast || !titleEl || !msgEl) return;
+
+        titleEl.textContent = title;
+        msgEl.textContent = msg;
+        if (iconEl) iconEl.textContent = icon;
+
+        toast.classList.add('show');
+        SoundManager.playClick();
+
+        if (barEl) {
+          barEl.style.transition = 'none';
+          barEl.style.width = '100%';
+          void barEl.offsetWidth; // Force layout recalculation
+          barEl.style.transition = 'width 15000ms linear';
+          barEl.style.width = '0%';
+        }
+
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 15000); // Minimum 15 seconds display duration
+      },
+
+      confirm(title, body, onConfirm) {
+        const modal = document.getElementById('customConfirmModal');
+        const heading = document.getElementById('modalHeading');
+        const bodyEl = document.getElementById('modalBodyText');
+        const confirmBtn = document.getElementById('modalConfirmBtn');
+        const cancelBtn = document.getElementById('modalCancelBtn');
+
+        if (!modal) return;
+
+        heading.textContent = title;
+        bodyEl.textContent = body;
+        modal.classList.add('show');
+
+        const cleanup = () => {
+          modal.classList.remove('show');
+          confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+          cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+        };
+
+        document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+          cleanup();
+          if (onConfirm) onConfirm();
+        }, { once: true });
+
+        document.getElementById('modalCancelBtn').addEventListener('click', cleanup, { once: true });
+      }
+    };
+
+    /* ==========================================================================
+       3. SSA MODULE QUESTION DATABASE & FORENSICS (28 VERIFIED CHALLENGES)
+       ========================================================================== */
+    const QUESTION_BANK = {
+      // ------------------------------------------------------------------------
+      // MODULE 1: Algebraic Thinking, Variable Abstraction & Equation Modeling
+      // Standards: NC.5.OA.2, NC.5.OA.3, NC.6.EE.1, NC.6.EE.2, NC.6.EE.3, NC.6.EE.6, NC.6.EE.7
+      // ------------------------------------------------------------------------
+      1: [
+        {
+          id: 'm1_q1',
+          standard: 'NC.6.EE.6 • NC.5.OA.2',
+          difficulty: 'SSA Rigor Jump',
+          narrative: 'A shipping crate has a base area represented by the bracketed expression [2³ + 4] ft² and an unknown height h ft. If the total interior volume of the crate is 144 ft³, evaluate the base area, formulate an equation, and solve for h using balance equivalence.',
+          knowns: 'V = 144 ft³, Base = [2³ + 4] ft²',
+          unknown: 'Height h (ft)',
+          invariant: 'V = Base · h ⟹ 12 · h = 144',
+          options: [
+            { text: '12 ft', type: 'target', forensic: 'Correctly evaluates 2³ = 8, Base = 8 + 4 = 12 ft², and solves 144 ÷ 12 = 12 ft.' },
+            { text: '14.4 ft', type: 'trap', forensic: 'Partial Step Trap: Computes 2 × 3 + 4 = 10 (confusing exponent 2³ with multiplication 2×3), yielding 144 ÷ 10 = 14.4 ft.' },
+            { text: '132 ft', type: 'trap', forensic: 'Operation Reversal Trap: Evaluates base as 12, then subtracts 144 - 12 = 132 instead of dividing by the coefficient.' },
+            { text: '36 ft', type: 'trap', forensic: 'Exponent Fallacy: Evaluates 2³ as 6, adds 4 = 10 or skips bracket grouping, dividing 144 ÷ 4 = 36.' }
+          ],
+          hints: [
+            'Recall order of operations inside brackets: Evaluate the exponent 2³ first (2 · 2 · 2), then add 4.',
+            'Volume of any right rectangular prism equals Base Area multiplied by Height: V = B · h.',
+            'With Base = 12 and Volume = 144, the equation is 12 · h = 144. Divide both sides by 12 to isolate h.'
+          ],
+          solution: {
+            step1: 'Deconstruct: The base expression contains an exponent and addition inside grouping brackets: [2³ + 4]. The total volume is 144 ft³.',
+            step2: 'Model: Base Area B = [2 · 2 · 2 + 4] = [8 + 4] = 12 ft². Equation for volume is 12 · h = 144.',
+            step3: 'Solve: Divide both sides of the balance by 12: h = 144 / 12 = 12 ft.',
+            step4: 'Verify: 12 ft² × 12 ft = 144 ft³. Units and magnitude check out perfectly.'
+          },
+          whatIf: {
+            title: 'What if base area doubles to 24 ft² while volume remains 144 ft³?',
+            desc: 'Because V = B · h is a constant product (144), doubling the base area cuts the required height exactly in half: h = 144 ÷ 24 = 6 ft (Inverse Multiplicative Relationship).'
+          }
+        },
+        {
+          id: 'm1_q2',
+          standard: 'NC.5.OA.3 • NC.6.RP.2',
+          difficulty: 'Covariance Rays',
+          narrative: 'Two scholars track savings: Sam saves $2 each day (Rule: y = 2x), while Terri saves $4 each day (Rule: y = 4x). Both start at the origin (0,0). Determine how many days x it takes for Terri to accumulate exactly $20 more than Sam.',
+          knowns: 'Sam: y = 2x; Terri: y = 4x',
+          unknown: 'Day x when Terri - Sam = $20',
+          invariant: 'Difference Rate = 4 - 2 = $2/day',
+          options: [
+            { text: '10 days', type: 'target', forensic: 'Target: Daily difference is 4 - 2 = $2/day. To accumulate $20: 20 ÷ 2 = 10 days.' },
+            { text: '5 days', type: 'trap', forensic: 'Partial Step Trap: Solves for when Terri alone reaches $20 (20 ÷ 4 = 5), ignoring Sam.' },
+            { text: '20 days', type: 'trap', forensic: 'Single Rate Trap: Divides 20 by Sam\'s rate alone ($20 ÷ 2) without subtracting rates.' },
+            { text: '8 days', type: 'trap', forensic: 'Additive Bias Trap: Compares at day 4 where Terri has $16 and Sam has $8 (difference $8).' }
+          ],
+          hints: [
+            'Write an expression for the difference between Terri\'s earnings and Sam\'s earnings on day x.',
+            'Terri\'s earnings minus Sam\'s earnings = 4x - 2x = 2x.',
+            'Set the difference equation equal to 20: 2x = 20, then divide by 2.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Sam accumulates at rate $2/day; Terri accumulates at rate $4/day. Both start at $0.',
+            step2: 'Model: On day x, Sam has 2x dollars and Terri has 4x dollars. Difference = 4x - 2x = 2x.',
+            step3: 'Solve: 2x = 20 ⟹ x = 10 days.',
+            step4: 'Verify: On Day 10, Terri has 4(10) = $40 and Sam has 2(10) = $20. Difference: $40 - $20 = $20.'
+          },
+          whatIf: {
+            title: 'What if Sam starts with a $10 head start (y = 2x + 10)?',
+            desc: 'Terri catches up when 4x = 2x + 10 ⟹ 2x = 10 ⟹ x = 5 days. After day 5, Terri pulls ahead.'
+          }
+        },
+        {
+          id: 'm1_q3',
+          standard: 'NC.6.EE.3 • Distributive Law',
+          difficulty: 'Equivalence Proof',
+          narrative: 'A robotics lab buys 6 sensor kits and 18 battery packs. Express the total cost algebraically if each sensor kit costs s dollars and each battery pack costs b dollars. Then factor out the greatest common factor (GCF) to generate an equivalent factored expression.',
+          knowns: '6 sensor kits at $s, 18 battery packs at $b',
+          unknown: 'Factored expression with GCF',
+          invariant: '6s + 18b = 6(s + 3b)',
+          options: [
+            { text: '6(s + 3b)', type: 'target', forensic: 'Target: Correctly factors GCF(6, 18) = 6, yielding 6(s + 3b).' },
+            { text: '3(2s + 6b)', type: 'trap', forensic: 'Incomplete Factorization Trap: 3 is a common factor, but not the greatest common factor (GCF = 6).' },
+            { text: '24(s + b)', type: 'trap', forensic: 'Additive Fallacy Trap: Adds coefficients 6 + 18 = 24, violating distinct variable grouping.' },
+            { text: '6s(1 + 3b)', type: 'trap', forensic: 'Variable Intrusion Trap: Incorrectly factors variable s out of the second term.' }
+          ],
+          hints: [
+            'Find the Greatest Common Factor of the numerical coefficients 6 and 18.',
+            'Factors of 6: 1, 2, 3, 6. Factors of 18: 1, 2, 3, 6, 9, 18. GCF is 6.',
+            'Divide each term by 6: 6s ÷ 6 = s, and 18b ÷ 6 = 3b. Place GCF outside parentheses.'
+          ],
+          solution: {
+            step1: 'Deconstruct: The un-factored algebraic expression is 6s + 18b.',
+            step2: 'Model: The greatest common divisor of 6 and 18 is 6.',
+            step3: 'Solve: 6s + 18b = 6 · s + 6 · (3b) = 6(s + 3b).',
+            step4: 'Verify: Expand 6(s + 3b) = 6s + 18b by distributive property.'
+          },
+          whatIf: {
+            title: 'What if kit count doubles to 12s + 36b?',
+            desc: 'The GCF doubles to 12: 12(s + 3b). Notice the inside binomial expression remains invariant!'
+          }
+        },
+        {
+          id: 'm1_q4',
+          standard: 'NC.6.EE.7 • Equation Balance',
+          difficulty: 'Two-Step Invariance',
+          narrative: 'An unknown mass container x is placed on a balance scale alongside 14 unit masses. The right pan contains 35 unit masses: 3x + 14 = 35. What exact sequence of operations preserves equilibrium while isolating variable x?',
+          knowns: 'Left pan: 3x + 14; Right pan: 35',
+          unknown: 'Solution for mass x',
+          invariant: 'Equilibrium preserved by applying inverse operations to both sides',
+          options: [
+            { text: 'Subtract 14 from both sides, then divide both sides by 3 ⟹ x = 7', type: 'target', forensic: 'Target: 3x = 35 - 14 = 21 ⟹ x = 21 ÷ 3 = 7.' },
+            { text: 'Divide both sides by 3, then subtract 14 ⟹ x = -2.33', type: 'trap', forensic: 'Inverse Hierarchy Trap: Dividing first without dividing the 14 constant leads to 3x/3 + 14 = 35/3.' },
+            { text: 'Add 14 to both sides, then divide by 3 ⟹ x = 16.33', type: 'trap', forensic: 'Sign Inversion Trap: Adds 14 instead of using inverse subtraction.' },
+            { text: 'Subtract 14 from both sides ⟹ x = 21', type: 'trap', forensic: 'Partial Step Trap: Stops after subtracting 14, forgetting coefficient 3.' }
+          ],
+          hints: [
+            'To isolate the variable term 3x, first eliminate the constant +14 using inverse subtraction.',
+            'Subtract 14 from 35: 35 - 14 = 21.',
+            'Now you have 3x = 21. Divide both sides by 3 to find the value of one x.'
+          ],
+          solution: {
+            step1: 'Deconstruct: The balance equation is 3x + 14 = 35.',
+            step2: 'Model: Subtract 14 from both pans to maintain equilibrium: 3x = 21.',
+            step3: 'Solve: Divide both pans into 3 equal groups: x = 21 ÷ 3 = 7.',
+            step4: 'Verify: 3(7) + 14 = 21 + 14 = 35. Equilibrium holds.'
+          },
+          whatIf: {
+            title: 'What if right pan increases by 6 units to 41?',
+            desc: '3x = 41 - 14 = 27 ⟹ x = 9. An increase of 6 in total mass adds 6 ÷ 3 = 2 to each variable box.'
+          }
+        },
+        {
+          id: 'm1_q5',
+          standard: 'NC.5.OA.2 • NC.6.EE.1',
+          difficulty: 'Nested Brackets & Powers',
+          narrative: 'Evaluate the multi-step expression involving whole-number powers and nested brackets: 4 · [3² + (18 - 6) ÷ 3] - 5.',
+          knowns: 'Expression: 4 · [3² + (18 - 6) ÷ 3] - 5',
+          unknown: 'Evaluated scalar value',
+          invariant: 'PEMDAS: Innermost parentheses ⟹ Exponents ⟹ Division ⟹ Brackets ⟹ Multiply ⟹ Subtract',
+          options: [
+            { text: '47', type: 'target', forensic: 'Target: (18 - 6) = 12 ⟹ 12 ÷ 3 = 4. 3² = 9 ⟹ [9 + 4] = 13. 4 · 13 = 52 ⟹ 52 - 5 = 47.' },
+            { text: '35', type: 'trap', forensic: 'Precedence Trap: Adds before dividing inside brackets: 9 + 12 = 21 ⟹ 21 ÷ 3 = 7 ⟹ 4 · 7 - 5 = 23.' },
+            { text: '59', type: 'trap', forensic: 'Exponent Error: Treats 3² as 6: [6 + 4] = 10 ⟹ 4 · 10 - 5 = 35 or misadds.' },
+            { text: '75', type: 'trap', forensic: 'Subtraction Order Error: Multiplies 4 · 13 = 52, but adds 5 instead of subtracting.' }
+          ],
+          hints: [
+            'Start inside the innermost parentheses: (18 - 6) = 12.',
+            'Next inside the bracket: 12 ÷ 3 = 4, and 3² = 9. So bracket becomes [9 + 4] = 13.',
+            'Finally, multiply by 4 first (4 · 13 = 52), then subtract 5.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Innermost grouping is (18 - 6) = 12.',
+            step2: 'Model: Inside bracket: 3² + 12 ÷ 3 = 9 + 4 = 13.',
+            step3: 'Solve: 4 · [13] - 5 = 52 - 5 = 47.',
+            step4: 'Verify: Recalculate step-by-step: 52 - 5 = 47.'
+          },
+          whatIf: {
+            title: 'What if exponent changes to 3³ (27)?',
+            desc: '[27 + 4] = 31 ⟹ 4 · 31 - 5 = 124 - 5 = 119.'
+          }
+        },
+        {
+          id: 'm1_q6',
+          standard: 'NC.6.EE.2 • Word Problem Modeling',
+          difficulty: 'Linear Formulation',
+          narrative: 'A drone logistics service charges a $25 base dispatch fee plus $0.15 for every megabyte m of telemetry transmitted. Write an algebraic equation for total cost C, and determine how many megabytes were transmitted if the total invoice is $43.00.',
+          knowns: 'Base fee: $25; Rate: $0.15/MB; Total: $43.00',
+          unknown: 'Megabytes m',
+          invariant: '25 + 0.15m = 43',
+          options: [
+            { text: '25 + 0.15m = 43 ⟹ m = 120 MB', type: 'target', forensic: 'Target: 0.15m = 43 - 25 = 18 ⟹ m = 18 ÷ 0.15 = 120 MB.' },
+            { text: '25 + 0.15m = 43 ⟹ m = 12 MB', type: 'trap', forensic: 'Decimal Place Trap: 18 ÷ 0.15 miscalculated as 12 instead of 120.' },
+            { text: '0.15 + 25m = 43 ⟹ m = 1.7 MB', type: 'trap', forensic: 'Coefficient Swapping Trap: Attaches variable to the fixed $25 base fee.' },
+            { text: '25m - 0.15 = 43 ⟹ m = 1.72 MB', type: 'trap', forensic: 'Operation Fallacy: Multiplies base fee by m.' }
+          ],
+          hints: [
+            'The base fee ($25) is a constant paid once. The variable cost is 0.15 times m.',
+            'Formulate: 25 + 0.15m = 43. Subtract 25 from both sides: 0.15m = 18.',
+            'Divide 18 by 0.15: 18 ÷ (15/100) = 1800 ÷ 15 = 120.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Fixed constant is $25, unit variable rate is $0.15/MB, total is $43.',
+            step2: 'Model: Total Cost = 25 + 0.15 · m = 43.',
+            step3: 'Solve: 0.15m = 43 - 25 = 18 ⟹ m = 18 ÷ 0.15 = 120 MB.',
+            step4: 'Verify: 25 + 0.15(120) = 25 + 18 = $43.00.'
+          },
+          whatIf: {
+            title: 'What if data rate is discounted by half to $0.075/MB?',
+            desc: 'For the same $18 data allowance: m = 18 ÷ 0.075 = 240 MB. Halving rate doubles data capacity!'
+          }
+        }
+      ],
+
+      // ------------------------------------------------------------------------
+      // MODULE 2: Base-Ten Operations, Decimal Precision & Multi-Digit Fluency
+      // Standards: NC.5.NBT.1, NC.5.NBT.3, NC.5.NBT.5, NC.5.NBT.6, NC.5.NBT.7, NC.6.NS.2, NC.6.NS.3, NC.6.NS.4
+      // ------------------------------------------------------------------------
+      2: [
+        {
+          id: 'm2_q1',
+          standard: 'NC.5.NBT.7 • NC.6.NS.3',
+          difficulty: 'SSA Rigor Jump',
+          narrative: 'An automated assembly line fills chemical containers at a rate of 0.425 L/sec. A student claims that running the pump for 12.8 seconds must yield a product with 4 decimal places because 0.425 has 3 decimal places and 12.8 has 1. Perform Distractor Forensics on the student\'s claim and compute the exact final volume.',
+          knowns: 'Rate = 0.425 L/s, Time = 12.8 s',
+          unknown: 'Product Volume (L) and Trailing Zero Logic',
+          invariant: '425 × 128 = 54,400 ⟹ 54,400 / 10,000 = 5.4400 = 5.44 L',
+          options: [
+            { text: '5.44 L (Student is wrong: trailing zeros collapse decimal length)', type: 'target', forensic: 'Target: 425 × 128 = 54,400. Dividing by 10⁴ gives 5.4400, which simplifies to 5.44 L (2 decimal places).' },
+            { text: '5.4400 L (Student is right: trailing zeros must be kept as digits)', type: 'trap', forensic: 'Mechanical Rule Fallacy: Confuses raw place-value denominator with standard decimal representation.' },
+            { text: '54.4 L', type: 'trap', forensic: 'Place Value Shift Trap: Miscounts total decimal places as 2 instead of 4.' },
+            { text: '0.544 L', type: 'trap', forensic: 'Over-Correction Trap: Divides by 100,000 instead of 10,000.' }
+          ],
+          hints: [
+            'Multiply the numbers as whole integers first: 425 × 128.',
+            '425 × 128 = 54,400.',
+            'Account for place value: 10³ × 10¹ = 10⁴ (divide 54,400 by 10,000). Notice the two trailing zeros!'
+          ],
+          solution: {
+            step1: 'Deconstruct: 0.425 = 425/1000 and 12.8 = 128/10.',
+            step2: 'Model: Product = (425 × 128) / (1000 × 10) = 54,400 / 10,000.',
+            step3: 'Solve: 54,400 / 10,000 = 5.4400 = 5.44 Liters.',
+            step4: 'Verify: 0.425 ≈ 0.4; 12.8 ≈ 13; 0.4 × 13 = 5.2. 5.44 is perfectly reasonable.'
+          },
+          whatIf: {
+            title: 'What if we multiply 0.425 by 10 and divide 12.8 by 10?',
+            desc: '4.25 × 1.28 = 5.44 L. By the associative property of multiplication, the product remains identical (Invariant).'
+          }
+        },
+        {
+          id: 'm2_q2',
+          standard: 'NC.5.NBT.6 • NC.6.NS.2',
+          difficulty: 'Partial Quotients Bridge',
+          narrative: 'A regional warehouse packs 3,456 solar cells into modular cartons holding 24 cells each. Using partial quotients and distributive decomposition, determine the total number of cartons filled.',
+          knowns: 'Dividend = 3,456 cells, Divisor = 24 cells/carton',
+          unknown: 'Quotient q',
+          invariant: '3,456 = 24 × 100 + 24 × 40 + 24 × 4',
+          options: [
+            { text: '144 cartons', type: 'target', forensic: 'Target: 24 × 100 = 2400 (rem 1056); 24 × 40 = 960 (rem 96); 24 × 4 = 96 (rem 0). 100 + 40 + 4 = 144.' },
+            { text: '142 cartons with remainder 8', type: 'trap', forensic: 'Partial Quotient Subtraction Error: Subtracts 960 from 1056 incorrectly as 144.' },
+            { text: '124 cartons', type: 'trap', forensic: 'Digit Inversion Trap: Confuses tens and units digits.' },
+            { text: '164 cartons', type: 'trap', forensic: 'Over-Estimation Trap: Uses 24 × 50 = 1200 instead of 960.' }
+          ],
+          hints: [
+            'Break down 3,456 using friendly multiples of 24: 24 × 100 = 2,400.',
+            'Subtract 2,400 from 3,456: 1,056 remains. Friendly multiple: 24 × 40 = 960.',
+            'Subtract 960 from 1,056: 96 remains. 24 × 4 = 96. Sum the parts: 100 + 40 + 4.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Divide 3,456 by 24 using partial quotients.',
+            step2: 'Model: 3,456 = 2,400 (100) + 960 (40) + 96 (4).',
+            step3: 'Solve: 100 + 40 + 4 = 144 cartons with zero remainder.',
+            step4: 'Verify: 144 × 24 = 144 × 20 + 144 × 4 = 2880 + 576 = 3,456.'
+          },
+          whatIf: {
+            title: 'What if carton capacity increases to 36 cells?',
+            desc: 'New cartons = 3,456 ÷ 36 = 96 cartons. Notice 144 × 24 = 96 × 36 = 3,456.'
+          }
+        },
+        {
+          id: 'm2_q3',
+          standard: 'NC.5.NBT.1 • NC.5.NBT.2',
+          difficulty: 'Powers of 10 Shifts',
+          narrative: 'Compare the value of Quantity A (0.078 × 10³) with Quantity B (780 ÷ 10²). What is the mathematical relationship between Quantity A and Quantity B?',
+          knowns: 'Quantity A = 0.078 × 10³; Quantity B = 780 ÷ 10²',
+          unknown: 'Ratio of Quantity A to Quantity B',
+          invariant: 'Multiplying by 10³ shifts digits left 3 places; dividing by 10² shifts digits right 2 places',
+          options: [
+            { text: 'Quantity A is 78 and Quantity B is 7.8; Quantity A is 10 times Quantity B', type: 'target', forensic: 'Target: 0.078 × 1000 = 78. 780 ÷ 100 = 7.8. 78 ÷ 7.8 = 10.' },
+            { text: 'Quantity A and Quantity B are equal to 7.8', type: 'trap', forensic: 'Place Shift Confusion: Shifts 0.078 by 2 places instead of 3.' },
+            { text: 'Quantity A is 100 times Quantity B', type: 'trap', forensic: 'Exponent Scale Trap: Subtracts powers 3 - 2 = 1, but misinterprets ratio.' },
+            { text: 'Quantity B is 10 times Quantity A', type: 'trap', forensic: 'Inverted Ratio Trap: Reverses numerator and denominator.' }
+          ],
+          hints: [
+            'Calculate Quantity A: 0.078 × 10³ means moving the decimal point 3 places to the right.',
+            'Calculate Quantity B: 780 ÷ 10² means moving the decimal point 2 places to the left.',
+            'Compare the two results: 78 versus 7.8.'
+          ],
+          solution: {
+            step1: 'Deconstruct: 10³ = 1,000 and 10² = 100.',
+            step2: 'Model: Quantity A = 0.078 × 1,000 = 78. Quantity B = 780 ÷ 100 = 7.8.',
+            step3: 'Solve: 78 ÷ 7.8 = 10. Quantity A is 10 times Quantity B.',
+            step4: 'Verify: 7.8 × 10 = 78. Verified.'
+          },
+          whatIf: {
+            title: 'What if Quantity B was multiplied by 10 instead of divided?',
+            desc: '780 × 100 = 78,000. Then Quantity B would be 1,000 times Quantity A.'
+          }
+        },
+        {
+          id: 'm2_q4',
+          standard: 'NC.5.NBT.7 • Mental Compensation',
+          difficulty: 'Precision Compensation',
+          narrative: 'A lab chemist must compute 85.32 - 39.98 with high precision under timed conditions. Which compensation strategy correctly transforms this problem into friendly mental math?',
+          knowns: 'Minuend = 85.32, Subtrahend = 39.98',
+          unknown: 'Equivalence Strategy & Difference',
+          invariant: 'a - b = (a + 0.02) - (b + 0.02) = 85.34 - 40.00 = 45.34',
+          options: [
+            { text: 'Add 0.02 to both numbers: 85.34 - 40.00 = 45.34', type: 'target', forensic: 'Target: Constant Difference Property preserves the gap invariant while creating an integer subtrahend.' },
+            { text: 'Subtract 40.00 then subtract 0.02: 45.32 - 0.02 = 45.30', type: 'trap', forensic: 'Subtractive Compensation Error: Since you subtracted 0.02 too much, you must ADD 0.02 back, not subtract.' },
+            { text: 'Subtract 39 from 85: 46.32 - 0.98 = 45.34 (Slow)', type: 'trap', forensic: 'Borrowing Trap: Prone to digit alignment errors.' },
+            { text: '45.30', type: 'trap', forensic: 'Under-compensation calculation mistake.' }
+          ],
+          hints: [
+            'Notice that 39.98 is only 0.02 away from the friendly whole number 40.00.',
+            'If you subtract 40, you have subtracted 0.02 too much. You must add 0.02 back.',
+            'Alternatively, add 0.02 to both numbers: 85.34 - 40.00.'
+          ],
+          solution: {
+            step1: 'Deconstruct: 39.98 = 40.00 - 0.02.',
+            step2: 'Model: 85.32 - (40.00 - 0.02) = 85.32 - 40.00 + 0.02.',
+            step3: 'Solve: 45.32 + 0.02 = 45.34.',
+            step4: 'Verify: 45.34 + 39.98 = 85.32. Exact check.'
+          },
+          whatIf: {
+            title: 'What if the problem was 85.32 - 39.95?',
+            desc: 'Add 0.05 to both numbers: 85.37 - 40.00 = 45.37.'
+          }
+        },
+        {
+          id: 'm2_q5',
+          standard: 'NC.5.NBT.5 • NC.6.NS.4',
+          difficulty: 'Algorithm Cryptarithm',
+          narrative: 'In the standard multiplication algorithm: 2A5 × 14 = 3,430, where A represents a single missing digit (0–9). Reconstruct the algorithm forensics to determine the unique value of digit A.',
+          knowns: '2A5 × 14 = 3,430',
+          unknown: 'Digit A',
+          invariant: '2A5 = 3,430 ÷ 14',
+          options: [
+            { text: 'A = 4 (since 245 × 14 = 3,430)', type: 'target', forensic: 'Target: 3,430 ÷ 14 = 245. Thus digit A in tens place is 4.' },
+            { text: 'A = 3', type: 'trap', forensic: 'Calculation Trap: 235 × 14 = 3,290 ≠ 3,430.' },
+            { text: 'A = 5', type: 'trap', forensic: 'Calculation Trap: 255 × 14 = 3,570 ≠ 3,430.' },
+            { text: 'A = 2', type: 'trap', forensic: 'Calculation Trap: 225 × 14 = 3,150 ≠ 3,430.' }
+          ],
+          hints: [
+            'Use the inverse operation of multiplication to find the entire 3-digit factor.',
+            'Divide the product 3,430 by 14: 3,430 ÷ 14.',
+            '14 goes into 34 twice (28, rem 6). 14 goes into 63 four times (56, rem 7). 14 goes into 70 five times.'
+          ],
+          solution: {
+            step1: 'Deconstruct: An integer equation with single unknown digit A: (200 + 10A + 5) × 14 = 3,430.',
+            step2: 'Model: 200 + 10A + 5 = 3,430 ÷ 14.',
+            step3: 'Solve: 3,430 ÷ 14 = 245. Therefore 10A = 40 ⟹ A = 4.',
+            step4: 'Verify: 245 × 14 = 245 × 10 + 245 × 4 = 2450 + 980 = 3,430.'
+          },
+          whatIf: {
+            title: 'What if multiplier was 15 instead of 14 for product 3,675?',
+            desc: '3,675 ÷ 15 = 245. Digit A remains 4!'
+          }
+        },
+        {
+          id: 'm2_q6',
+          standard: 'NC.6.NS.4 • GCF Factoring',
+          difficulty: 'Prime Decomposition',
+          narrative: 'A manufacturing team packages 48 blue LEDs and 72 green LEDs into identical kits with no LEDs left over. What is the maximum number of kits possible, and how many of each color are in each kit?',
+          knowns: '48 blue LEDs, 72 green LEDs',
+          unknown: 'Maximum kits (GCF) and distribution',
+          invariant: 'GCF(48, 72) = 24; 48 = 24 × 2, 72 = 24 × 3',
+          options: [
+            { text: '24 kits (each with 2 blue and 3 green LEDs)', type: 'target', forensic: 'Target: GCF(48, 72) = 24. 48 ÷ 24 = 2 blue; 72 ÷ 24 = 3 green.' },
+            { text: '12 kits (each with 4 blue and 6 green LEDs)', type: 'trap', forensic: 'Common Factor Trap: 12 is a common factor, but not the greatest (24 is larger).' },
+            { text: '8 kits (each with 6 blue and 9 green LEDs)', type: 'trap', forensic: 'Sub-optimal Factorization Trap: Further reduction possible by 3.' },
+            { text: '6 kits (each with 8 blue and 12 green LEDs)', type: 'trap', forensic: 'Sub-optimal Factorization.' }
+          ],
+          hints: [
+            'Find the Greatest Common Factor of 48 and 72.',
+            'Prime factors: 48 = 2⁴ × 3. 72 = 2³ × 3².',
+            'GCF = 2³ × 3 = 8 × 3 = 24 kits.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Equal sharing without leftovers requires the greatest common divisor.',
+            step2: 'Model: 48 = 24 · 2; 72 = 24 · 3.',
+            step3: 'Solve: GCF = 24 kits. Each kit has 48/24 = 2 blue and 72/24 = 3 green.',
+            step4: 'Verify: 24 × 2 = 48; 24 × 3 = 72. Factored form: 24(2 + 3).'
+          },
+          whatIf: {
+            title: 'What if 96 red LEDs are added to the batch?',
+            desc: 'GCF(48, 72, 96) = 24. Still 24 kits: 2 blue, 3 green, 4 red!'
+          }
+        }
+      ],
+
+      // ------------------------------------------------------------------------
+      // MODULE 3: Advanced Fraction Structures, Division Mechanics & Conceptual Bridges
+      // Standards: NC.5.NF.1, NC.5.NF.3, NC.5.NF.4, NC.5.NF.7, NC.6.NS.1
+      // ------------------------------------------------------------------------
+      3: [
+        {
+          id: 'm3_q1',
+          standard: 'NC.6.NS.1 • NC.5.NF.7',
+          difficulty: 'SSA Rigor Jump (Archetype 1)',
+          narrative: 'A highway construction crew has 1 ½ miles of road to pave. Their equipment paves ⅔ of a mile per hour. Using common unit subdivisions (9/6 miles and 4/6 miles/hour), construct a double tape diagram to determine how many hours it takes, and explain precisely what the fractional remainder represents.',
+          knowns: 'Total Distance = 1 ½ = 3/2 = 9/6 miles; Rate = 2/3 = 4/6 mile/hr',
+          unknown: 'Time h and Remainder Interpretation',
+          invariant: '9/6 ÷ 4/6 = 9 ÷ 4 = 2 ¼ hours',
+          options: [
+            { text: '2 ¼ hours (1 leftover block is ¼ of a 4-block hour group = 15 min)', type: 'target', forensic: 'Target: 9 ÷ 4 = 2 full 4-block groups with 1 block remaining. Leftover is 1 out of 4 = ¼ hour.' },
+            { text: '1 hour', type: 'trap', forensic: 'Operation Reversal Trap: Multiplies 3/2 × 2/3 = 1, confusing reciprocal division with multiplication.' },
+            { text: '2 ⅙ hours', type: 'trap', forensic: 'Remainder Context Trap: Interprets the 1 leftover block as ⅙ relative to 1 whole mile, rather than ¼ relative to the 4/6 rate unit.' },
+            { text: '4/9 hour', type: 'trap', forensic: 'Inverted Division Trap: Divides rate by distance: (2/3) ÷ (3/2) = 4/9.' }
+          ],
+          hints: [
+            'Convert both numbers to a common denominator of 6: 1 ½ = 9/6 and ⅔ = 4/6.',
+            'Once denominators are identical, divide numerators: 9 ÷ 4.',
+            '9 ÷ 4 = 2 with a remainder of 1. Because your group size is 4 blocks, the remainder is ¼ of a group.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Total distance = 1 ½ = 3/2 miles. Paving rate = ⅔ mile/hour.',
+            step2: 'Model: Common unit grid (6ths): Distance = 9/6; Rate = 4/6. Problem becomes 9 ÷ 4.',
+            step3: 'Solve: 9 ÷ 4 = 2 ¼ hours (2 hours and 15 minutes).',
+            step4: 'Verify: 2 ¼ × ⅔ = (9/4) × (2/3) = 18/12 = 3/2 = 1 ½ miles. Proof holds.'
+          },
+          whatIf: {
+            title: 'What happens if paving speed doubles to 1 ⅓ miles/hour (8/6)?',
+            desc: 'New time = 9 ÷ 8 = 1 ⅛ hours (1 hour 7.5 min). Doubling the rate halves the required time!'
+          }
+        },
+        {
+          id: 'm3_q2',
+          standard: 'NC.6.NS.1 • Common Units',
+          difficulty: 'Fraction Division Modeling',
+          narrative: 'A chef has ⅚ kilogram of gourmet spice. Each specialty sauce recipe requires ¾ kilogram of spice. How many batches of sauce can the chef prepare, and what fraction of a batch remains?',
+          knowns: 'Available = ⅚ kg; Required/batch = ¾ kg',
+          unknown: 'Batches = ⅚ ÷ ¾',
+          invariant: 'Common denominator 12: 10/12 ÷ 9/12 = 10 ÷ 9 = 1 ⅑ batches',
+          options: [
+            { text: '1 ⅑ batches (1 full batch plus ⅑ of a batch)', type: 'target', forensic: 'Target: ⅚ = 10/12, ¾ = 9/12. 10 ÷ 9 = 1 ⅑ batches.' },
+            { text: '1 ⅛ batches', type: 'trap', forensic: 'Denominator Confusion Trap: Divides 10 by 8 instead of 9.' },
+            { text: '5/8 batch', type: 'trap', forensic: 'Multiplication Trap: Multiplies ⅚ × ¾ = 15/24 = 5/8.' },
+            { text: '9/10 batch', type: 'trap', forensic: 'Inverted Ratio Trap: Inverts dividend and divisor.' }
+          ],
+          hints: [
+            'Find a common denominator for 6 and 4: LCM(6, 4) = 12.',
+            'Convert: ⅚ = 10/12, and ¾ = 9/12.',
+            'Divide numerators: 10 ÷ 9 = 1 with 1 leftover. The remainder is 1 out of 9 = ⅑.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Dividend = ⅚ kg; Divisor = ¾ kg.',
+            step2: 'Model: Subdivide into 12ths: 10/12 ÷ 9/12.',
+            step3: 'Solve: 10 ÷ 9 = 1 ⅑ batches.',
+            step4: 'Verify: 1 ⅑ × ¾ = (10/9) × (3/4) = 30/36 = ⅚ kg.'
+          },
+          whatIf: {
+            title: 'What if available spice was 1 ½ kg (18/12)?',
+            desc: '18 ÷ 9 = exactly 2 batches with 0 remainder!'
+          }
+        },
+        {
+          id: 'm3_q3',
+          standard: 'NC.5.NF.4 • Area Model',
+          difficulty: 'Mixed Number Decomposition',
+          narrative: 'A rectangular garden bed measures 3 ½ feet by 2 ⅔ feet. Compute the total area by decomposing into 4 partial product sub-rectangles: (3 + ½) × (2 + ⅔).',
+          knowns: 'Length = 3 ½ ft; Width = 2 ⅔ ft',
+          unknown: 'Area in square feet',
+          invariant: 'Area = 3×2 + 3×(2/3) + (1/2)×2 + (1/2)×(2/3) = 6 + 2 + 1 + 1/3 = 9 ⅓ ft²',
+          options: [
+            { text: '9 ⅓ ft²', type: 'target', forensic: 'Target: (7/2) × (8/3) = 56/6 = 9 2/6 = 9 ⅓ ft².' },
+            { text: '6 ⅓ ft²', type: 'trap', forensic: 'Partial Product Trap: Multiplies only whole numbers 3×2 = 6 and fractions ½×⅔ = ⅓, forgetting cross terms.' },
+            { text: '8 ⅔ ft²', type: 'trap', forensic: 'Cross-Product Addition Error: Omits one of the cross terms.' },
+            { text: '10 ft²', type: 'trap', forensic: 'Rounding Trap: Over-estimates.' }
+          ],
+          hints: [
+            'Convert mixed numbers to improper fractions: 3 ½ = 7/2 and 2 ⅔ = 8/3.',
+            'Multiply numerators and denominators: (7 × 8) / (2 × 3) = 56 / 6.',
+            'Simplify 56/6: 56 ÷ 6 = 9 with remainder 2 ⟹ 9 2/6 = 9 ⅓ ft².'
+          ],
+          solution: {
+            step1: 'Deconstruct: Rectangular area = length × width = (3 ½) × (2 ⅔).',
+            step2: 'Model: 4 partial products: (3×2) + (3×⅔) + (½×2) + (½×⅔) = 6 + 2 + 1 + ⅓.',
+            step3: 'Solve: 6 + 2 + 1 + ⅓ = 9 ⅓ sq ft.',
+            step4: 'Verify: (7/2) × (8/3) = 56/6 = 28/3 = 9 ⅓. Verified.'
+          },
+          whatIf: {
+            title: 'What if length doubles to 7 ft?',
+            desc: 'Area doubles: 9 ⅓ × 2 = 18 ⅔ sq ft.'
+          }
+        },
+        {
+          id: 'm3_q4',
+          standard: 'NC.6.NS.1 • Reciprocal Proof',
+          difficulty: 'Conceptual Mechanics',
+          narrative: 'Why does dividing by a fraction ⅖ produce the exact same numerical result as multiplying by its reciprocal 5/2? Articulate the formal mathematical justification.',
+          knowns: 'Division by a/b ≡ Multiplication by b/a',
+          unknown: 'Formal conceptual proof',
+          invariant: 'x ÷ (a/b) = [x · (b/a)] / [(a/b) · (b/a)] = [x · (b/a)] / 1',
+          options: [
+            { text: 'Multiplying dividend and divisor by reciprocal 5/2 turns divisor into 1, leaving x · (5/2)', type: 'target', forensic: 'Target: Invariant fraction transformation: (x) / (2/5) = [x × (5/2)] / [(2/5) × (5/2)] = x × (5/2) / 1.' },
+            { text: 'Because "Keep-Change-Flip" is an arbitrary rule invented by mathematicians', type: 'trap', forensic: 'Rote Rule Fallacy: Fails to understand the multiplicative identity.' },
+            { text: 'Because dividing always makes numbers smaller', type: 'trap', forensic: 'Misconception Trap: Dividing by a fraction < 1 increases the quotient.' },
+            { text: 'Because 2/5 and 5/2 add up to 1', type: 'trap', forensic: 'Additive Confusion: They multiply to 1, not add.' }
+          ],
+          hints: [
+            'Think of a division problem as a giant fraction with numerator x and denominator ⅖.',
+            'How can you transform the denominator ⅖ into 1 without changing the overall value?',
+            'Multiply both numerator and denominator by 5/2. The denominator becomes (⅖ × 5/2) = 1.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Fraction division x ÷ (2/5) represented as a complex fraction.',
+            step2: 'Model: Multiply numerator and denominator by the reciprocal (5/2).',
+            step3: 'Solve: Numerator becomes x · (5/2); Denominator becomes (2/5) · (5/2) = 1.',
+            step4: 'Verify: Anything divided by 1 is itself: x · (5/2). Identity proved.'
+          },
+          whatIf: {
+            title: 'What if divisor is unit fraction ⅛?',
+            desc: 'Reciprocal is 8/1 = 8. Dividing by ⅛ is identical to scaling by 8!'
+          }
+        },
+        {
+          id: 'm3_q5',
+          standard: 'NC.5.NF.7 • Contextual Division',
+          difficulty: 'Unit Allocation',
+          narrative: 'A medical clinic has 4 ½ liters of saline solution. Each IV drip bag requires ⅜ of a liter. How many complete IV bags can be filled, and how many liters of saline remain?',
+          knowns: 'Total = 4 ½ = 9/2 = 36/8 liters; Each bag = ⅜ liter',
+          unknown: 'Full bags and exact remainder',
+          invariant: '36/8 ÷ 3/8 = 36 ÷ 3 = exactly 12 bags',
+          options: [
+            { text: 'Exactly 12 bags with 0 remainder', type: 'target', forensic: 'Target: 4 ½ = 36/8. 36 ÷ 3 = 12 bags with 0 leftover.' },
+            { text: '11 bags with ⅜ liter remaining', type: 'trap', forensic: 'Arithmetic Under-count Trap: 11 × ⅜ = 33/8 = 4 ⅛ (leaves 3/8, enough for 1 more bag!).' },
+            { text: '10 bags with ¾ liter remaining', type: 'trap', forensic: 'Under-allocation Trap.' },
+            { text: '14 bags', type: 'trap', forensic: 'Over-allocation Trap.' }
+          ],
+          hints: [
+            'Convert 4 ½ to eighths: 4 ½ = 4 4/8 = 36/8 liters.',
+            'Each bag takes 3/8 liter.',
+            'Divide 36 eighths by 3 eighths: 36 ÷ 3.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Total saline = 4 ½ liters. Each bag = ⅜ liter.',
+            step2: 'Model: 4 ½ = 9/2 = 36/8 liters.',
+            step3: 'Solve: 36/8 ÷ 3/8 = 36 ÷ 3 = 12 full bags exactly.',
+            step4: 'Verify: 12 × ⅜ = 36/8 = 4 ½ liters. 0 remainder.'
+          },
+          whatIf: {
+            title: 'What if each bag required ½ liter (4/8)?',
+            desc: '36 ÷ 4 = 9 bags exactly.'
+          }
+        },
+        {
+          id: 'm3_q6',
+          standard: 'NC.5.NF.1 • NC.6.RP.2',
+          difficulty: 'Comparative Rates',
+          narrative: 'Runner A completes ¾ mile in 1/10 of an hour. Runner B completes ⅘ mile in ⅛ of an hour. Which runner maintains a faster hourly speed, and by how much?',
+          knowns: 'Runner A: ¾ mi in 1/10 hr; Runner B: ⅘ mi in ⅛ hr',
+          unknown: 'Unit speeds (mph) and difference',
+          invariant: 'Speed A = ¾ ÷ 1/10 = 7.5 mph; Speed B = ⅘ ÷ ⅛ = 6.4 mph',
+          options: [
+            { text: 'Runner A is faster by 1.1 mph (7.5 mph vs 6.4 mph)', type: 'target', forensic: 'Target: Runner A = ¾ × 10 = 7.5 mph. Runner B = ⅘ × 8 = 6.4 mph. 7.5 - 6.4 = 1.1 mph.' },
+            { text: 'Runner B is faster by 0.05 mph', type: 'trap', forensic: 'Raw Distance Trap: Looks only at distance (⅘ > ¾) without dividing by time.' },
+            { text: 'Both runners have identical speeds', type: 'trap', forensic: 'Rounding Trap.' },
+            { text: 'Runner A is faster by 0.9 mph', type: 'trap', forensic: 'Subtraction Error: 7.5 - 6.4 miscalculated as 0.9.' }
+          ],
+          hints: [
+            'Speed = Distance ÷ Time.',
+            'Runner A speed: (¾) ÷ (1/10) = ¾ × 10 = 30/4 = 7.5 mph.',
+            'Runner B speed: (⅘) ÷ (⅛) = ⅘ × 8 = 32/5 = 6.4 mph.',
+            'Compare the two unit rates: 7.5 - 6.4.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Calculate unit speeds in miles per hour for both runners.',
+            step2: 'Model: Speed A = ¾ ÷ 1/10 = 7.5 mph. Speed B = ⅘ ÷ ⅛ = 6.4 mph.',
+            step3: 'Solve: 7.5 - 6.4 = 1.1 mph faster for Runner A.',
+            step4: 'Verify: In 1 hour, Runner A covers 7.5 miles while B covers 6.4 miles. Difference is 1.1 miles.'
+          },
+          whatIf: {
+            title: 'How long would it take Runner A to complete a 15-mile half-marathon?',
+            desc: 'Time = 15 ÷ 7.5 = exactly 2 hours!'
+          }
+        }
+      ],
+
+      // ------------------------------------------------------------------------
+      // MODULE 4: Proportional Reasoning, Unit Rates & Scale Transformations
+      // Standards: NC.5.OA.3, NC.5.MD.1, NC.6.RP.1, NC.6.RP.2, NC.6.RP.3, NC.6.RP.4
+      // ------------------------------------------------------------------------
+      4: [
+        {
+          id: 'm4_q1',
+          standard: 'NC.6.RP.2 • NC.5.OA.3',
+          difficulty: 'SSA Rigor Jump (Archetype 3)',
+          narrative: 'Recipe A uses 5 lemons for every 2 quarts of water (y = 2.5x). Recipe B uses 2 lemons for every 1 quart of water (y = 2.0x). Both relationships are plotted as rays from origin (0,0). Determine which recipe has a stronger lemon taste and prove how the coordinate rays visually verify your conclusion.',
+          knowns: 'Recipe A: 5 lemons / 2 qts; Recipe B: 2 lemons / 1 qt',
+          unknown: 'Stronger taste and visual slope proof',
+          invariant: 'Unit rate = Δy / Δx (lemons per quart). Slope A (2.5) > Slope B (2.0)',
+          options: [
+            { text: 'Recipe A is stronger (2.5 lemons/qt vs 2.0); Ray A is steeper', type: 'target', forensic: 'Target: Unit rate A = 5/2 = 2.5 lemons/qt. Unit rate B = 2/1 = 2.0 lemons/qt. Steeper ray represents higher concentration.' },
+            { text: 'Recipe B is stronger (Additive Fallacy Trap)', type: 'trap', forensic: 'Additive Bias Trap: Compares raw differences 5 - 2 = 3 vs 2 - 1 = 1, mistakenly assuming smaller difference means stronger.' },
+            { text: 'Both taste identical (Misscaling Trap)', type: 'trap', forensic: 'Rounding Fallacy: Rounds 2.5 down to 2.' },
+            { text: 'Recipe A is weaker because it requires 0.4 qts/lemon', type: 'trap', forensic: 'Inverted Unit Ratio Trap: Calculates quarts per lemon (0.4 vs 0.5) but misinterprets smaller water requirement.' }
+          ],
+          hints: [
+            'Find the unit rate of lemons per quart for both recipes.',
+            'Recipe A: 5 lemons ÷ 2 quarts = 2.5 lemons per quart.',
+            'Recipe B: 2 lemons ÷ 1 quart = 2.0 lemons per quart. A higher number means more lemon concentration.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Compare concentrations by scaling to 1 quart of water.',
+            step2: 'Model: Recipe A unit rate = 2.5 lemons/qt; Recipe B unit rate = 2.0 lemons/qt.',
+            step3: 'Solve: 2.5 > 2.0. Recipe A has more lemons per unit of water. On the coordinate graph, Ray A has slope 2.5 and Ray B has slope 2.0.',
+            step4: 'Verify: At 2 quarts, Recipe A has 5 lemons while Recipe B has only 4 lemons. Recipe A is definitively more tart.'
+          },
+          whatIf: {
+            title: 'What happens if we mix 1 quart of Recipe A with 1 quart of Recipe B?',
+            desc: 'Total lemons = 2.5 + 2.0 = 4.5 lemons in 2 quarts = 2.25 lemons/qt. The combined unit rate is the exact arithmetic mean of the two individual slopes!'
+          }
+        },
+        {
+          id: 'm4_q2',
+          standard: 'NC.6.RP.3 • Double Number Line',
+          difficulty: 'Unit Rate Duality',
+          narrative: 'A high-speed color printer outputs 150 pages in 4 minutes at a constant rate. What are the two distinct unit rates that describe this machine, and what does each represent?',
+          knowns: '150 pages in 4 minutes',
+          unknown: 'Two unit rates: pages/min and min/page',
+          invariant: 'Rate 1 = 150/4 = 37.5 pages/min; Rate 2 = 4/150 = 0.0267 min/page',
+          options: [
+            { text: '37.5 pages/min (throughput) and 0.0267 min/page (time per page)', type: 'target', forensic: 'Target: 150 ÷ 4 = 37.5 pages per minute; 4 ÷ 150 = 2/75 ≈ 0.0267 min per page (1.6 seconds/page).' },
+            { text: '35 pages/min and 0.05 min/page', type: 'trap', forensic: 'Arithmetic Approximation Error.' },
+            { text: '600 pages/hour only', type: 'trap', forensic: 'Incomplete Dimensional Analysis: Converts to hours but ignores reciprocal unit rate.' },
+            { text: '37.5 pages/min and 150 min/page', type: 'trap', forensic: 'Reciprocal Inversion Error.' }
+          ],
+          hints: [
+            'For pages per minute: Divide pages by minutes (150 ÷ 4).',
+            'For minutes per page: Divide minutes by pages (4 ÷ 150).',
+            'Notice that the two unit rates are mathematical reciprocals of each other!'
+          ],
+          solution: {
+            step1: 'Deconstruct: Rate relation between 150 pages and 4 minutes.',
+            step2: 'Model: Rate 1 = 150 / 4 = 37.5 pages/min. Rate 2 = 4 / 150 = 2/75 min/page.',
+            step3: 'Solve: In seconds: (2/75) × 60 = 1.6 seconds per page.',
+            step4: 'Verify: 37.5 pages/min × (1 min / 37.5 pages) = 1. Reciprocal invariance holds.'
+          },
+          whatIf: {
+            title: 'How many pages can the printer output during a 12-minute print job?',
+            desc: 'Pages = 12 min × 37.5 pages/min = 450 pages!'
+          }
+        },
+        {
+          id: 'm4_q3',
+          standard: 'NC.6.RP.2 • Constant of Proportionality',
+          difficulty: 'Coordinate Ray Invariance',
+          narrative: 'A direct variation ray begins at origin (0,0) and passes through coordinate point (6, 15). What is the constant of proportionality k, and what equation represents this proportional relationship?',
+          knowns: 'Ray passes through (0,0) and (6, 15)',
+          unknown: 'Constant k and equation y = kx',
+          invariant: 'k = y / x = 15 / 6 = 2.5',
+          options: [
+            { text: 'k = 2.5; Equation: y = 2.5x', type: 'target', forensic: 'Target: k = y/x = 15/6 = 5/2 = 2.5. Line is y = 2.5x.' },
+            { text: 'k = 0.4; Equation: y = 0.4x', type: 'trap', forensic: 'Inverted Ratio Trap: Computes x/y = 6/15 = 0.4 instead of y/x.' },
+            { text: 'k = 9; Equation: y = x + 9', type: 'trap', forensic: 'Additive Difference Trap: Subtracts 15 - 6 = 9, assuming non-proportional translation.' },
+            { text: 'k = 21; Equation: y = 21x', type: 'trap', forensic: 'Additive Fallacy: Adds 15 + 6 = 21.' }
+          ],
+          hints: [
+            'For any line passing through (0,0), the constant of proportionality k is y ÷ x.',
+            'Divide 15 by 6: 15 ÷ 6 = 2.5.',
+            'The direct variation equation has the form y = kx.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Proportional ray through origin (0,0) and point (6, 15).',
+            step2: 'Model: k = y / x = 15 / 6 = 5/2 = 2.5.',
+            step3: 'Solve: y = 2.5x.',
+            step4: 'Verify: At x = 6, y = 2.5(6) = 15. At origin x = 0, y = 0. Passes check.'
+          },
+          whatIf: {
+            title: 'What is the y-value when x = 14?',
+            desc: 'y = 2.5 × 14 = 35. Point (14, 35) lies squarely on this ray!'
+          }
+        },
+        {
+          id: 'm4_q4',
+          standard: 'NC.6.RP.4 • Percent Benchmark Decomposer',
+          difficulty: 'Mental Benchmark Systems',
+          narrative: 'A robotics kit normally costs $240. During an educational discount event, the price is discounted by 35%. Using benchmark percents (10% and 5%), calculate the exact dollar discount and final price without long-form multiplication.',
+          knowns: 'Original = $240; Discount = 35%',
+          unknown: 'Dollar Discount and Final Price',
+          invariant: '35% = 3 × 10% + 5% = 3($24) + $12 = $72 + $12 = $84 discount',
+          options: [
+            { text: 'Discount = $84; Final Price = $156', type: 'target', forensic: 'Target: 10% of $240 = $24. 30% = 3 × $24 = $72. 5% = $12. Total discount = $72 + $12 = $84. Price = $240 - $84 = $156.' },
+            { text: 'Discount = $70; Final Price = $170', type: 'trap', forensic: 'Rough Estimation Trap.' },
+            { text: 'Discount = $84; Final Price = $166', type: 'trap', forensic: 'Subtraction Error: 240 - 84 miscalculated as 166.' },
+            { text: 'Discount = $35; Final Price = $205', type: 'trap', forensic: 'Percent-Dollar Conflation Trap: Subtracts raw percentage value 35 as dollars.' }
+          ],
+          hints: [
+            'Find 10% of $240 by dividing by 10: 10% = $24.',
+            'Multiply by 3 to find 30%: 3 × $24 = $72.',
+            'Find 5% by taking half of 10%: $24 ÷ 2 = $12. Add them: $72 + $12 = $84.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Benchmark decomposition of 35% into (10% + 10% + 10% + 5%).',
+            step2: 'Model: 10% of 240 = 24. 30% = 72. 5% = 12.',
+            step3: 'Solve: Total Discount = 72 + 12 = $84. Final Price = 240 - 84 = $156.',
+            step4: 'Verify: 0.35 × 240 = 84. 240 - 84 = 156. Verified.'
+          },
+          whatIf: {
+            title: 'What if sales tax of 7.5% is applied to the discounted $156 price?',
+            desc: 'Tax = 10% of 156 ($15.60) minus 2.5% ($3.90) = $11.70. Final total = $167.70.'
+          }
+        },
+        {
+          id: 'm4_q5',
+          standard: 'NC.6.RP.3 • Scale Transformations',
+          difficulty: '2D Scale Factor Scaling',
+          narrative: 'A blueprint rectangle with dimensions 4 cm by 7 cm (Area = 28 cm²) is dilated by a linear scale factor of k = 3. What is the area of the enlarged dilated rectangle, and what is the ratio of the new area to the original area?',
+          knowns: 'Original dimensions: 4 cm × 7 cm; Area = 28 cm²; Scale factor k = 3',
+          unknown: 'New Area and Area Scale Ratio',
+          invariant: 'Area scales by k²: New Area = Original Area × k² = 28 × 3² = 28 × 9 = 252 cm²',
+          options: [
+            { text: 'New Area = 252 cm²; Area ratio is 9:1 (k²)', type: 'target', forensic: 'Target: New dimensions are 12 cm × 21 cm = 252 cm². Area ratio = 252 / 28 = 9 = 3².' },
+            { text: 'New Area = 84 cm²; Area ratio is 3:1 (k)', type: 'trap', forensic: 'Linear Scaling Fallacy: Multiplies area by k (28 × 3 = 84) instead of k².' },
+            { text: 'New Area = 168 cm²', type: 'trap', forensic: 'Partial Scale Trap: Scales only one dimension by 3.' },
+            { text: 'New Area = 756 cm²', type: 'trap', forensic: 'Cube Factor Trap: Multiplies by k³ (volume scale).' }
+          ],
+          hints: [
+            'Find the new dimensions by multiplying both width and length by scale factor 3.',
+            'New width = 4 × 3 = 12 cm. New length = 7 × 3 = 21 cm.',
+            'Multiply new dimensions: 12 × 21 = 252 cm². Notice 252 ÷ 28 = 9 = 3².'
+          ],
+          solution: {
+            step1: 'Deconstruct: Linear dilation multiplies every 1D length by scale factor k = 3.',
+            step2: 'Model: Area is a 2-dimensional measure (length × width). Therefore Area_new = Area_old × k².',
+            step3: 'Solve: 28 × 3² = 28 × 9 = 252 cm².',
+            step4: 'Verify: 12 × 21 = 252. 252 / 28 = 9. Invariant k² proved.'
+          },
+          whatIf: {
+            title: 'What if the figure was a 3D prism scaled by k = 3?',
+            desc: 'Volume scales by k³ = 3³ = 27 times larger!'
+          }
+        },
+        {
+          id: 'm4_q6',
+          standard: 'NC.5.MD.1 • Conversion Systems',
+          difficulty: 'Multi-Step Conversion',
+          narrative: 'A chemical reservoir holds 3.75 gallons of liquid reagent. The laboratory dispenses the reagent into 15-fluid-ounce test tubes. How many complete test tubes can be filled, and how many fluid ounces remain?',
+          knowns: '1 gallon = 128 fluid ounces; Volume = 3.75 gallons; Tube = 15 fl oz',
+          unknown: 'Tubes filled and remainder in fluid ounces',
+          invariant: 'Total fl oz = 3.75 × 128 = 480 fl oz ⟹ 480 ÷ 15 = exactly 32 tubes',
+          options: [
+            { text: 'Exactly 32 test tubes with 0 fl oz remaining', type: 'target', forensic: 'Target: 3.75 × 128 = 480 fl oz. 480 ÷ 15 = 32 tubes with 0 remainder.' },
+            { text: '30 test tubes with 30 fl oz remaining', type: 'trap', forensic: 'Improper Remainder Trap: Remainder 30 is larger than divisor 15.' },
+            { text: '25 test tubes', type: 'trap', forensic: 'Conversion Error: Uses 100 fl oz per gallon.' },
+            { text: '31 test tubes with 15 fl oz remaining', type: 'trap', forensic: 'Incomplete Division: 15 fl oz fills exactly one more tube!' }
+          ],
+          hints: [
+            'Convert 3.75 gallons into fluid ounces: 1 gallon = 128 fl oz.',
+            '3.75 × 128 = (3 × 128) + (¾ × 128) = 384 + 96 = 480 fl oz.',
+            'Divide 480 by 15 fl oz per tube: 480 ÷ 15.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Customary volume conversion: 1 gal = 4 qt = 8 pt = 16 cups = 128 fl oz.',
+            step2: 'Model: Total fl oz = 3.75 × 128 = 480 fl oz.',
+            step3: 'Solve: 480 ÷ 15 = 32 test tubes exactly with 0 remainder.',
+            step4: 'Verify: 32 × 15 = 480 fl oz = 3.75 gallons. Perfect match.'
+          },
+          whatIf: {
+            title: 'What if test tube capacity was 16 fl oz (1 pint)?',
+            desc: '480 ÷ 16 = exactly 30 test tubes!'
+          }
+        }
+      ],
+
+      // ------------------------------------------------------------------------
+      // MODULE 5: 3D Spatial Geometry & Composite Solids (Section F Archetype 2)
+      // Standards: NC.5.MD.4, NC.5.MD.5, NC.6.G.1, NC.6.G.4
+      // ------------------------------------------------------------------------
+      5: [
+        {
+          id: 'm5_q1',
+          standard: 'NC.5.MD.5 • NC.6.G.2',
+          difficulty: 'SSA Rigor Jump (Archetype 2)',
+          narrative: 'An L-shaped storage container is composed of two non-overlapping rectangular prisms with a total volume of 223 m³. Prism A has known dimensions 3 m × 2 m × 3 m. Prism B has a known base area of 30 m². Work backward to determine the missing height of Prism B.',
+          knowns: 'Total V = 223 m³; Prism A = 3×2×3 m; Prism B Base = 30 m²',
+          unknown: 'Height h of Prism B',
+          invariant: 'V_B = 223 - V_A = 223 - 18 = 205 m³ ⟹ h = 205 ÷ 30 = 6 ⅚ m',
+          options: [
+            { text: 'h = 6 ⅚ m (6.83 m)', type: 'target', forensic: 'Target: Prism A volume = 3 × 2 × 3 = 18 m³. Prism B volume = 223 - 18 = 205 m³. Height = 205 ÷ 30 = 6 25/30 = 6 ⅚ m.' },
+            { text: 'h = 7.43 m', type: 'trap', forensic: 'Partial Step Trap: Divides total volume 223 ÷ 30 = 7.43 m without subtracting Prism A volume first.' },
+            { text: 'h = 6.00 m', type: 'trap', forensic: 'Additive Boundary Trap: Subtracts Prism A base area (6 m²) instead of volume (18 m³).' },
+            { text: 'h = 13.6 m', type: 'trap', forensic: 'Dimension Multiplicity Trap: Divides 205 by 15 instead of 30.' }
+          ],
+          hints: [
+            'Find the volume of Prism A first: Volume = length × width × height.',
+            'Prism A volume = 3 × 2 × 3 = 18 m³.',
+            'Subtract Prism A volume from total 223 m³: 223 - 18 = 205 m³. Then divide by Base Area 30.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Total Volume = V_A + V_B = 223 m³.',
+            step2: 'Model: V_A = 3 × 2 × 3 = 18 m³. V_B = 223 - 18 = 205 m³.',
+            step3: 'Solve: V_B = Base × height ⟹ 205 = 30 · h ⟹ h = 205 / 30 = 6 25/30 = 6 ⅚ m (6.83 m).',
+            step4: 'Verify: 18 + (30 × 6 ⅚) = 18 + 205 = 223 m³. Exact.'
+          },
+          whatIf: {
+            title: 'What happens to total exterior surface area if Prism A slides along the face of Prism B?',
+            desc: 'As long as Prism A remains fully on the face of Prism B without overhanging, the total exterior surface area remains invariant because the subtracted shared boundary area is unchanged!'
+          }
+        },
+        {
+          id: 'm5_q2',
+          standard: 'NC.6.G.4 • Surface Area Nets',
+          difficulty: 'Boundary Invariance',
+          narrative: 'When unfolding the 3D composite L-shaped container from Question 1 into a flat 2D net, how many exterior faces are created, and how many interior contact boundary faces must be subtracted from the total individual surface areas?',
+          knowns: 'Two joined rectangular prisms (Prism A & Prism B)',
+          unknown: 'Interior contact boundary subtraction',
+          invariant: 'Contact area is subtracted twice (once from Prism A, once from Prism B)',
+          options: [
+            { text: '10 exterior faces; 2 interior boundary faces subtracted (2 × contact area)', type: 'target', forensic: 'Target: Each prism has 6 faces (total 12). Joining them covers 2 faces (1 on A, 1 on B). Exterior net has 12 - 2 = 10 faces.' },
+            { text: '11 exterior faces; 1 boundary face subtracted', type: 'trap', forensic: 'Single Boundary Error: Forgets that joining covers faces on BOTH prisms.' },
+            { text: '12 exterior faces; 0 boundary faces subtracted', type: 'trap', forensic: 'Disjoint Assumption: Ignores physical contact plane.' },
+            { text: '8 exterior faces', type: 'trap', forensic: 'Over-subtraction error.' }
+          ],
+          hints: [
+            'How many faces does an isolated rectangular prism have? 6 faces.',
+            'Two separate prisms have 6 + 6 = 12 total faces.',
+            'When glued together along a shared face, that contact region is covered on BOTH solids.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Surface area of composite solids requires subtracting interior shared interfaces.',
+            step2: 'Model: Two prisms have 6 + 6 = 12 faces. Joining them glues 1 face of A to 1 face of B.',
+            step3: 'Solve: 12 - 2 = 10 exposed exterior faces. Surface Area = SA_A + SA_B - 2(Contact Area).',
+            step4: 'Verify: Physical net folding confirms exactly 10 outward facing rectangles.'
+          },
+          whatIf: {
+            title: 'What if Prism A contact area is 6 m²?',
+            desc: 'Total surface area reduction = 2 × 6 = 12 m² subtracted from the disjoint sum.'
+          }
+        },
+        {
+          id: 'm5_q3',
+          standard: 'NC.6.G.2 • Space Diagonal Bridge',
+          difficulty: '3D Spatial Diagonal',
+          narrative: 'A precision shipping container has dimensions: length = 4 ft, width = 3 ft, and height = 12 ft. Calculate the exact length of the internal 3D space diagonal connecting opposite bottom and top corners.',
+          knowns: 'l = 4 ft, w = 3 ft, h = 12 ft',
+          unknown: 'Space diagonal d',
+          invariant: 'd = √(l² + w² + h²) = √(16 + 9 + 144) = √169 = 13 ft',
+          options: [
+            { text: 'd = 13 ft', type: 'target', forensic: 'Target: Bottom base diagonal = √(4² + 3²) = √25 = 5 ft. Space diagonal = √(5² + 12²) = √(25 + 144) = √169 = 13 ft.' },
+            { text: 'd = 19 ft', type: 'trap', forensic: 'Additive Fallacy: Adds dimensions linearly: 4 + 3 + 12 = 19 ft.' },
+            { text: 'd = 15 ft', type: 'trap', forensic: 'Base Diagonal Conflation: Adds 3 + 12 = 15.' },
+            { text: 'd = 12.6 ft', type: 'trap', forensic: 'Under-estimation error.' }
+          ],
+          hints: [
+            'Use the extended 3D Pythagorean theorem: d = √(l² + w² + h²).',
+            'Compute the squares: 4² = 16, 3² = 9, 12² = 144.',
+            'Sum them: 16 + 9 + 144 = 169. What number multiplied by itself gives 169?'
+          ],
+          solution: {
+            step1: 'Deconstruct: The space diagonal is the hypotenuse of a right triangle formed by base diagonal and height.',
+            step2: 'Model: Base diagonal = √(4² + 3²) = 5 ft. Space diagonal = √(5² + 12²).',
+            step3: 'Solve: d = √(25 + 144) = √169 = 13 ft.',
+            step4: 'Verify: 13² = 169 = 16 + 9 + 144. Exact integer Pythagorean quadruple (3, 4, 12, 13).'
+          },
+          whatIf: {
+            title: 'Can a 12.5 ft fishing pole fit completely inside this closed container?',
+            desc: 'Yes! Because the maximum internal clearance is 13 ft along the diagonal, a 12.5 ft pole fits comfortably.'
+          }
+        },
+        {
+          id: 'm5_q4',
+          standard: 'NC.5.MD.5c • Cavity Subtraction',
+          difficulty: 'Void Subtraction Mechanics',
+          narrative: 'A solid cubic block of titanium has edge length 10 cm (Outer Volume = 1,000 cm³). A rectangular core void measuring 4 cm by 4 cm is drilled completely through from top to bottom (height 10 cm). What is the remaining volume of the titanium block?',
+          knowns: 'Outer cube = 10×10×10 cm³; Void = 4×4×10 cm³',
+          unknown: 'Net Volume',
+          invariant: 'V_net = V_outer - V_void = 1000 - 160 = 840 cm³',
+          options: [
+            { text: '840 cm³', type: 'target', forensic: 'Target: Outer V = 10³ = 1000 cm³. Void V = 4 × 4 × 10 = 160 cm³. Remaining V = 1000 - 160 = 840 cm³.' },
+            { text: '984 cm³', type: 'trap', forensic: 'Area Subtraction Trap: Subtracts only 4×4 = 16 cm² from 1,000 cm³.' },
+            { text: '640 cm³', type: 'trap', forensic: 'Void Over-estimation: Subtracts 360 cm³.' },
+            { text: '800 cm³', type: 'trap', forensic: 'Rough estimate.' }
+          ],
+          hints: [
+            'Calculate the volume of the outer cube: 10 × 10 × 10 = 1,000 cm³.',
+            'Calculate the volume of the removed core void: 4 × 4 × 10 = 160 cm³.',
+            'Subtract the void volume from the outer volume.'
+          ],
+          solution: {
+            step1: 'Deconstruct: Composite solid with internal hollow void.',
+            step2: 'Model: V_net = V_cube - V_cavity = 10³ - (4 × 4 × 10).',
+            step3: 'Solve: 1,000 - 160 = 840 cm³.',
+            step4: 'Verify: 840 + 160 = 1,000 cm³. Volume conservation holds.'
+          },
+          whatIf: {
+            title: 'If titanium has density 4.5 g/cm³, what is the final mass?',
+            desc: 'Mass = 840 cm³ × 4.5 g/cm³ = 3,780 grams (3.78 kg)!'
+          }
+        }
+      ]
+    };
+
+    /* ==========================================================================
+       3.1 QUESTION & OPTION RANDOMIZATION ENGINE
+       ========================================================================== */
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+
+    function randomizeQuestionBank() {
+      for (const modKey in QUESTION_BANK) {
+        if (Object.prototype.hasOwnProperty.call(QUESTION_BANK, modKey)) {
+          // 1. Randomize question sequence within each module
+          QUESTION_BANK[modKey] = shuffleArray(QUESTION_BANK[modKey]);
+
+          // 2. Randomize answer options sequence for every single question
+          QUESTION_BANK[modKey].forEach(q => {
+            if (q.options && Array.isArray(q.options)) {
+              q.options = shuffleArray(q.options);
+            }
+          });
+        }
+      }
+    }
+
+    /* ==========================================================================
+       4. APP APPLICATION STATE & USER PROGRESS
+       ========================================================================== */
+    const AppState = {
+      activeModule: 1,
+      activeQuestionIndex: 0,
+      activeStage: 1,
+      selectedOptionIndex: null,
+      submitted: false,
+      hintStage: 1,
+      
+      // HUD Metrics
+      focusSeconds: 0,
+      curiosityGems: 0,
+      trapBadges: 0,
+      retryTokens: 3,
+
+      // Manipulative Sandbox States
+      mod1State: {
+        leftMass: 144, // 12 * 12
+        rightMass: 144,
+        variableCount: 12,
+        constantMass: 144,
+        baseArea: 12,
+        height: 12,
+        tiltAngle: 0
+      },
+
+      mod2State: {
+        factorA: 0.425,
+        factorB: 12.8,
+        zoom: 'thousandths',
+        exponentShift: 0,
+        collapseZeros: true
+      },
+
+      mod3State: {
+        dividendMiles: 1.5, // 9/6
+        divisorRate: 0.6667, // 4/6
+        commonDenominator: 6,
+        subdividedDividend: 9,
+        subdividedDivisor: 4
+      },
+
+      mod4State: {
+        recipeA_lemons: 5,
+        recipeA_quarts: 2,
+        recipeB_lemons: 2,
+        recipeB_quarts: 1,
+        showMixture: false
+      },
+
+      mod5State: {
+        prismA_dims: [3, 2, 3],
+        prismB_base: 30,
+        prismB_h: 6.83,
+        unfoldNet: false
+      },
+
+      // Scratchpad Whiteboard
+      scratchpad: {
+        active: false,
+        tool: 'pen',
+        color: '#38bdf8',
+        isDrawing: false,
+        lastX: 0,
+        lastY: 0
+      }
+    };
+
+    /* ==========================================================================
+       5. SPEECH SYNTHESIS ENGINE (Voice Read-Aloud)
+       ========================================================================== */
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) {
+        UI.showToast('Voice Read-Aloud', 'Speech synthesis is not supported in this browser.', '🔇');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/<[^>]*>?/gm, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* ==========================================================================
+       6. DOM ELEMENTS & EVENT BINDINGS
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      SoundManager.init();
+      initTheme();
+      initHUDTimer();
+      initModuleTabs();
+      initStageButtons();
+      initScratchpad();
+      initGlobalButtons();
+      randomizeQuestionBank(); // Randomize question and option order on app open
+      loadModule(1);
+    });
+
+    // Theme Switcher & Persistence
+    function initTheme() {
+      const savedTheme = localStorage.getItem('ssa_theme') || 'dark';
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+
+      document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const newTheme = isLight ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('ssa_theme', newTheme);
+        renderActiveManipulative();
+        UI.showToast('Theme Updated', `Switched to ${newTheme} mode with high-contrast canvas synchronization.`, '🌓');
+      });
+    }
+
+    // HUD Focus Timer
+    function initHUDTimer() {
+      const timerEl = document.getElementById('hudTimerVal');
+      setInterval(() => {
+        AppState.focusSeconds++;
+        const mins = String(Math.floor(AppState.focusSeconds / 60)).padStart(2, '0');
+        const secs = String(AppState.focusSeconds % 60).padStart(2, '0');
+        if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Module Tabs Switcher
+    function initModuleTabs() {
+      document.querySelectorAll('.module-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mod = parseInt(btn.dataset.mod, 10);
+          if (mod === AppState.activeModule) return;
+          SoundManager.playClick();
+          document.querySelectorAll('.module-tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loadModule(mod);
+        });
+      });
+    }
+
+    // 4-Stage Pedagogical Loop Buttons
+    function initStageButtons() {
+      document.querySelectorAll('.stage-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const stage = parseInt(btn.dataset.stage, 10);
+          setStage(stage);
+        });
+      });
+    }
+
+    function setStage(stage) {
+      AppState.activeStage = stage;
+      SoundManager.playClick();
+      document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+      const targetBtn = document.getElementById(`stageBtn${stage}`);
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const coachSpeech = document.getElementById('coachDialogueText');
+      if (stage === 1) {
+        coachSpeech.textContent = 'Stage 1: Deconstruct the problem. Inspect the 3-Column Schema: Knowns, Unknowns, and Core Invariant.';
+      } else if (stage === 2) {
+        coachSpeech.textContent = 'Stage 2: Pathway Reconstruction. Perform a mental sanity check on scale before calculating.';
+      } else if (stage === 3) {
+        coachSpeech.textContent = 'Stage 3: Distractor Forensics. Click each option to spot cognitive traps and earn Trap-Hunter badges.';
+      } else if (stage === 4) {
+        coachSpeech.textContent = 'Stage 4: Curiosity Engine. Manipulate the sandbox sliders to stress-test mathematical invariants!';
+        const whatIf = document.getElementById('whatIfContainer');
+        if (whatIf) whatIf.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Global Buttons
+    function initGlobalButtons() {
+      // Audio SFX Toggle
+      document.getElementById('audioToggleBtn')?.addEventListener('click', (e) => {
+        SoundManager.muted = !SoundManager.muted;
+        e.currentTarget.textContent = SoundManager.muted ? '🔇' : '🔊';
+        UI.showToast('Audio SFX', SoundManager.muted ? 'Sound muted.' : 'Sound enabled.', '🔊');
+      });
+
+      // Voice Listen
+      document.getElementById('speakDialogueBtn')?.addEventListener('click', () => {
+        const text = document.getElementById('coachDialogueText')?.textContent || '';
+        speakText(text);
+      });
+
+      // Offline Download
+      document.getElementById('downloadAppBtn')?.addEventListener('click', () => {
+        const html = document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = '5th_grade_ssa_math_acceleration_lab.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        UI.showToast('Offline Download', 'Stand-alone learning lab compiled and saved locally.', '💾');
+      });
+
+      // Reset Sandbox
+      document.getElementById('resetSandboxBtn')?.addEventListener('click', () => {
+        UI.confirm('Reset Sandbox', 'Reset all variables and sliders to default problem settings?', () => {
+          resetModuleSandboxDefaults();
+          renderActiveManipulative();
+          UI.showToast('Sandbox Reset', 'Manipulative variables returned to initial state.', '↻');
+        });
+      });
+
+      // Hint Toggle
+      document.getElementById('hintToggleHeader')?.addEventListener('click', () => {
+        const q = getActiveQuestion();
+        if (!q) return;
+
+        AppState.hintStage = (AppState.hintStage % 3) + 1;
+        SoundManager.playClick();
+
+        document.getElementById('hDot1').className = 'hint-dot ' + (AppState.hintStage >= 1 ? 'active' : '');
+        document.getElementById('hDot2').className = 'hint-dot ' + (AppState.hintStage >= 2 ? 'active' : '');
+        document.getElementById('hDot3').className = 'hint-dot ' + (AppState.hintStage >= 3 ? 'active' : '');
+
+        const stageLabel = document.getElementById('hintStageLabel');
+        const hintBody = document.getElementById('hintBodyText');
+
+        if (stageLabel) stageLabel.textContent = `(Tier ${AppState.hintStage} / 3)`;
+        if (hintBody) hintBody.textContent = q.hints[AppState.hintStage - 1];
+      });
+
+      // Dynamic Reshuffle Button
+      document.getElementById('shuffleBtn')?.addEventListener('click', () => {
+        randomizeQuestionBank();
+        loadModule(AppState.activeModule);
+        UI.showToast('Order Randomized 🔀', 'Questions and answer choices have been dynamically reshuffled across all modules!', '🎲');
+      });
+
+      // Toast Close
+      document.getElementById('toastCloseBtn')?.addEventListener('click', () => {
+        if (UI.toastTimer) clearTimeout(UI.toastTimer);
+        document.getElementById('customToast')?.classList.remove('show');
+      });
+    }
+
+    /* ==========================================================================
+       7. MODULE & QUESTION LOADER
+       ========================================================================== */
+    function loadModule(modNum) {
+      AppState.activeModule = modNum;
+      AppState.activeQuestionIndex = 0;
+      AppState.selectedOptionIndex = null;
+      AppState.submitted = false;
+      AppState.hintStage = 1;
+
+      // Update Manipulative Badge
+      const badges = {
+        1: ['Algebraic Balance Scale', 'Live Equilibrium & Weight Physics'],
+        2: ['Base-Ten Decimal Area Zoomer', 'Thousandths Grid & Trailing Zero Collapse'],
+        3: ['Dual-Tape Fraction Resizer', 'Common Unit Subdivision & Remainder Groups'],
+        4: ['Synchronized Ratio Ray Plotter', 'Covariance Rays & Direct Proportion'],
+        5: ['3D Composite Prism Slicer', 'Spatial Volume & Surface Area Net Unfolder']
+      };
+
+      const [name, sub] = badges[modNum] || ['Mathematical Sandbox', 'Interactive Model'];
+      document.getElementById('manipulativeBadgeName').textContent = name;
+      document.getElementById('manipulativeSubtext').textContent = sub;
+
+      // Render Question Navigator Pills
+      const questions = QUESTION_BANK[modNum] || [];
+      const pillsContainer = document.getElementById('qPillsContainer');
+      if (pillsContainer) {
+        pillsContainer.innerHTML = '';
+        questions.forEach((q, idx) => {
+          const pill = document.createElement('button');
+          pill.className = `q-pill ${idx === 0 ? 'active' : ''}`;
+          pill.textContent = `Q${idx + 1}`;
+          pill.title = `Question ${idx + 1}: ${q.standard}`;
+          pill.addEventListener('click', () => {
+            selectQuestion(idx);
+          });
+          pillsContainer.appendChild(pill);
+        });
+      }
+
+      setupDynamicControls(modNum);
+      loadQuestion(0);
+      renderActiveManipulative();
+    }
+
+    function selectQuestion(idx) {
+      AppState.activeQuestionIndex = idx;
+      AppState.selectedOptionIndex = null;
+      AppState.submitted = false;
+      AppState.hintStage = 1;
+      SoundManager.playClick();
+
+      document.querySelectorAll('.q-pill').forEach((p, i) => {
+        p.classList.toggle('active', i === idx);
+      });
+
+      loadQuestion(idx);
+    }
+
+    function getActiveQuestion() {
+      const qList = QUESTION_BANK[AppState.activeModule] || [];
+      return qList[AppState.activeQuestionIndex] || null;
+    }
+
+    function loadQuestion(idx) {
+      const q = getActiveQuestion();
+      if (!q) return;
+
+      document.getElementById('qStandardTag').textContent = q.standard;
+      document.getElementById('qDifficultyTag').textContent = q.difficulty;
+      document.getElementById('problemPromptText').textContent = q.narrative;
+      document.getElementById('schemaKnownsVal').textContent = q.knowns;
+      document.getElementById('schemaUnknownsVal').textContent = q.unknown;
+      document.getElementById('schemaInvariantVal').textContent = q.invariant;
+
+      // Hint Reset
+      document.getElementById('hintStageLabel').textContent = '(Tier 1 / 3)';
+      document.getElementById('hintBodyText').textContent = q.hints[0];
+      document.getElementById('hDot1').className = 'hint-dot active';
+      document.getElementById('hDot2').className = 'hint-dot';
+      document.getElementById('hDot3').className = 'hint-dot';
+
+      // Solution Accordion Reset
+      const accordion = document.getElementById('solutionAccordion');
+      if (accordion) accordion.classList.remove('visible');
+      document.getElementById('solStep1').textContent = q.solution.step1;
+      document.getElementById('solStep2').textContent = q.solution.step2;
+      document.getElementById('solStep3').textContent = q.solution.step3;
+      document.getElementById('solStep4').textContent = q.solution.step4;
+
+      // What-If Box
+      document.getElementById('whatIfDescText').innerHTML = `<strong>${q.whatIf.title}</strong><br>${q.whatIf.desc}`;
+
+      // Render Answer Options
+      renderOptions(q);
+
+      // Coach Dialogue
+      document.getElementById('coachDialogueText').textContent = `Problem ${idx + 1}: Notice the target unknown. Identify why distractors are structured around misconceptions.`;
+    }
+
+    function renderOptions(q) {
+      const container = document.getElementById('optionsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, i) => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.innerHTML = `
+          <div class="option-letter">${letters[i]}</div>
+          <div class="option-text">${opt.text}</div>
+          <span class="option-forensic-tag">${opt.type === 'target' ? '✓ Target' : '⚠ Trap'}</span>
+        `;
+
+        card.addEventListener('click', () => {
+          handleOptionSelect(i, opt);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    function handleOptionSelect(index, option) {
+      const q = getActiveQuestion();
+      if (!q) return;
+
+      const cards = document.querySelectorAll('.option-card');
+      cards.forEach((c, i) => {
+        c.classList.remove('selected', 'correct', 'trap');
+        if (i === index) {
+          c.classList.add('selected');
+        }
+      });
+
+      // Grade Choice
+      if (option.type === 'target') {
+        cards[index].classList.add('correct');
+        SoundManager.playSuccess();
+        UI.showToast('Exemplary Rigor! 🎯', 'Correct! You successfully avoided cognitive distractors.', '🏆');
+
+        // Mark Pill
+        const activePill = document.querySelectorAll('.q-pill')[AppState.activeQuestionIndex];
+        if (activePill) activePill.classList.add('passed');
+
+        // Award Curiosity Gem
+        AppState.curiosityGems += 1;
+        document.getElementById('hudGemsVal').textContent = AppState.curiosityGems;
+
+        // Reveal Solution Accordion
+        document.getElementById('solutionAccordion')?.classList.add('visible');
+
+        document.getElementById('coachDialogueText').textContent = `Brilliant deduction! Forensics: ${option.forensic}`;
+      } else {
+        cards[index].classList.add('trap');
+        SoundManager.playTrapTone();
+        UI.showToast('Diagnostic Trap Detected! ⚠️', option.forensic, '🔍');
+
+        // Award Trap-Hunter badge for diagnosing misconception
+        AppState.trapBadges += 1;
+        document.getElementById('hudTrapsVal').textContent = AppState.trapBadges;
+
+        // Consume Retry Token if available
+        if (AppState.retryTokens > 0) {
+          AppState.retryTokens--;
+          document.getElementById('hudTokensVal').textContent = AppState.retryTokens;
+        }
+
+        document.getElementById('coachDialogueText').textContent = `Cognitive Trap Spotted: ${option.forensic}. Use a Retry Token or Socratic Hint to re-calculate.`;
+      }
+    }
+
+    /* ==========================================================================
+       8. DYNAMIC MANIPULATIVE CONTROLS SETUP
+       ========================================================================== */
+    function setupDynamicControls(modNum) {
+      const bar = document.getElementById('dynamicControlsBar');
+      if (!bar) return;
+      bar.innerHTML = '';
+
+      if (modNum === 1) {
+        // Module 1: Algebraic Balance Scale
+        bar.innerHTML = `
+          <div class="control-slider-row">
+            <span class="mono">Base Area [2³+4]:</span>
+            <input type="range" id="m1BaseSlider" min="4" max="24" step="2" value="12">
+            <span class="mono" id="m1BaseVal">12 ft²</span>
+          </div>
+          <div class="control-slider-row">
+            <span class="mono">Height h (ft):</span>
+            <input type="range" id="m1HeightSlider" min="2" max="24" step="1" value="12">
+            <span class="mono" id="m1HeightVal">12 ft</span>
+          </div>
+          <div class="button-actions-row">
+            <button type="button" class="btn-action-sm" id="m1Preset1Btn">Preset: 12h = 144</button>
+            <button type="button" class="btn-action-sm" id="m1Preset2Btn">Preset: 3x + 14 = 35</button>
+            <button type="button" class="btn-action-sm" id="m1SubConstantBtn">-14 Both Pans</button>
+            <button type="button" class="btn-action-sm" id="m1DivideBtn">÷3 Both Pans</button>
+          </div>
+        `;
+
+        document.getElementById('m1BaseSlider')?.addEventListener('input', (e) => {
+          AppState.mod1State.baseArea = parseFloat(e.target.value);
+          document.getElementById('m1BaseVal').textContent = `${AppState.mod1State.baseArea} ft²`;
+          AppState.mod1State.leftMass = AppState.mod1State.baseArea * AppState.mod1State.height;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m1HeightSlider')?.addEventListener('input', (e) => {
+          AppState.mod1State.height = parseFloat(e.target.value);
+          document.getElementById('m1HeightVal').textContent = `${AppState.mod1State.height} ft`;
+          AppState.mod1State.leftMass = AppState.mod1State.baseArea * AppState.mod1State.height;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m1Preset1Btn')?.addEventListener('click', () => {
+          AppState.mod1State.baseArea = 12;
+          AppState.mod1State.height = 12;
+          AppState.mod1State.leftMass = 144;
+          AppState.mod1State.rightMass = 144;
+          renderActiveManipulative();
+          UI.showToast('Preset 1', 'Balance configured for 12 · h = 144.', '⚖️');
+        });
+
+        document.getElementById('m1Preset2Btn')?.addEventListener('click', () => {
+          AppState.mod1State.baseArea = 3;
+          AppState.mod1State.height = 7;
+          AppState.mod1State.leftMass = 35; // 3(7) + 14
+          AppState.mod1State.rightMass = 35;
+          renderActiveManipulative();
+          UI.showToast('Preset 2', 'Balance configured for 3x + 14 = 35.', '⚖️');
+        });
+
+        document.getElementById('m1SubConstantBtn')?.addEventListener('click', () => {
+          AppState.mod1State.leftMass = Math.max(0, AppState.mod1State.leftMass - 14);
+          AppState.mod1State.rightMass = Math.max(0, AppState.mod1State.rightMass - 14);
+          renderActiveManipulative();
+          SoundManager.playClick();
+          UI.showToast('Balance Operation', 'Subtracted 14 from both pans. Equilibrium maintained!', '⚖️');
+        });
+
+        document.getElementById('m1DivideBtn')?.addEventListener('click', () => {
+          AppState.mod1State.leftMass = Math.round(AppState.mod1State.leftMass / 3);
+          AppState.mod1State.rightMass = Math.round(AppState.mod1State.rightMass / 3);
+          renderActiveManipulative();
+          SoundManager.playClick();
+          UI.showToast('Balance Operation', 'Divided both pans by 3. Solution x = 7 isolated!', '⚖️');
+        });
+
+      } else if (modNum === 2) {
+        // Module 2: Base-Ten Decimal Area Zoomer
+        bar.innerHTML = `
+          <div class="control-slider-row">
+            <span class="mono">Factor A (Liters/sec):</span>
+            <input type="range" id="m2FactorASlider" min="0.1" max="1.0" step="0.025" value="0.425">
+            <span class="mono" id="m2FactorAVal">0.425 L/s</span>
+          </div>
+          <div class="control-slider-row">
+            <span class="mono">Factor B (Time in sec):</span>
+            <input type="range" id="m2FactorBSlider" min="5" max="25" step="0.5" value="12.8">
+            <span class="mono" id="m2FactorBVal">12.8 s</span>
+          </div>
+          <div class="button-actions-row">
+            <button type="button" class="btn-action-sm" id="m2CollapseZerosBtn">Toggle Trailing Zero Collapse</button>
+            <button type="button" class="btn-action-sm" id="m2ShiftExpBtn">Shift Exponent ×10 / ÷10</button>
+          </div>
+        `;
+
+        document.getElementById('m2FactorASlider')?.addEventListener('input', (e) => {
+          AppState.mod2State.factorA = parseFloat(e.target.value);
+          document.getElementById('m2FactorAVal').textContent = `${AppState.mod2State.factorA.toFixed(3)} L/s`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m2FactorBSlider')?.addEventListener('input', (e) => {
+          AppState.mod2State.factorB = parseFloat(e.target.value);
+          document.getElementById('m2FactorBVal').textContent = `${AppState.mod2State.factorB.toFixed(1)} s`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m2CollapseZerosBtn')?.addEventListener('click', () => {
+          AppState.mod2State.collapseZeros = !AppState.mod2State.collapseZeros;
+          renderActiveManipulative();
+          UI.showToast('Zero Collapse', AppState.mod2State.collapseZeros ? 'Showing 5.44 L (trailing zeros collapsed).' : 'Showing 5.4400 L (raw place-value fraction).', '🔍');
+        });
+
+        document.getElementById('m2ShiftExpBtn')?.addEventListener('click', () => {
+          AppState.mod2State.factorA *= 10;
+          AppState.mod2State.factorB /= 10;
+          document.getElementById('m2FactorAVal').textContent = `${AppState.mod2State.factorA.toFixed(2)}`;
+          document.getElementById('m2FactorBVal').textContent = `${AppState.mod2State.factorB.toFixed(2)}`;
+          renderActiveManipulative();
+          UI.showToast('Associative Invariance', 'Multiplied A by 10 and divided B by 10. Product remains strictly invariant!', '✨');
+        });
+
+      } else if (modNum === 3) {
+        // Module 3: Dual-Tape Fraction Resizer
+        bar.innerHTML = `
+          <div class="control-slider-row">
+            <span class="mono">Common Denominator Grid:</span>
+            <input type="range" id="m3DenomSlider" min="2" max="12" step="2" value="6">
+            <span class="mono" id="m3DenomVal">6ths Grid</span>
+          </div>
+          <div class="control-slider-row">
+            <span class="mono">Paving Speed (Rate):</span>
+            <input type="range" id="m3RateSlider" min="0.333" max="1.5" step="0.1667" value="0.6667">
+            <span class="mono" id="m3RateVal">⅔ mi/hr (4/6)</span>
+          </div>
+          <div class="button-actions-row">
+            <button type="button" class="btn-action-sm" id="m3SubdivideBtn">Subdivide to 6ths (9/6 ÷ 4/6)</button>
+            <button type="button" class="btn-action-sm" id="m3DoubleRateBtn">Double Speed to 1 ⅓ mi/hr</button>
+          </div>
+        `;
+
+        document.getElementById('m3DenomSlider')?.addEventListener('input', (e) => {
+          AppState.mod3State.commonDenominator = parseInt(e.target.value, 10);
+          document.getElementById('m3DenomVal').textContent = `${AppState.mod3State.commonDenominator}ths Grid`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m3RateSlider')?.addEventListener('input', (e) => {
+          AppState.mod3State.divisorRate = parseFloat(e.target.value);
+          document.getElementById('m3RateVal').textContent = `${AppState.mod3State.divisorRate.toFixed(2)} mi/hr`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m3SubdivideBtn')?.addEventListener('click', () => {
+          AppState.mod3State.commonDenominator = 6;
+          AppState.mod3State.divisorRate = 2/3;
+          document.getElementById('m3DenomSlider').value = 6;
+          document.getElementById('m3DenomVal').textContent = '6ths Grid';
+          renderActiveManipulative();
+          UI.showToast('Subdivision Model', 'Distance is 9 blocks (9/6). Rate is 4 blocks (4/6). 9 ÷ 4 = 2 ¼ hours!', '📏');
+        });
+
+        document.getElementById('m3DoubleRateBtn')?.addEventListener('click', () => {
+          AppState.mod3State.divisorRate = 4/3; // 8/6
+          renderActiveManipulative();
+          UI.showToast('Speed Doubled', 'Doubling speed to 1 ⅓ mi/hr (8/6) cuts time from 2 ¼ hours down to 1 ⅛ hours!', '⚡');
+        });
+
+      } else if (modNum === 4) {
+        // Module 4: Synchronized Ratio Ray Plotter
+        bar.innerHTML = `
+          <div class="control-slider-row">
+            <span class="mono">Recipe A Lemons (Water = 2 qt):</span>
+            <input type="range" id="m4RecipeASlider" min="1" max="10" step="1" value="5">
+            <span class="mono" id="m4RecipeAVal">5 lemons (2.5/qt)</span>
+          </div>
+          <div class="control-slider-row">
+            <span class="mono">Recipe B Lemons (Water = 1 qt):</span>
+            <input type="range" id="m4RecipeBSlider" min="1" max="6" step="1" value="2">
+            <span class="mono" id="m4RecipeBVal">2 lemons (2.0/qt)</span>
+          </div>
+          <div class="button-actions-row">
+            <button type="button" class="btn-action-sm" id="m4MixRecipesBtn">Simulate 1:1 Mixture (Arithmetic Mean)</button>
+            <button type="button" class="btn-action-sm" id="m4ResetRaysBtn">Reset Rays</button>
+          </div>
+        `;
+
+        document.getElementById('m4RecipeASlider')?.addEventListener('input', (e) => {
+          AppState.mod4State.recipeA_lemons = parseInt(e.target.value, 10);
+          const rateA = AppState.mod4State.recipeA_lemons / AppState.mod4State.recipeA_quarts;
+          document.getElementById('m4RecipeAVal').textContent = `${AppState.mod4State.recipeA_lemons} lemons (${rateA.toFixed(2)}/qt)`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m4RecipeBSlider')?.addEventListener('input', (e) => {
+          AppState.mod4State.recipeB_lemons = parseInt(e.target.value, 10);
+          const rateB = AppState.mod4State.recipeB_lemons / AppState.mod4State.recipeB_quarts;
+          document.getElementById('m4RecipeBVal').textContent = `${AppState.mod4State.recipeB_lemons} lemons (${rateB.toFixed(2)}/qt)`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m4MixRecipesBtn')?.addEventListener('click', () => {
+          AppState.mod4State.showMixture = true;
+          renderActiveManipulative();
+          UI.showToast('Mixture Plotted', 'Combined mixture: 4.5 lemons in 2 quarts = 2.25 lemons/qt. Ray plots between A and B!', '📐');
+        });
+
+        document.getElementById('m4ResetRaysBtn')?.addEventListener('click', () => {
+          AppState.mod4State.showMixture = false;
+          AppState.mod4State.recipeA_lemons = 5;
+          AppState.mod4State.recipeB_lemons = 2;
+          renderActiveManipulative();
+        });
+
+      } else if (modNum === 5) {
+        // Module 5: 3D Composite Prism Slicer
+        bar.innerHTML = `
+          <div class="control-slider-row">
+            <span class="mono">Prism B Height h (m):</span>
+            <input type="range" id="m5HeightSlider" min="2" max="12" step="0.1" value="6.83">
+            <span class="mono" id="m5HeightVal">6.83 m</span>
+          </div>
+          <div class="button-actions-row">
+            <button type="button" class="btn-action-sm" id="m5TargetHBtn">Solve h = 6 ⅚ m (205 ÷ 30)</button>
+            <button type="button" class="btn-action-sm" id="m5UnfoldNetBtn">Unfold 2D Exterior Net</button>
+          </div>
+        `;
+
+        document.getElementById('m5HeightSlider')?.addEventListener('input', (e) => {
+          AppState.mod5State.prismB_h = parseFloat(e.target.value);
+          document.getElementById('m5HeightVal').textContent = `${AppState.mod5State.prismB_h.toFixed(2)} m`;
+          renderActiveManipulative();
+        });
+
+        document.getElementById('m5TargetHBtn')?.addEventListener('click', () => {
+          AppState.mod5State.prismB_h = 6.8333;
+          document.getElementById('m5HeightSlider').value = 6.83;
+          document.getElementById('m5HeightVal').textContent = '6.83 m (6 ⅚)';
+          renderActiveManipulative();
+          UI.showToast('Target Height', 'Prism B Volume = 205 m³. Base = 30 m² ⟹ h = 6 ⅚ m!', '📦');
+        });
+
+        document.getElementById('m5UnfoldNetBtn')?.addEventListener('click', () => {
+          AppState.mod5State.unfoldNet = !AppState.mod5State.unfoldNet;
+          renderActiveManipulative();
+          UI.showToast('Net View', AppState.mod5State.unfoldNet ? 'Flattened 2D Net: Notice 2 interior boundary faces subtracted.' : '3D Wireframe Perspective.', '📦');
+        });
+      }
+    }
+
+    function resetModuleSandboxDefaults() {
+      AppState.mod1State.baseArea = 12;
+      AppState.mod1State.height = 12;
+      AppState.mod1State.leftMass = 144;
+      AppState.mod1State.rightMass = 144;
+
+      AppState.mod2State.factorA = 0.425;
+      AppState.mod2State.factorB = 12.8;
+      AppState.mod2State.collapseZeros = true;
+
+      AppState.mod3State.commonDenominator = 6;
+      AppState.mod3State.divisorRate = 2/3;
+
+      AppState.mod4State.recipeA_lemons = 5;
+      AppState.mod4State.recipeB_lemons = 2;
+      AppState.mod4State.showMixture = false;
+
+      AppState.mod5State.prismB_h = 6.83;
+      AppState.mod5State.unfoldNet = false;
+    }
+
+    /* ==========================================================================
+       9. SYNCHRONIZED INTERACTIVE 2D/3D MANIPULATIVE RENDERERS
+       ========================================================================== */
+    function renderActiveManipulative() {
+      const canvas = document.getElementById('activeManipulativeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // High-DPI Canvas Setup
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = (rect.height || 380) * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height || 380;
+
+      // Theme Colors
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      const bgColor = isLight ? '#f1f5f9' : '#0b1120';
+      const gridColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
+      const textMain = isLight ? '#0f172a' : '#f8fafc';
+      const textSub = isLight ? '#475569' : '#94a3b8';
+
+      // Clear & Background Grid
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 30) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      // Render based on Active Module
+      if (AppState.activeModule === 1) {
+        renderMod1Balance(ctx, w, h, textMain, textSub);
+      } else if (AppState.activeModule === 2) {
+        renderMod2DecimalGrid(ctx, w, h, textMain, textSub);
+      } else if (AppState.activeModule === 3) {
+        renderMod3FractionTapes(ctx, w, h, textMain, textSub);
+      } else if (AppState.activeModule === 4) {
+        renderMod4RatioRays(ctx, w, h, textMain, textSub);
+      } else if (AppState.activeModule === 5) {
+        renderMod5Prism3D(ctx, w, h, textMain, textSub);
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // MANIPULATIVE 1: Algebraic Balance Scale (SVG/Canvas Dynamic Beam)
+    // ------------------------------------------------------------------------
+    function renderMod1Balance(ctx, w, h, textMain, textSub) {
+      const state = AppState.mod1State;
+      const fulcrumX = w * 0.5;
+      const fulcrumY = h * 0.65;
+      const beamHalfLength = w * 0.35;
+
+      // Calculate Physical Tilt Angle
+      const massDiff = state.leftMass - state.rightMass;
+      const targetTilt = Math.max(-0.25, Math.min(0.25, massDiff * 0.005));
+      state.tiltAngle += (targetTilt - state.tiltAngle) * 0.2;
+
+      // Fulcrum Base & Triangle
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.moveTo(fulcrumX, fulcrumY);
+      ctx.lineTo(fulcrumX - 25, fulcrumY + 50);
+      ctx.lineTo(fulcrumX + 25, fulcrumY + 50);
+      ctx.closePath();
+      ctx.fill();
+
+      // Horizontal Floor
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(fulcrumX - beamHalfLength - 40, fulcrumY + 50);
+      ctx.lineTo(fulcrumX + beamHalfLength + 40, fulcrumY + 50);
+      ctx.stroke();
+
+      // Tilting Beam
+      ctx.save();
+      ctx.translate(fulcrumX, fulcrumY);
+      ctx.rotate(state.tiltAngle);
+
+      ctx.strokeStyle = '#8b5cf6';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(-beamHalfLength, 0);
+      ctx.lineTo(beamHalfLength, 0);
+      ctx.stroke();
+
+      // Center Pivot Pin
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(0, 0, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pan Strings & Pans
+      const panDrop = 65;
+      // Left Pan
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-beamHalfLength, 0);
+      ctx.lineTo(-beamHalfLength - 20, panDrop);
+      ctx.moveTo(-beamHalfLength, 0);
+      ctx.lineTo(-beamHalfLength + 20, panDrop);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(-beamHalfLength - 35, panDrop, 70, 10, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Right Pan
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(beamHalfLength, 0);
+      ctx.lineTo(beamHalfLength - 20, panDrop);
+      ctx.moveTo(beamHalfLength, 0);
+      ctx.lineTo(beamHalfLength + 20, panDrop);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.strokeStyle = '#059669';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(beamHalfLength - 35, panDrop, 70, 10, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Objects on Left Pan (Variable Box h and Base Area)
+      ctx.fillStyle = '#8b5cf6';
+      ctx.fillRect(-beamHalfLength - 20, panDrop - 35, 40, 35);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-beamHalfLength - 20, panDrop - 35, 40, 35);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`[${state.baseArea}]·h`, -beamHalfLength, panDrop - 14);
+
+      // Objects on Right Pan (Constant Weight Stack)
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(beamHalfLength - 22, panDrop - 32, 44, 32);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(beamHalfLength - 22, panDrop - 32, 44, 32);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`${state.rightMass}`, beamHalfLength, panDrop - 12);
+
+      ctx.restore();
+
+      // HUD Readout updates
+      const isEq = Math.abs(state.leftMass - state.rightMass) < 1;
+      document.getElementById('telVal1').textContent = `[${state.baseArea}] · h = ${state.leftMass}`;
+      document.getElementById('telVal2').textContent = `${state.rightMass} units`;
+      const tel3 = document.getElementById('telVal3');
+      if (tel3) {
+        tel3.textContent = isEq ? 'EQUILIBRIUM (BALANCED)' : (state.leftMass > state.rightMass ? 'LEFT PAN HEAVY' : 'RIGHT PAN HEAVY');
+        tel3.style.color = isEq ? 'var(--accent-emerald)' : 'var(--accent-amber)';
+      }
+
+      // Title & Formula
+      ctx.font = 'bold 13px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#8b5cf6';
+      ctx.textAlign = 'left';
+      ctx.fillText('Algebraic Balance Equation:', 20, 30);
+      ctx.fillStyle = textMain;
+      ctx.font = '16px "JetBrains Mono", monospace';
+      ctx.fillText(`${state.baseArea} · h = ${state.rightMass} ⟹ h = ${(state.rightMass / state.baseArea).toFixed(1)} ft`, 20, 52);
+    }
+
+    // ------------------------------------------------------------------------
+    // MANIPULATIVE 2: Base-Ten Decimal Area Zoomer (SVG / Canvas Grid)
+    // ------------------------------------------------------------------------
+    function renderMod2DecimalGrid(ctx, w, h, textMain, textSub) {
+      const state = AppState.mod2State;
+      const gridX = 40;
+      const gridY = 70;
+      const gridW = Math.min(w - 80, 300);
+      const gridH = 240;
+
+      // Outer Container Box
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(gridX, gridY, gridW, gridH);
+
+      // 10x10 Base-10 Grid Divisions
+      const cols = 10;
+      const rows = 10;
+      const cellW = gridW / cols;
+      const cellH = gridH / rows;
+
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.lineWidth = 1;
+      for (let c = 1; c < cols; c++) {
+        ctx.beginPath();
+        ctx.moveTo(gridX + c * cellW, gridY);
+        ctx.lineTo(gridX + c * cellW, gridY + gridH);
+        ctx.stroke();
+      }
+      for (let r = 1; r < rows; r++) {
+        ctx.beginPath();
+        ctx.moveTo(gridX, gridY + r * cellH);
+        ctx.lineTo(gridX + gridW, gridY + r * cellH);
+        ctx.stroke();
+      }
+
+      // Factor A (0.425) Shaded Horizontal Strip (Cyan)
+      const shadedHeight = gridH * Math.min(1, state.factorA);
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.3)';
+      ctx.fillRect(gridX, gridY, gridW, shadedHeight);
+
+      // Factor B Shaded Vertical Strip (Amber)
+      const normFactorB = (state.factorB % 10) / 10 || 0.8;
+      const shadedWidth = gridW * normFactorB;
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
+      ctx.fillRect(gridX, gridY, shadedWidth, gridH);
+
+      // Overlapping Intersecting Partial Product (Emerald Green)
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.5)';
+      ctx.fillRect(gridX, gridY, shadedWidth, shadedHeight);
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(gridX, gridY, shadedWidth, shadedHeight);
+
+      // Labels & Dimensions
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#06b6d4';
+      ctx.textAlign = 'right';
+      ctx.fillText(`Height: ${state.factorA.toFixed(3)} L/s`, gridX - 8, gridY + shadedHeight * 0.5);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Width: ${state.factorB.toFixed(1)} s`, gridX + shadedWidth * 0.5, gridY + gridH + 20);
+
+      // Calculation Telemetry
+      const product = state.factorA * state.factorB;
+      const formatted = state.collapseZeros ? product.toFixed(2) : product.toFixed(4);
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#8b5cf6';
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.fillText('Decomposed Place Value Multiplication:', 20, 26);
+      ctx.fillStyle = textMain;
+      ctx.font = '15px "JetBrains Mono", monospace';
+      ctx.fillText(`(${state.factorA.toFixed(3)} × 10³) × (${state.factorB.toFixed(1)} × 10¹) = 54,400`, 20, 48);
+
+      // Side Info Box
+      const sideX = gridX + gridW + 30;
+      if (sideX + 160 <= w) {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+        ctx.roundRect(sideX, gridY, w - sideX - 20, 200, 8);
+        ctx.fill();
+
+        ctx.font = 'bold 11px "Inter", sans-serif';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('Place-Value Forensics', sideX + 12, gridY + 24);
+
+        ctx.font = '10px "JetBrains Mono", monospace';
+        ctx.fillStyle = textSub;
+        ctx.fillText('425 × 128 = 54,400', sideX + 12, gridY + 50);
+        ctx.fillText('Divisor: 10³ × 10¹ = 10,000', sideX + 12, gridY + 74);
+        ctx.fillText('54,400 ÷ 10,000 = 5.4400', sideX + 12, gridY + 98);
+
+        ctx.fillStyle = '#10b981';
+        ctx.font = 'bold 11px "JetBrains Mono", monospace';
+        ctx.fillText(`Volume: ${formatted} L`, sideX + 12, gridY + 130);
+
+        ctx.font = '9px "Inter", sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText('Trailing Zeros Collapse: Active', sideX + 12, gridY + 155);
+      }
+
+      // Update HUD
+      document.getElementById('telVal1').textContent = `${state.factorA.toFixed(3)} L/s`;
+      document.getElementById('telVal2').textContent = `${state.factorB.toFixed(1)} s`;
+      document.getElementById('telVal3').textContent = `${formatted} Liters`;
+    }
+
+    // ------------------------------------------------------------------------
+    // MANIPULATIVE 3: Dual-Tape Fraction Resizer (SVG / Canvas Tape Diagram)
+    // ------------------------------------------------------------------------
+    function renderMod3FractionTapes(ctx, w, h, textMain, textSub) {
+      const state = AppState.mod3State;
+      const tapeX = 50;
+      const tapeW = Math.min(w - 100, 420);
+      const tapeH = 40;
+
+      // Top Tape: Dividend (1 ½ miles = 9/6)
+      const topY = 70;
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('Distance Bar (Dividend): 1 ½ miles = 9/6 miles', tapeX, topY - 10);
+
+      // Base bar background
+      ctx.fillStyle = 'rgba(251, 191, 36, 0.15)';
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 2;
+      ctx.roundRect(tapeX, topY, tapeW, tapeH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Subdivisions for 9/6 (at scale 6ths: 1 whole = 6 blocks, 1 ½ = 9 blocks)
+      const blocksCount = 9;
+      const blockWidth = tapeW / blocksCount;
+
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)';
+      ctx.lineWidth = 1.5;
+      for (let i = 1; i < blocksCount; i++) {
+        ctx.beginPath();
+        ctx.moveTo(tapeX + i * blockWidth, topY);
+        ctx.lineTo(tapeX + i * blockWidth, topY + tapeH);
+        ctx.stroke();
+      }
+
+      // Label 1 whole boundary (at 6 blocks)
+      const wholeBoundaryX = tapeX + 6 * blockWidth;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(wholeBoundaryX, topY - 15);
+      ctx.lineTo(wholeBoundaryX, topY + tapeH + 15);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '10px "Inter", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('1 Whole Mile (6/6)', wholeBoundaryX, topY - 18);
+
+      // Bottom Tape: Divisor Rate (⅔ mile/hr = 4/6)
+      const botY = 160;
+      ctx.fillStyle = '#f97316';
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('Rate Bar (Divisor Unit Group): ⅔ mi/hr = 4/6 group', tapeX, botY - 10);
+
+      // 4-block hour group 1
+      const groupWidth = 4 * blockWidth;
+      ctx.fillStyle = 'rgba(249, 115, 22, 0.35)';
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+
+      // Group 1: 4 blocks (Hour 1)
+      ctx.roundRect(tapeX, botY, groupWidth, tapeH, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('1 Full Hour (4/6)', tapeX + groupWidth * 0.5, botY + 24);
+
+      // Group 2: 4 blocks (Hour 2)
+      ctx.fillStyle = 'rgba(249, 115, 22, 0.35)';
+      ctx.roundRect(tapeX + groupWidth, botY, groupWidth, tapeH, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('2nd Full Hour (4/6)', tapeX + groupWidth * 1.5, botY + 24);
+
+      // Leftover 1 block (15 min = ¼ hour)
+      const remX = tapeX + 2 * groupWidth;
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2;
+      ctx.roundRect(remX, botY, blockWidth, tapeH, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('¼ hr', remX + blockWidth * 0.5, botY + 24);
+
+      // Remainder Forensic Callout
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = 'bold 11px "Inter", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('↑ Leftover: 1 block of a 4-block group = ¼ hour (15 min)', remX, botY + tapeH + 24);
+
+      // Formula Summary
+      ctx.font = '14px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('Common Unit Division: 9/6 ÷ 4/6 = 9 ÷ 4 = 2 ¼ Hours', tapeX, botY + 80);
+
+      // HUD Update
+      document.getElementById('telVal1').textContent = '9/6 mi (9 blocks)';
+      document.getElementById('telVal2').textContent = '4/6 mi/hr (4 blocks)';
+      document.getElementById('telVal3').textContent = '2 ¼ Hours (2h 15m)';
+    }
+
+    // ------------------------------------------------------------------------
+    // MANIPULATIVE 4: Synchronized Ratio Ray Plotter (Coordinate Plane & Rays)
+    // ------------------------------------------------------------------------
+    function renderMod4RatioRays(ctx, w, h, textMain, textSub) {
+      const state = AppState.mod4State;
+      const ox = 60;
+      const oy = h - 60;
+      const scaleX = (w - 120) / 5; // 5 quarts max
+      const scaleY = (oy - 40) / 12; // 12 lemons max
+
+      // Coordinate Axes
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy);
+      ctx.lineTo(w - 30, oy); // X axis
+      ctx.moveTo(ox, oy);
+      ctx.lineTo(ox, 30);     // Y axis
+      ctx.stroke();
+
+      // Axis Labels
+      ctx.fillStyle = textSub;
+      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      for (let x = 1; x <= 4; x++) {
+        const px = ox + x * scaleX;
+        ctx.fillText(`${x} qt`, px, oy + 18);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.beginPath(); ctx.moveTo(px, oy); ctx.lineTo(px, 30); ctx.stroke();
+      }
+
+      ctx.textAlign = 'right';
+      for (let y = 2; y <= 10; y += 2) {
+        const py = oy - y * scaleY;
+        ctx.fillText(`${y}`, ox - 8, py + 4);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.beginPath(); ctx.moveTo(ox, py); ctx.lineTo(w - 30, py); ctx.stroke();
+      }
+
+      ctx.fillText('Lemons (y)', ox - 10, 30);
+      ctx.textAlign = 'left';
+      ctx.fillText('Water Quarts (x)', w - 100, oy + 32);
+
+      // Origin dot
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(ox, oy, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ray A: y = 2.5x (Gold/Yellow)
+      const rateA = state.recipeA_lemons / state.recipeA_quarts;
+      const endXA = 4;
+      const endYA = rateA * endXA;
+
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy);
+      ctx.lineTo(ox + endXA * scaleX, oy - endYA * scaleY);
+      ctx.stroke();
+
+      // Point A at (2, 5)
+      const ptAx = ox + state.recipeA_quarts * scaleX;
+      const ptAy = oy - state.recipeA_lemons * scaleY;
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(ptAx, ptAy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(`A (${state.recipeA_quarts}, ${state.recipeA_lemons}) [Slope: ${rateA.toFixed(1)}]`, ptAx + 8, ptAy - 6);
+
+      // Ray B: y = 2.0x (Cyan)
+      const rateB = state.recipeB_lemons / state.recipeB_quarts;
+      const endXB = 4;
+      const endYB = rateB * endXB;
+
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy);
+      ctx.lineTo(ox + endXB * scaleX, oy - endYB * scaleY);
+      ctx.stroke();
+
+      // Point B at (1, 2)
+      const ptBx = ox + state.recipeB_quarts * scaleX;
+      const ptBy = oy - state.recipeB_lemons * scaleY;
+      ctx.fillStyle = '#06b6d4';
+      ctx.beginPath();
+      ctx.arc(ptBx, ptBy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`B (${state.recipeB_quarts}, ${state.recipeB_lemons}) [Slope: ${rateB.toFixed(1)}]`, ptBx + 8, ptBy + 16);
+
+      // Ray Mixture (if enabled): Arithmetic mean
+      if (state.showMixture) {
+        const meanRate = (rateA + rateB) / 2;
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox + 4 * scaleX, oy - (meanRate * 4) * scaleY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#10b981';
+        ctx.fillText(`Mixture: y = ${meanRate.toFixed(2)}x (Mean)`, ox + 2.5 * scaleX, oy - (meanRate * 2.5) * scaleY - 10);
+      }
+
+      // Slope Comparison Callout
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillText(`Steeper Ray A (m = ${rateA.toFixed(1)}) proves stronger lemon concentration than Ray B (m = ${rateB.toFixed(1)})`, ox, 20);
+
+      // HUD Update
+      document.getElementById('telVal1').textContent = `Ray A: y = ${rateA.toFixed(1)}x`;
+      document.getElementById('telVal2').textContent = `Ray B: y = ${rateB.toFixed(1)}x`;
+      document.getElementById('telVal3').textContent = rateA > rateB ? 'RECIPE A STRONGER' : 'RECIPE B STRONGER';
+    }
+
+    // ------------------------------------------------------------------------
+    // MANIPULATIVE 5: 3D Composite Prism Slicer (Isometric Wireframe / Net)
+    // ------------------------------------------------------------------------
+    function renderMod5Prism3D(ctx, w, h, textMain, textSub) {
+      const state = AppState.mod5State;
+      const cx = w * 0.5;
+      const cy = h * 0.55;
+
+      if (!state.unfoldNet) {
+        // Isometric 3D Composite Solid Wireframe
+        // Prism B: Base 30, height h
+        const bW = 120;
+        const bD = 60;
+        const bH = state.prismB_h * 14;
+
+        // Isometric projection helpers
+        const iso = (x, y, z) => {
+          return {
+            x: cx + (x - z) * 0.866,
+            y: cy + (x + z) * 0.5 - y
+          };
+        };
+
+        // Draw Prism B (Bottom large prism)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+
+        // Prism B 8 Vertices
+        const vb = [
+          iso(-bW/2, 0, -bD/2),
+          iso(bW/2, 0, -bD/2),
+          iso(bW/2, 0, bD/2),
+          iso(-bW/2, 0, bD/2),
+          iso(-bW/2, bH, -bD/2),
+          iso(bW/2, bH, -bD/2),
+          iso(bW/2, bH, bD/2),
+          iso(-bW/2, bH, bD/2)
+        ];
+
+        // Bottom face
+        ctx.beginPath();
+        ctx.moveTo(vb[0].x, vb[0].y);
+        ctx.lineTo(vb[1].x, vb[1].y);
+        ctx.lineTo(vb[2].x, vb[2].y);
+        ctx.lineTo(vb[3].x, vb[3].y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Top face
+        ctx.beginPath();
+        ctx.moveTo(vb[4].x, vb[4].y);
+        ctx.lineTo(vb[5].x, vb[5].y);
+        ctx.lineTo(vb[6].x, vb[6].y);
+        ctx.lineTo(vb[7].x, vb[7].y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Vertical edges
+        for (let i = 0; i < 4; i++) {
+          ctx.beginPath();
+          ctx.moveTo(vb[i].x, vb[i].y);
+          ctx.lineTo(vb[i+4].x, vb[i+4].y);
+          ctx.stroke();
+        }
+
+        // Draw Prism A on top of Prism B: 3 x 2 x 3
+        const aW = 50;
+        const aD = 40;
+        const aH = 50;
+
+        ctx.strokeStyle = '#fbbf24';
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.25)';
+
+        const va = [
+          iso(-aW/2, bH, -aD/2),
+          iso(aW/2, bH, -aD/2),
+          iso(aW/2, bH, aD/2),
+          iso(-aW/2, bH, aD/2),
+          iso(-aW/2, bH + aH, -aD/2),
+          iso(aW/2, bH + aH, -aD/2),
+          iso(aW/2, bH + aH, aD/2),
+          iso(-aW/2, bH + aH, aD/2)
+        ];
+
+        // Top face of Prism A
+        ctx.beginPath();
+        ctx.moveTo(va[4].x, va[4].y);
+        ctx.lineTo(va[5].x, va[5].y);
+        ctx.lineTo(va[6].x, va[6].y);
+        ctx.lineTo(va[7].x, va[7].y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Vertical edges of Prism A
+        for (let i = 0; i < 4; i++) {
+          ctx.beginPath();
+          ctx.moveTo(va[i].x, va[i].y);
+          ctx.lineTo(va[i+4].x, va[i+4].y);
+          ctx.stroke();
+        }
+
+        // Callout labels
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 11px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('Prism A (3 × 2 × 3 = 18 m³)', cx, cy - bH - aH - 12);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(`Prism B (Base: 30 m², h = ${state.prismB_h.toFixed(2)} m ⟹ 205 m³)`, cx, cy + 40);
+
+      } else {
+        // Flattened 2D Net
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#8b5cf6';
+        ctx.textAlign = 'center';
+        ctx.fillText('2D Unfolded Net: 10 Exterior Faces (2 Shared Faces Subtracted)', cx, 30);
+
+        // Grid of unfolded faces
+        const fSize = 45;
+        const netOx = cx - fSize * 2;
+        const netOy = cy - fSize * 1.5;
+
+        // Cross pattern for base prism
+        [
+          [1, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2]
+        ].forEach(([fx, fy]) => {
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+          ctx.fillRect(netOx + fx * fSize, netOy + fy * fSize, fSize, fSize);
+          ctx.strokeRect(netOx + fx * fSize, netOy + fy * fSize, fSize, fSize);
+        });
+
+        // Highlight subtracted contact boundary
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.4)';
+        ctx.fillRect(netOx + fSize, netOy + fSize, fSize, fSize);
+        ctx.strokeStyle = '#f43f5e';
+        ctx.strokeRect(netOx + fSize, netOy + fSize, fSize, fSize);
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.font = '10px "Inter", sans-serif';
+        ctx.fillText('Shared Boundary (-2x)', cx, netOy + fSize * 1.5 + 4);
+      }
+
+      // HUD Update
+      document.getElementById('telVal1').textContent = 'V_A = 18 m³';
+      document.getElementById('telVal2').textContent = `V_B = ${(30 * state.prismB_h).toFixed(1)} m³`;
+      document.getElementById('telVal3').textContent = `Total V = ${(18 + 30 * state.prismB_h).toFixed(1)} m³`;
+    }
+
+    /* ==========================================================================
+       10. INTERACTIVE WHITEBOARD SCRATCHPAD (Overlay Layer)
+       ========================================================================== */
+    function initScratchpad() {
+      const toggleBtn = document.getElementById('toggleScratchpadBtn');
+      const toolbar = document.getElementById('scratchpadToolbar');
+      const canvas = document.getElementById('scratchpadCanvas');
+      if (!canvas || !toggleBtn) return;
+      const ctx = canvas.getContext('2d');
+
+      function resizeScratch() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = (rect.height || 380) * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      resizeScratch();
+      window.addEventListener('resize', resizeScratch);
+
+      toggleBtn.addEventListener('click', () => {
+        AppState.scratchpad.active = !AppState.scratchpad.active;
+        canvas.classList.toggle('active', AppState.scratchpad.active);
+        if (toolbar) toolbar.style.display = AppState.scratchpad.active ? 'flex' : 'none';
+        toggleBtn.classList.toggle('primary', AppState.scratchpad.active);
+        UI.showToast('Whiteboard Overlay', AppState.scratchpad.active ? 'Whiteboard layer active. Draw calculations directly over simulation.' : 'Whiteboard hidden.', '✏️');
+      });
+
+      // Tool Switcher
+      document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          AppState.scratchpad.tool = btn.dataset.tool;
+        });
+      });
+
+      // Color Swatches
+      document.querySelectorAll('.color-swatch').forEach(sw => {
+        sw.addEventListener('click', () => {
+          AppState.scratchpad.color = sw.dataset.color;
+        });
+      });
+
+      // Clear Whiteboard
+      document.getElementById('clearScratchpadBtn')?.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        UI.showToast('Whiteboard Cleared', 'Canvas drawing layer erased.', '🧹');
+      });
+
+      // Pointer Handlers
+      const startDraw = (x, y) => {
+        if (!AppState.scratchpad.active) return;
+        AppState.scratchpad.isDrawing = true;
+        AppState.scratchpad.lastX = x;
+        AppState.scratchpad.lastY = y;
+      };
+
+      const moveDraw = (x, y) => {
+        if (!AppState.scratchpad.active || !AppState.scratchpad.isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(AppState.scratchpad.lastX, AppState.scratchpad.lastY);
+        ctx.lineTo(x, y);
+
+        if (AppState.scratchpad.tool === 'pen') {
+          ctx.strokeStyle = AppState.scratchpad.color;
+          ctx.lineWidth = 2.5;
+          ctx.globalAlpha = 1.0;
+        } else if (AppState.scratchpad.tool === 'highlighter') {
+          ctx.strokeStyle = AppState.scratchpad.color;
+          ctx.lineWidth = 14;
+          ctx.globalAlpha = 0.35;
+        } else if (AppState.scratchpad.tool === 'eraser') {
+          ctx.clearRect(x - 15, y - 15, 30, 30);
+          AppState.scratchpad.lastX = x;
+          AppState.scratchpad.lastY = y;
+          return;
+        }
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+
+        AppState.scratchpad.lastX = x;
+        AppState.scratchpad.lastY = y;
+      };
+
+      const stopDraw = () => {
+        AppState.scratchpad.isDrawing = false;
+      };
+
+      // Mouse events
+      canvas.addEventListener('mousedown', (e) => {
+        const r = canvas.getBoundingClientRect();
+        startDraw(e.clientX - r.left, e.clientY - r.top);
+      });
+      canvas.addEventListener('mousemove', (e) => {
+        const r = canvas.getBoundingClientRect();
+        moveDraw(e.clientX - r.left, e.clientY - r.top);
+      });
+      window.addEventListener('mouseup', stopDraw);
+
+      // Touch events
+      canvas.addEventListener('touchstart', (e) => {
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches[0];
+        startDraw(t.clientX - r.left, t.clientY - r.top);
+      }, { passive: true });
+
+      canvas.addEventListener('touchmove', (e) => {
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches[0];
+        moveDraw(t.clientX - r.left, t.clientY - r.top);
+      }, { passive: true });
+
+      window.addEventListener('touchend', stopDraw);
+    }
+
+  })();
+  </script>
+</body>
+</html>
